@@ -1,4 +1,5 @@
-# Protein Structure Prediction Tools
+# ProSPr
+## The Protein Structure Prediction Toolbox
 **Author:** Okke van Eck  
 **Last update:** 24 June 2020  
 **Live version:** 0.1a0  

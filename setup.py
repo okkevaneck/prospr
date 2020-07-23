@@ -20,7 +20,8 @@ setuptools.setup(
     description="A toolbox for protein folding with Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/OkkeVanEck/prospr",
+    url="https://github.com/okkevaneck/prospr",
+    license="LICENSE",
     packages=setuptools.find_packages(),
     install_requires=[
         "matplotlib",

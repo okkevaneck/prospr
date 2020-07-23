@@ -1,10 +1,13 @@
+# This .gitignore is divided into a Python and a C++ section.
+
+# ===============
+# PYTHON IGNORES.
+# ===============
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
-*.so
 
 # Distribution / packaging
 .Python
@@ -133,3 +136,42 @@ dmypy.json
 
 # Ignore test.py files.
 test.py
+
+
+# ============
+# C++ IGNORES.
+# ============
+
+# Prerequisites
+*.d
+*.cxx
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
