@@ -44,13 +44,15 @@ build: %.cxx
 
 clean:
 	@echo "~ Removing all built .cxx, .so and .py files.."
-	@rm -f $(CXX_FILES) $(SO_FILES) $(PY_FILES)
-	@echo "~ Removing all __pycache__ directories.."
-	@rm -rf $(PYCACHES)
-	@echo "~ Done cleaning!"
+	rm -f $(CXX_FILES) $(SO_FILES) $(PY_FILES)
+	@echo "\n~ Removing all __pycache__ directories.."
+	rm -rf $(PYCACHES)
+	@echo "\n~ Done cleaning!"
 
 deploy:
-	@echo "~ Creating package.."
+	@echo "~ Removing old files.."
+	rm -rf build dist prospr.egg-info
+	@echo "\n~ Creating new package.."
 	python3 setup.py sdist bdist_wheel
 	@echo "\n~ Uploading package.."
 	twine upload dist/*
