@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="prospr",
-    version="0.1a1",
+    version="0.1a2",
     author="okkevaneck",
     description="A toolbox for protein folding with Python.",
     long_description=long_description,
@@ -40,5 +40,4 @@ setuptools.setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
-    python_requires='>=3.6',
 )
