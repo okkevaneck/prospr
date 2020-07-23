@@ -35,7 +35,7 @@ build: %.cxx
 		mv $$FPATH "$(COREDIR)/$$MODULE/$$FNAME"; \
 	done
 
-	@echo "~ Done building!"
+	@echo "\n~ Done building!"
 
 %.cxx:
 	@echo "~ Creating all .cxx wrappers.."

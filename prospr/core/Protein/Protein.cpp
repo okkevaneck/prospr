@@ -62,6 +62,10 @@ int Protein::get_changes() {
     return changes;
 }
 
+bool Protein::is_hydro(int index) {
+    return find(h_idxs.begin(), h_idxs.end(), index) != h_idxs.end();
+}
+
 void Protein::reset() {
     /* Reset all variables of a protein as it was just initialized. */
     space.clear();
@@ -107,8 +111,7 @@ void Protein::place_amino(int move, bool track) {
         throw std::runtime_error("Protein folded onto itself..");
 
     /* Change score according to placement of the new amino. */
-    if (move != 0 &&
-            find(h_idxs.begin(), h_idxs.end(), cur_len) != h_idxs.end())
+    if (move != 0 && is_hydro(cur_len))
         change_score(move, -1);
 
     space[last_pos] = std::vector<int>{cur_len, 0};
@@ -122,8 +125,7 @@ void Protein::remove_amino() {
      */
      cur_len--;
 
-     if (last_move != 0 &&
-            find(h_idxs.begin(), h_idxs.end(), cur_len) != h_idxs.end())
+    if (last_move != 0 && is_hydro(cur_len))
             change_score(last_move, 1);
 
     /* Remove the last placed amino acid and change direction of the amino
@@ -149,8 +151,7 @@ void Protein::change_score(int move, int value) {
         cur_pos = last_pos;
         cur_pos[abs(move) - 1] += move / abs(move);
 
-        if (space.count(cur_pos) > 0 &&
-                find(h_idxs.begin(), h_idxs.end(), cur_len) != h_idxs.end())
+        if (space.count(cur_pos) > 0 && is_hydro(cur_len))
             score += value;
     }
 }

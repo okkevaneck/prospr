@@ -14,26 +14,25 @@ def get_scoring_aminos(protein):
     Collect all placed aminos from a protein that may score points.
     """
     score_pos = {}
-    dim = protein.get_dim()
-    # cur_pos = np.array([0 for _ in range(dim)], dtype=np.int64)
-    cur_pos = [0 for _ in range(dim)]
-    amino, next_dir = protein.get_amino(cur_pos)
+    cur_pos = [0 for _ in range(protein.get_dim())]
+    idx, next_dir = protein.get_amino(cur_pos)
 
     # Store origin if it may score points.
-    if amino == "H":
+    # if amino == "H":
+    if protein.is_hydro(idx):
         score_pos[tuple(cur_pos)] = np.array([0, next_dir], dtype=np.int64)
 
     while next_dir != 0:
         # Compute position of next amino and get its amino and fold.
         cur_pos[abs(next_dir) - 1] += next_dir // abs(next_dir)
-        amino, fold = protein.get_amino(cur_pos)
+        idx, fold = protein.get_amino(cur_pos)
 
         # Store previous directions for checking existing connections.
         prev_dir = -next_dir
         next_dir = fold
 
         # Save amino if it may score points.
-        if amino == "H":
+        if protein.is_hydro(idx):
             score_pos[tuple(cur_pos)] = np.array([prev_dir, next_dir],
                                                  dtype=np.int64)
 
@@ -50,7 +49,7 @@ def get_scoring_pairs(protein):
 
     # Sort positions from bottom-left to upper-rigth.
     moves = np.array([m for m in range(1, protein.get_dim() + 1)])
-    pairs = np.empty((1, 2, 3), dtype=np.int64)
+    pairs = np.empty((1, 2, protein.get_dim()), dtype=np.int64)
 
     # Check if a score can be made with the amino above or to the right.
     for pos, [prev_dir, next_dir] in score_aminos.items():
