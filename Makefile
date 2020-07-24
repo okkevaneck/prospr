@@ -57,4 +57,3 @@ deploy:
 	@echo "\n~ Uploading package.."
 	twine upload dist/*
 	@echo "\n~ Done deploying!"
-
