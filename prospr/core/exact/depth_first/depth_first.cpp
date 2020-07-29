@@ -7,19 +7,13 @@
 #include "depth_first.h"
 #include <stack>
 #include <vector>
+#include <algorithm>
 
 
 /* A depth-first search function for finding a minimum energy conformation. */
 Protein depth_first(Protein protein) {
     int max_length = protein.get_sequence().length();
-    int dim protein.get_dim();
-    int move = 2;
-    int best_score = 1;
-    bool placed_amino;
-    std::vector<int> best_hash;
-    std::vector<int> all_moves;
-    std::vector<int> remaining_moves;
-    std::stack<std::vector<int>> dfs_stack;
+    int dim = protein.get_dim();
 
     /* The first two amino acids are fixed in order to prevent symmetry. */
     if (max_length >= 1)
@@ -30,6 +24,9 @@ Protein depth_first(Protein protein) {
         return protein;
 
     /* Setup all_moves for initializing the stack. */
+    int move = 2;
+    std::vector<int> all_moves;
+
     for (int i = 1; i <= dim; i++) {
         if (i == move)
             continue;
@@ -38,6 +35,8 @@ Protein depth_first(Protein protein) {
     }
 
     /* Setup stack. */
+    std::stack<std::vector<int>> dfs_stack;
+
     for (int i = 0; i < max_length - 2; i++) {
         protein.place_amino(2);
         dfs_stack.push(all_moves);
@@ -52,6 +51,13 @@ Protein depth_first(Protein protein) {
 
         all_moves.push_back(i);
     }
+
+    /* Declare and set variables for the depth-first search. */
+    int best_score = 1;
+    std::vector<int> best_hash;
+    std::vector<int> remaining_moves;
+    int score;
+    bool placed_amino;
 
     while (!dfs_stack.empty()) {
         /* Check if the bottom of the tree is reached and store best folds.
@@ -68,8 +74,9 @@ Protein depth_first(Protein protein) {
             remaining_moves = all_moves;
         } else {
             remaining_moves = all_moves;
-            remaining_moves.erase(std::remove(v.begin(), v.end(), -move),
-                                  v.end());
+            remaining_moves.erase(std::remove(remaining_moves.begin(),
+                                              remaining_moves.end(), -move),
+                                  remaining_moves.end());
         }
 
         /* Loop till an amino acid is placed or no new combinations are left. */
@@ -77,20 +84,22 @@ Protein depth_first(Protein protein) {
 
         while (!placed_amino) {
             /* Try all remaining moves for the current amino acid. */
-            while (!placed_amino && remaining_moves) {
-                move = remaining_moves.pop_back();
+            while (!placed_amino && !remaining_moves.empty()) {
+                move = remaining_moves.back();
+                remaining_moves.pop_back();
 
                 /* Place amino acid if valid and update stack accordingly. */
                 if (protein.is_valid(move)) {
                     protein.place_amino(move);
                     dfs_stack.push(remaining_moves);
-                    place_amino = true;
+                    placed_amino = true;
                 }
             }
 
             /* Backtrack if the current amino acid has no moves left. */
-            while (!place_amino && remaining_moves.empty() && !dfs_stack.empty()) {
-                remaining_moves = dfs_stack.pop();
+            while (!placed_amino && remaining_moves.empty() && !dfs_stack.empty()) {
+                remaining_moves = dfs_stack.top();
+                dfs_stack.pop();
                 protein.remove_amino();
             }
 
