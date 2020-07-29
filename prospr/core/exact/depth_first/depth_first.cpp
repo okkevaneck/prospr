@@ -10,10 +10,42 @@
 #include <algorithm>
 
 
+/* Initialize the stack and all_moves vector. */
+void initialize_vars(Protein* protein,
+                     std::stack<std::vector<int>>* dfs_stack,
+                     std::vector<int>* all_moves,
+                     int max_length,
+                     int first_move) {
+    int dim = protein->get_dim();
+
+    /*  Setup all_moves for stack initialization. */
+    for (int i = 1; i <= dim; i++) {
+        if (i == first_move)
+            continue;
+
+        all_moves->push_back(i);
+    }
+
+    /* Setup stack, limiting negative movement to prevent symmetry. */
+    for (int i = 0; i < max_length - 2; i++) {
+        protein->place_amino(2);
+        dfs_stack->push(*all_moves);
+    }
+
+    /* Setup all_moves for further usage. */
+    all_moves->clear();
+
+    for (int i = -dim; i <= dim; i++) {
+        if (i == 0)
+            continue;
+
+        all_moves->push_back(i);
+    }
+}
+
 /* A depth-first search function for finding a minimum energy conformation. */
 Protein depth_first(Protein protein) {
     int max_length = protein.get_sequence().length();
-    int dim = protein.get_dim();
 
     /* The first two amino acids are fixed in order to prevent symmetry. */
     if (max_length >= 1)
@@ -26,31 +58,8 @@ Protein depth_first(Protein protein) {
     /* Setup all_moves for initializing the stack. */
     int move = 2;
     std::vector<int> all_moves;
-
-    for (int i = 1; i <= dim; i++) {
-        if (i == move)
-            continue;
-
-        all_moves.push_back(i);
-    }
-
-    /* Setup stack. */
     std::stack<std::vector<int>> dfs_stack;
-
-    for (int i = 0; i < max_length - 2; i++) {
-        protein.place_amino(2);
-        dfs_stack.push(all_moves);
-    }
-
-    /* Setup all_moves for further usage. */
-    all_moves.clear();
-
-    for (int i = -dim; i <= dim; i++) {
-        if (i == 0)
-            continue;
-
-        all_moves.push_back(i);
-    }
+    initialize_vars(&protein, &dfs_stack, &all_moves, max_length, move);
 
     /* Declare and set variables for the depth-first search. */
     int best_score = 1;
@@ -97,7 +106,8 @@ Protein depth_first(Protein protein) {
             }
 
             /* Backtrack if the current amino acid has no moves left. */
-            while (!placed_amino && remaining_moves.empty() && !dfs_stack.empty()) {
+            while (!placed_amino && remaining_moves.empty() &&
+                   !dfs_stack.empty()) {
                 remaining_moves = dfs_stack.top();
                 dfs_stack.pop();
                 protein.remove_amino();
