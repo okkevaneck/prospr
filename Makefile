@@ -12,35 +12,32 @@
 # 					Add module names to the MODULES list for automatic
 #					compilation.
 
-MODULES = Protein
 COREDIR = prospr/core
 CXX_FILES = $(shell find $(COREDIR)/ -type f -name "*.cxx")
 SO_FILES = $(shell find $(COREDIR)/ -type f -name "*.so")
 PY_FILES = $(shell find $(COREDIR)/ -type f -name "*.py" ! -name "__init__.py" \
-			! -name "build.py")
+			! -name "setup.py")
 PYCACHES = $(shell find prospr/ -type d -name "__pycache__")
 
 .PHONY: build clean deploy
 all: build
 
 
-build: %.cxx
+build:
 	@echo "\n~ Creating all .so and .py interfaces.."
-	python $(COREDIR)/build.py build_ext --build-lib=$(COREDIR)
-	@echo "\n~ Moving .so files into right directories.."
+	$(eval $@_SPATHS := $(shell find $(COREDIR)/ -type f -name "*setup.py"))
+	$(eval $@_MPATHS := $(foreach PATH, $($@_SPATHS), $(dir $(PATH))))
 
-	for MODULE in $(MODULES); do \
-		FPATH=`find $(COREDIR)/ -type f -name "_$$MODULE*"`; \
-		FNAME=`basename "$$FPATH"`; \
-		mv $$FPATH "$(COREDIR)/$$MODULE/$$FNAME"; \
+	# Compile and build all core modules.
+	for MPATH in $($@_MPATHS); do \
+		MODULE=$$(basename $${MPATH%/}); \
+		echo "\n~ SWIG "; \
+		swig -python -c++ $$MPATH/$$MODULE.i; \
+		echo "\n~ build"; \
+		python $$MPATH/setup.py build_ext --build-lib=$$MPATH; \
 	done
 
 	@echo "\n~ Done building!"
-
-%.cxx:
-	@echo "~ Creating all .cxx wrappers.."
-	$(foreach MODULE, $(MODULES), \
-		swig -python -c++ $(COREDIR)/$(MODULE)/$(MODULE).i)
 
 clean:
 	@echo "~ Removing all built .cxx, .so and .py files.."

@@ -1,12 +1,11 @@
 /* File:       Protein.i
  * Author:     Okke van Eck
  *
- * Description:    SWIG file for a Protein object within the HP-model.
+ * Description:    SWIG interface file for a Protein object within the HP-model.
  */
 
 %module Protein
 %{
-#define SWIG_FILE_WITH_INIT
 #include "Protein.h"
 %}
 

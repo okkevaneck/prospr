@@ -9,6 +9,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <iostream>
+
 
 /* Initialize the stack and all_moves vector. */
 void initialize_vars(Protein* protein,
@@ -55,71 +57,73 @@ Protein depth_first(Protein protein) {
     if (max_length < 3)
         return protein;
 
+    std::cout << "First ifs worked!\n";
+
     /* Setup all_moves for initializing the stack. */
-    int move = 2;
-    std::vector<int> all_moves;
-    std::stack<std::vector<int>> dfs_stack;
-    initialize_vars(&protein, &dfs_stack, &all_moves, max_length, move);
-
-    /* Declare and set variables for the depth-first search. */
-    int best_score = 1;
-    std::vector<int> best_hash;
-    std::vector<int> remaining_moves;
-    int score;
-    bool placed_amino;
-
-    while (!dfs_stack.empty()) {
-        /* Check if the bottom of the tree is reached and store best folds.
-         * Continue with next amino acid otherwise.
-         */
-        if (protein.get_cur_len() == max_length) {
-            score = protein.get_score();
-
-            if (score < best_score) {
-                best_score = score;
-                best_hash = protein.hash_fold();
-            }
-
-            remaining_moves = all_moves;
-        } else {
-            remaining_moves = all_moves;
-            remaining_moves.erase(std::remove(remaining_moves.begin(),
-                                              remaining_moves.end(), -move),
-                                  remaining_moves.end());
-        }
-
-        /* Loop till an amino acid is placed or no new combinations are left. */
-        placed_amino = false;
-
-        while (!placed_amino) {
-            /* Try all remaining moves for the current amino acid. */
-            while (!placed_amino && !remaining_moves.empty()) {
-                move = remaining_moves.back();
-                remaining_moves.pop_back();
-
-                /* Place amino acid if valid and update stack accordingly. */
-                if (protein.is_valid(move)) {
-                    protein.place_amino(move);
-                    dfs_stack.push(remaining_moves);
-                    placed_amino = true;
-                }
-            }
-
-            /* Backtrack if the current amino acid has no moves left. */
-            while (!placed_amino && remaining_moves.empty() &&
-                   !dfs_stack.empty()) {
-                remaining_moves = dfs_stack.top();
-                dfs_stack.pop();
-                protein.remove_amino();
-            }
-
-            /* Check if there are no moves left. */
-            if (remaining_moves.empty())
-                break;
-        }
-    }
-
-    protein.set_hash(best_hash);
+//    int move = 2;
+//    std::vector<int> all_moves;
+//    std::stack<std::vector<int>> dfs_stack;
+//    initialize_vars(&protein, &dfs_stack, &all_moves, max_length, move);
+//
+//    /* Declare and set variables for the depth-first search. */
+//    int best_score = 1;
+//    std::vector<int> best_hash;
+//    std::vector<int> remaining_moves;
+//    int score;
+//    bool placed_amino;
+//
+//    while (!dfs_stack.empty()) {
+//        /* Check if the bottom of the tree is reached and store best folds.
+//         * Continue with next amino acid otherwise.
+//         */
+//        if (protein.get_cur_len() == max_length) {
+//            score = protein.get_score();
+//
+//            if (score < best_score) {
+//                best_score = score;
+//                best_hash = protein.hash_fold();
+//            }
+//
+//            remaining_moves = all_moves;
+//        } else {
+//            remaining_moves = all_moves;
+//            remaining_moves.erase(std::remove(remaining_moves.begin(),
+//                                              remaining_moves.end(), -move),
+//                                  remaining_moves.end());
+//        }
+//
+//        /* Loop till an amino acid is placed or no new combinations are left. */
+//        placed_amino = false;
+//
+//        while (!placed_amino) {
+//            /* Try all remaining moves for the current amino acid. */
+//            while (!placed_amino && !remaining_moves.empty()) {
+//                move = remaining_moves.back();
+//                remaining_moves.pop_back();
+//
+//                /* Place amino acid if valid and update stack accordingly. */
+//                if (protein.is_valid(move)) {
+//                    protein.place_amino(move);
+//                    dfs_stack.push(remaining_moves);
+//                    placed_amino = true;
+//                }
+//            }
+//
+//            /* Backtrack if the current amino acid has no moves left. */
+//            while (!placed_amino && remaining_moves.empty() &&
+//                   !dfs_stack.empty()) {
+//                remaining_moves = dfs_stack.top();
+//                dfs_stack.pop();
+//                protein.remove_amino();
+//            }
+//
+//            /* Check if there are no moves left. */
+//            if (remaining_moves.empty())
+//                break;
+//        }
+//    }
+//
+//    protein.set_hash(best_hash);
 
     return protein;
 }
