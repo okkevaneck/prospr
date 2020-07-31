@@ -24,20 +24,20 @@ all: build
 
 
 build:
-	@echo "\n~ Creating all .so and .py interfaces.."
+	@echo "~ Creating all .so and .py interfaces.."
 	$(eval $@_SPATHS := $(shell find $(COREDIR)/ -type f -name "*setup.py"))
 	$(eval $@_MPATHS := $(foreach PATH, $($@_SPATHS), $(dir $(PATH))))
 
-	# Compile and build all core modules.
-	for MPATH in $($@_MPATHS); do \
+	@for MPATH in $($@_MPATHS); do \
 		MODULE=$$(basename $${MPATH%/}); \
-		echo "\n~ SWIG "; \
+		echo "Building $$MODULE.."; \
+		echo "\tCompiling source with SWIG.."; \
 		swig -python -c++ $$MPATH/$$MODULE.i; \
-		echo "\n~ build"; \
-		python $$MPATH/setup.py build_ext --build-lib=$$MPATH; \
+		echo "\tConstructing module with setuptools.."; \
+		python $$MPATH/setup.py -q build_ext --build-lib=$$MPATH; \
 	done
 
-	@echo "\n~ Done building!"
+	@echo "~ Done building!"
 
 clean:
 	@echo "~ Removing all built .cxx, .so and .py files.."
