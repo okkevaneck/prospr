@@ -1,4 +1,12 @@
-# This .gitignore is divided into a Python and a C++ section.
+# This .gitignore is divided into a Project, Python and a C++ section.
+
+# ================
+# PROJECT IGNORES.
+# ================
+# Ignore test files.
+*test.py
+*test.cpp
+
 
 # ===============
 # PYTHON IGNORES.
@@ -133,9 +141,6 @@ dmypy.json
 
 # JetBrains editors.
 .idea/*
-
-# Ignore test.py files.
-test.py
 
 
 # ============
