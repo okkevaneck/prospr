@@ -12,9 +12,31 @@
 #include <iostream>
 
 
+void print_stack(std::stack<std::vector<int>> &dfs_stack) {
+    if (dfs_stack.empty()) {
+        std::cout << std::endl;
+        return;
+    }
+
+    std::vector<int> v = dfs_stack.top();
+    dfs_stack.pop();
+    print_stack(dfs_stack);
+    dfs_stack.push(v);
+
+    std::cout << "Vec of " << v.size() << ":\n";
+    for (auto i = 0; i < v.size(); i++) {
+        std::cout << v.at(i) << " ";
+    }
+
+    std::cout << "\n";
+}
+
+
+
 /* Initialize the stack and all_moves vector. */
 void initialize_vars(Protein* protein,
                      std::stack<std::vector<int>>* dfs_stack,
+                     std::stack<int>* prev_moves,
                      std::vector<int>* all_moves,
                      int max_length,
                      int first_move) {
@@ -28,10 +50,11 @@ void initialize_vars(Protein* protein,
         all_moves->push_back(i);
     }
 
-    /* Setup stack, limiting negative movement to prevent symmetry. */
+    /* Setup stacks, limiting negative movement to prevent symmetry. */
     for (int i = 0; i < max_length - 2; i++) {
         protein->place_amino(2);
         dfs_stack->push(*all_moves);
+        prev_moves->push(2);
     }
 
     /* Setup all_moves for further usage. */
@@ -63,7 +86,9 @@ Protein depth_first(Protein protein) {
     int move = 2;
     std::vector<int> all_moves;
     std::stack<std::vector<int>> dfs_stack;
-    initialize_vars(&protein, &dfs_stack, &all_moves, max_length, move);
+    std::stack<int> prev_moves;
+    initialize_vars(&protein, &dfs_stack, &prev_moves, &all_moves, max_length,
+                    move);
 
     std::cout << "Setup initials worked!\n";
 
@@ -86,13 +111,14 @@ Protein depth_first(Protein protein) {
 //    std::cout << "\n";
 //
 //    std::cout << "\nmax_length:" << max_length << "\n";
-//    std::cout << "\nmove:" << move << "\n";
+//    std::cout << "\nmove:" << move << "\n\n";
 
 
     /* Declare and set variables for the depth-first search. */
     int best_score = 1;
     std::vector<int> best_hash;
     std::vector<int> remaining_moves;
+    int prev_move;
     int score;
     bool placed_amino;
 
@@ -100,8 +126,9 @@ Protein depth_first(Protein protein) {
         /* Check if the bottom of the tree is reached and store best folds.
          * Continue with next amino acid otherwise.
          */
-         std::cout << protein.get_cur_len() << "\n";
+//        std::cout << "\n\nTop length: " << protein.get_cur_len() << "\n";
         if (protein.get_cur_len() == max_length) {
+//            std::cout << "Reached bottom\n";
             score = protein.get_score();
 
             if (score < best_score) {
@@ -111,6 +138,7 @@ Protein depth_first(Protein protein) {
 
             remaining_moves.clear();
         } else {
+//            std::cout << "Branching\n";
             remaining_moves = all_moves;
             remaining_moves.erase(std::remove(remaining_moves.begin(),
                                               remaining_moves.end(), -move),
@@ -125,11 +153,21 @@ Protein depth_first(Protein protein) {
             while (!placed_amino && !remaining_moves.empty()) {
                 move = remaining_moves.back();
                 remaining_moves.pop_back();
+//                std::cout << "Trying move: " << move << "\n";
 
                 /* Place amino acid if valid and update stack accordingly. */
                 if (protein.is_valid(move)) {
+//                    std::cout << "\tMove valid\n";
                     protein.place_amino(move);
+//                    std::cout << "Amino placed, remaining moves:\n";
+
+//                    for (auto i = 0; i < remaining_moves.size(); i++) {
+//                        std::cout << remaining_moves.at(i) << ' ';
+//                    }
+//                    std::cout << "\n";
+
                     dfs_stack.push(remaining_moves);
+                    prev_moves.push(move);
                     placed_amino = true;
                 }
             }
@@ -137,17 +175,39 @@ Protein depth_first(Protein protein) {
             /* Backtrack if the current amino acid has no moves left. */
             while (!placed_amino && remaining_moves.empty() &&
                    !dfs_stack.empty()) {
+//                std::cout << "Backtracking\nStack begin:";
+//                print_stack(dfs_stack);
+
+//                std::cout << "\nBefore top\n";
                 remaining_moves = dfs_stack.top();
+                prev_move = prev_moves.top();
+
+//                std::cout << "Remaining moves:\n";
+//                for (auto i = 0; i < remaining_moves.size(); i++) {
+//                    std::cout << remaining_moves.at(i) << ' ';
+//                }
+//                std::cout << "\n";
+
+//                std::cout << "Before pop\n";
                 dfs_stack.pop();
-                protein.remove_amino();
+                prev_moves.pop();
+
+//                std::cout << "Stack after pop";
+//                print_stack(dfs_stack);
+
+//                std::cout << "\nBefore remove\n";
+                protein.remove_amino(prev_move);
             }
 
             /* Check if there are no moves left. */
-            if (remaining_moves.empty())
+            if (remaining_moves.empty()) {
+//                std::cout << "No moves left\n";
                 break;
+            }
         }
     }
 
+    std::cout << "Before set_hash\n";
     protein.set_hash(best_hash);
 
     return protein;

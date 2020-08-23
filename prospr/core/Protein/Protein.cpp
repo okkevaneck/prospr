@@ -119,20 +119,16 @@ void Protein::place_amino(int move, bool track) {
     cur_len++;
 }
 
-void Protein::remove_amino() {
-    /* Remove last placed amino acid and set direction for new last placed amino
-     * acid to 0.
-     */
-     cur_len--;
+void Protein::remove_amino(int move) {
+    /* Change score according to removal of the last amino. */
+    cur_len--;
 
-    if (last_move != 0 && is_hydro(cur_len))
-            change_score(last_move, 1);
+    if (move != 0 && is_hydro(cur_len))
+        change_score(last_move, 1);
 
-    /* Remove the last placed amino acid and change direction of the amino
-     * before.
-     */
+    /* Remove the last amino. */
     space.erase(last_pos);
-    last_pos[abs(last_move) - 1] -= last_move / abs(last_move);
+    last_pos[abs(move) - 1] -= move / abs(move);
     space[last_pos][1] = 0;
 }
 
