@@ -1,13 +1,17 @@
-/* File:       depth_first.cpp
+/* File:       depth_first_bnb.cpp
  * Author:     Okke van Eck
  *
- * Description:    Source file for a depth-first search function.
+ * Description:    Source file for a depth-first branch-and-bound search
+ *                 function.
  */
 
-#include "depth_first.h"
+#include "depth_first_bnb.h"
 #include <stack>
 #include <vector>
 #include <algorithm>
+#include <math.h>
+
+#include <iostream>
 
 
 /* Initialize the stack and all_moves vector. */
@@ -45,8 +49,32 @@ void initialize_vars(Protein* protein,
     }
 }
 
+
+bool prune_branch(Protein protein, int max_length, int move, int best_score) {
+    protein.place_amino(move);
+
+    int cur_len = protein.get_cur_len();
+    int cur_score = protein.get_score();
+    std::vector<int> h_idxs = protein.get_h_idxs();
+
+    std::vector<int>::iterator next_h_idx = std::lower_bound(h_idxs.begin(),
+                                                              h_idxs.end(),
+                                                              cur_len - 1);
+    int h_left = h_idxs.size() - (next_h_idx - h_idxs.begin());
+    int free_places = pow(2, (protein.get_dim() - 1));
+    int branch_score = -free_places * h_left;
+
+    if (cur_len != max_length && h_idxs.back() == max_length - 1)
+        branch_score--;
+
+    protein.remove_amino(move);
+
+    return cur_score + branch_score >= best_score;
+}
+
+
 /* A depth-first search function for finding a minimum energy conformation. */
-Protein depth_first(Protein protein) {
+Protein depth_first_bnb(Protein protein) {
     int max_length = protein.get_sequence().length();
 
     /* The first two amino acids are fixed in order to prevent symmetry. */
@@ -103,7 +131,8 @@ Protein depth_first(Protein protein) {
                 remaining_moves.pop_back();
 
                 /* Place amino acid if valid and update stacks accordingly. */
-                if (protein.is_valid(move)) {
+                if (protein.is_valid(move) && !prune_branch(protein, max_length,
+                                                            move, best_score)) {
                     protein.place_amino(move);
                     dfs_stack.push(remaining_moves);
                     prev_moves.push(move);

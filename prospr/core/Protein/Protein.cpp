@@ -62,6 +62,10 @@ int Protein::get_changes() {
     return changes;
 }
 
+std::vector<int> Protein::get_h_idxs() {
+    return h_idxs;
+}
+
 bool Protein::is_hydro(int index) {
     return find(h_idxs.begin(), h_idxs.end(), index) != h_idxs.end();
 }

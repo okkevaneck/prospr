@@ -5,7 +5,6 @@
 # ================
 # Ignore test files.
 *test.py
-*test.cpp
 
 
 # ===============

@@ -1,7 +1,7 @@
 /* File:       depth_first.h
  * Author:     Okke van Eck
  *
- * Description:    Header file for a depth_first search function.
+ * Description:    Header file for a depth-first search function.
  */
 
 #include "../../Protein/Protein.h"

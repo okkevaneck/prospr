@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-File:           build.py
+File:           setup.py
 Author:         Okke van Eck
 Description:    This file compiles the depth_first C++ files into a Python
                     modules.

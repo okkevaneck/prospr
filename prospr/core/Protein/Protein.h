@@ -19,6 +19,7 @@ class Protein {
         std::vector<int> get_amino(std::vector<int> position);
         int get_score();
         int get_changes();
+        std::vector<int> get_h_idxs();
         bool is_hydro(int index);
         void reset();
         void reset_conformation();

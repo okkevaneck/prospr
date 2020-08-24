@@ -1,7 +1,7 @@
 /* File:       depth_first.i
  * Author:     Okke van Eck
  *
- * Description:    SWIG interface file for a depth_first search function.
+ * Description:    SWIG interface file for a depth-first search function.
  */
 
 %module depth_first
