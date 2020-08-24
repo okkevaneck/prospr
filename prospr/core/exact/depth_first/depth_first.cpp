@@ -9,6 +9,43 @@
 #include <vector>
 #include <algorithm>
 
+#include <iostream>
+
+
+
+void print_dfs_stack(std::stack<std::vector<int>> &dfs_stack) {
+    if (dfs_stack.empty()) {
+        std::cout << std::endl;
+        return;
+    }
+
+    std::vector<int> v = dfs_stack.top();
+    dfs_stack.pop();
+    print_dfs_stack(dfs_stack);
+    dfs_stack.push(v);
+
+    for (auto i = 0; i < v.size(); i++) {
+        std::cout << v.at(i) << " ";
+    }
+
+    std::cout << "\n";
+}
+
+void print_int_stack(std::stack<int> &prev_moves) {
+    if (prev_moves.empty()) {
+        std::cout << std::endl;
+        return;
+    }
+
+    int v = prev_moves.top();
+    prev_moves.pop();
+    print_int_stack(prev_moves);
+    prev_moves.push(v);
+
+    std::cout << v << " ";
+}
+
+
 
 /* Initialize the stack and all_moves vector. */
 void initialize_vars(Protein* protein,
@@ -65,6 +102,25 @@ Protein depth_first(Protein protein) {
     initialize_vars(&protein, &dfs_stack, &prev_moves, &all_moves, max_length,
                     move);
 
+
+//    std::cout << "Initials:\n";
+//
+//    std::cout << "\ndfs_stack:";
+//    print_dfs_stack(dfs_stack);
+//
+//    std::cout << "\nprev_moves:";
+//    print_int_stack(prev_moves);
+//
+//    std::cout << "\n\nall_moves:\n";
+//    for (auto i = 0; i < all_moves.size(); i++) {
+//        std::cout << all_moves.at(i) << ' ';
+//    }
+//    std::cout << "\n\n";
+//
+//    std::cout << "max_length:" << max_length << "\n";
+//    std::cout << "move:" << move << "\n\n";
+
+
     /* Declare and set variables for the depth-first search. */
     int best_score = 1;
     std::vector<int> best_hash;
@@ -79,6 +135,8 @@ Protein depth_first(Protein protein) {
          */
         if (protein.get_cur_len() == max_length) {
             score = protein.get_score();
+
+//            std::cout << "\nCurrent score: " << score << "\n";
 
             if (score < best_score) {
                 best_score = score;
@@ -104,6 +162,7 @@ Protein depth_first(Protein protein) {
 
                 /* Place amino acid if valid and update stacks accordingly. */
                 if (protein.is_valid(move)) {
+//                    std::cout << "Move: " << move << "\n";
                     protein.place_amino(move);
                     dfs_stack.push(remaining_moves);
                     prev_moves.push(move);
@@ -119,6 +178,7 @@ Protein depth_first(Protein protein) {
                 dfs_stack.pop();
                 prev_moves.pop();
                 protein.remove_amino(prev_move);
+//                std::cout << "Undo move: " << prev_move << "\n";
             }
 
             /* Check if there are no moves left. */

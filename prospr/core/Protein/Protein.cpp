@@ -124,7 +124,7 @@ void Protein::remove_amino(int move) {
     cur_len--;
 
     if (move != 0 && is_hydro(cur_len))
-        change_score(last_move, 1);
+        change_score(move, 1);
 
     /* Remove the last amino. */
     space.erase(last_pos);
@@ -147,7 +147,7 @@ void Protein::change_score(int move, int value) {
         cur_pos = last_pos;
         cur_pos[abs(move) - 1] += move / abs(move);
 
-        if (space.count(cur_pos) > 0 && is_hydro(cur_len))
+        if (space.count(cur_pos) > 0 && is_hydro(space[cur_pos][0]))
             score += value;
     }
 }
