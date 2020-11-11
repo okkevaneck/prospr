@@ -3,15 +3,14 @@
 # Author:     Okke van Eck
 #
 # Description:		This bash file supports the commands:
-#						- "Deploy"	for updating the live version.
-#						- "Build"	for building the Python interfaces for the
+#                       - "globals" for printing the used global variables.
+#						- "build"	for building the Python interfaces for the
 #										C++ code.
-#						- "Clean"	for removing the Python interfaces for the
+#						- "clean"	for removing the Python interfaces for the
 #										C++ code as well as the prerequisite
 # 										.cxx files. Also removes all compiled
 #										Python caches.
-# 					Add module names to the MODULES list for automatic
-#					compilation.
+#						- "deploy"	for updating the live version on PyPI.
 
 set -e
 
@@ -32,14 +31,14 @@ case "$1" in
         ;;
     "build")
         echo "~ Creating all .so and .py interfaces.."
-        SPATHS=$(find ${COREDIR}/ -type f -name "*setup.py")
-        MPATHS=$(foreach PATH, ${SPATHS}, "$(dir ${PATH})")
+        SETUP_PATHS=$(find ${COREDIR}/ -type f -name "*setup.py")
 
-        echo ${SPATHS}
-        echo ${MPATHS}
-        exit
+        declare -a MODULE_PATHS=()
+        for SPATH in ${SETUP_PATHS}; do
+            MODULE_PATHS+=( "$(dirname $SPATH)" );
+        done
 
-        for MPATH in ${MPATHS}; do
+        for MPATH in "${MODULE_PATHS[@]}"; do
             MODULE=$(basename ${MPATH%/})
             echo "Building ${MODULE}.."
             echo -e "\tCompiling source with SWIG.."
