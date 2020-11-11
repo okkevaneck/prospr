@@ -6,6 +6,11 @@
 # Ignore test files.
 *test.py
 
+# Ignore core compiled Python files.
+prospr/core/**/*.py
+!prospr/core/**/__init__.py
+!prospr/core/**/setup.py
+
 
 # ===============
 # PYTHON IGNORES.
