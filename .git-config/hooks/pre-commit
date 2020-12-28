@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# TODO: Run all tests and exit if test failed.
+
+# Compress all core .cpp files into archive.
+bash manage.sh zip_core
