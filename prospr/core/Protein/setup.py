@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """
 File:           build.py
-Author:         Okke van Eck
 Description:    This file compiles the Protein C++ files into a Python modules.
 """
 
 from setuptools import setup, Extension
 import os
 
-path = os.path.dirname(__file__)
 
+path = os.path.dirname(__file__)
 
 Protein_module = Extension("_Protein",
                            sources=[f"{path}/Protein_wrap.cxx",

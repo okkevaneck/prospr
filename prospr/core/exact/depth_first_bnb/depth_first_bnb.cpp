@@ -1,8 +1,6 @@
-/* File:       depth_first_bnb.cpp
- * Author:     Okke van Eck
- *
- * Description:    Source file for a depth-first branch-and-bound search
- *                 function.
+/* File:            depth_first_bnb.cpp
+ * Description:     Source file for a depth-first branch-and-bound search
+ *                      function.
  */
 
 #include "depth_first_bnb.h"

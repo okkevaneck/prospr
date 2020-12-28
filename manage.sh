@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # File:       manage.sh
-# Author:     Okke van Eck
-#
-# Description:		This bash file supports the commands:
-#                       - "globals" for printing the used global variables.
-#						- "build"	for building the Python interfaces for the
-#										C++ code.
-#						- "clean"	for removing the Python interfaces for the
-#										C++ code as well as the prerequisite
-# 										.cxx files. Also removes all compiled
-#										Python caches.
-#						- "deploy"	for updating the live version on PyPI.
+# Description:      This bash file supports the commands:
+#                       - "init"        for installing the development
+#                                           requirements via pip.
+#                       - "echo_debug"  for printing the used global variables.
+#						- "build"	    for building the Python interfaces for
+#										    the C++ code.
+#						- "clean"	    for removing the Python interfaces for
+#										    the C++ code, the prerequisite .cxx
+#										    files, and all compiled Python
+#										    caches.
+#						- "deploy"	    for updating the live version on PyPI.
 
 set -e
 
@@ -22,7 +22,10 @@ PY_FILES=$(find ${COREDIR}/ -type f -name "*.py" ! -name "__init__.py" \
 PYCACHES=$(find prospr/ -type d -name "__pycache__")
 
 case "$1" in
-    "globals")
+    "init")
+        pip install -r requirements.txt
+    ;;
+    "echo_debug")
         echo -e "Core dir:\n${COREDIR}\n"
         echo -e "CXX files:\n${CXX_FILES}\n"
         echo -e "SO files:\n${SO_FILES}\n"

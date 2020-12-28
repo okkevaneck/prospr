@@ -1,7 +1,5 @@
-/* File:       Protein.cpp
- * Author:     Okke van Eck
- *
- * Description:    Source file for a Protein object within the HP-model.
+/* File:            Protein.cpp
+ * Description:     Source file for a Protein object within the HP-model.
  */
 
 #include "Protein.h"

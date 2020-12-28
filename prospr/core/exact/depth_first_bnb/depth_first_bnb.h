@@ -1,8 +1,6 @@
-/* File:       depth_first_bnb.h
- * Author:     Okke van Eck
- *
- * Description:    Header file for a depth-first branch-and-bound search
- *                 function.
+/* File:            depth_first_bnb.h
+ * Description:     Header file for a depth-first branch-and-bound search
+ *                      function.
  */
 
 #include "../../Protein/Protein.h"

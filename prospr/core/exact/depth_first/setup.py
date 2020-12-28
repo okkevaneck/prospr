@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 File:           setup.py
-Author:         Okke van Eck
 Description:    This file compiles the depth_first C++ files into a Python
                     modules.
 """
@@ -9,8 +8,8 @@ Description:    This file compiles the depth_first C++ files into a Python
 from setuptools import setup, Extension
 import os
 
-path = os.path.dirname(__file__)
 
+path = os.path.dirname(__file__)
 
 depth_first_module = Extension("_depth_first",
                                sources=[f"{path}/../../Protein/Protein_wrap.cxx",

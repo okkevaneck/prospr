@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-File:       depth_first.py
-Author:     Okke van Eck
-
+File:           depth_first.py
 Description:    This file defines the depth-first search algorithm for folding a
                 Protein object.
 """

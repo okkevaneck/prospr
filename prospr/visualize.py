@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-File:       visualize.py
-Author:     Okke van Eck
-
+File:           visualize.py
 Description:    This file contains functions for visualizing a Protein instance.
 """
 

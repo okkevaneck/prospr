@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 File:           setup.py
-Author:         Okke van Eck
 Description:    This file compiles the depth_first_bnb C++ files into a Python
                     modules.
 """
@@ -9,8 +8,8 @@ Description:    This file compiles the depth_first_bnb C++ files into a Python
 from setuptools import setup, Extension
 import os
 
-path = os.path.dirname(__file__)
 
+path = os.path.dirname(__file__)
 
 depth_first_bnb_module = Extension("_depth_first_bnb",
                                    sources=[f"{path}/../../Protein/Protein_wrap.cxx",

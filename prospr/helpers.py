@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-File:       helpers.py
-Author:     Okke van Eck
-
+File:           helpers.py
 Description:    This file contains helper functions for a Protein instance.
 """
 

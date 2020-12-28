@@ -1,7 +1,5 @@
-/* File:       Protein.h
- * Author:     Okke van Eck
- *
- * Description:    Header file for a Protein object within the HP-model.
+/* File:            Protein.h
+ * Description:     Header file for a Protein object within the HP-model.
  */
 
 #include <string.h>

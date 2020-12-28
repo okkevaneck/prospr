@@ -1,8 +1,6 @@
-/* File:       depth_first_bnb.i
- * Author:     Okke van Eck
- *
- * Description:    SWIG interface file for a depth-first branch-and-bound search
- *                 function.
+/* File:            depth_first_bnb.i
+ * Description:     SWIG interface file for a depth-first branch-and-bound
+ *                      search function.
  */
 
 %module depth_first_bnb

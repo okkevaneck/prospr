@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-File:       setup.py
-Author:     Okke van Eck
-
+File:           setup.py
 Description:    This file contains the setup required for distributing the
                 package on PyPi.org.
 """
