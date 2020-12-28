@@ -27,7 +27,7 @@ setuptools.setup(
         "numpy",
         "pandas"
     ],
-    package_data={"": ["*.csv"]},
+    package_data={"prospr": ["datasets/**/.*"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",

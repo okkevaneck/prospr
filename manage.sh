@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# File:       manage.sh
+# File:             manage.sh
 # Description:      This bash file supports the commands:
 #                       - "init"        for setting up a developing environment.
 #                       - "echo_debug"  for printing the used global variables.
