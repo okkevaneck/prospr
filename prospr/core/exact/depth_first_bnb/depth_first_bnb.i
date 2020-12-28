@@ -15,5 +15,5 @@ namespace std {
     %template(IntVector) vector<int>;
 }
 
-%include "../../Protein/Protein.h"
+%include "../../protein/protein.h"
 %include "depth_first_bnb.h"

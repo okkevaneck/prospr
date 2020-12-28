@@ -10,16 +10,16 @@ import os
 
 path = os.path.dirname(__file__)
 
-Protein_module = Extension("_Protein",
-                           sources=[f"{path}/Protein_wrap.cxx",
-                                    f"{path}/Protein.cpp"],
+protein_module = Extension("_protein",
+                           sources=[f"{path}/protein_wrap.cxx",
+                                    f"{path}/protein.cpp"],
                            )
 
-setup(name="Protein",
+setup(name="protein",
       version="0.1",
       author="okkevaneck",
       description="C++ core compiled into a Python module.",
-      ext_modules=[Protein_module],
-      py_modules=["Protein"],
+      ext_modules=[protein_module],
+      py_modules=["protein"],
       license="LICENSE",
       )

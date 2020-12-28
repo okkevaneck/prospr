@@ -1,5 +1,5 @@
-/* File:            Protein.h
- * Description:     Header file for a Protein object within the HP-model.
+/* File:            protein.h
+ * Description:     Header file for a protein object within the HP-model.
  */
 
 #include <string.h>

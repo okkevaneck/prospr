@@ -12,8 +12,8 @@ import os
 path = os.path.dirname(__file__)
 
 depth_first_bnb_module = Extension("_depth_first_bnb",
-                                   sources=[f"{path}/../../Protein/Protein_wrap.cxx",
-                                            f"{path}/../../Protein/Protein.cpp",
+                                   sources=[f"{path}/../../protein/protein_wrap.cxx",
+                                            f"{path}/../../protein/protein.cpp",
                                             f"{path}/depth_first_bnb_wrap.cxx",
                                             f"{path}/depth_first_bnb.cpp"],
                                    )

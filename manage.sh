@@ -50,13 +50,25 @@ case "$1" in
             MODULE_PATHS+=( "$(dirname $SPATH)" );
         done
 
-        for MPATH in "${MODULE_PATHS[@]}"; do
-            MODULE=$(basename ${MPATH%/})
+        # Get index of protein path and set it as first string in array.
+        for i in "${!MODULE_PATHS[@]}"; do
+           if [[ $(basename "${MODULE_PATHS[$i]}") = "protein" ]]; then
+               P_IDX=${i};
+               break
+           fi
+        done
+
+        MODULE_PATHS=( "${MODULE_PATHS[${P_IDX}]}" \
+            "${MODULE_PATHS[@]:0:${P_IDX}}" "${MODULE_PATHS[@]:${P_IDX}+1}" )
+
+        # Loop over modules and compile them. Skip any NULL values.
+        for MPATH in "${MODULE_PATHS[@]/}"; do
+            MODULE=$(basename "${MPATH%/}")
             echo "Building ${MODULE}.."
             echo -e "\tCompiling source with SWIG.."
-            swig -python -c++ ${MPATH}/${MODULE}.i
+            swig -python -c++ "${MPATH}/${MODULE}.i"
             echo -e "\tConstructing module with setuptools.."
-            python ${MPATH}/setup.py -q build_ext --build-lib=${MPATH}
+            python "${MPATH}/setup.py" -q build_ext --build-lib="${MPATH}"
         done
 
         echo "~ Done building!"

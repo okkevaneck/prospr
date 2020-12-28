@@ -1,8 +1,8 @@
-/* File:            Protein.cpp
- * Description:     Source file for a Protein object within the HP-model.
+/* File:            protein.cpp
+ * Description:     Source file for a protein object within the HP-model.
  */
 
-#include "Protein.h"
+#include "protein.h"
 #include <stdlib.h>
 #include <algorithm>
 
