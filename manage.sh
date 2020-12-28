@@ -71,13 +71,13 @@ case "$1" in
         ;;
     # Update the live version on PyPI.
     "deploy")
-        @echo "~ Removing old files.."
+        echo "~ Removing old files.."
         rm -rf build dist prospr.egg-info
-        @echo -e "\n~ Creating new package.."
+        echo -e "\n~ Creating new package.."
         python3 setup.py sdist bdist_wheel
-        @echo -e "\n~ Uploading package.."
+        echo -e "\n~ Uploading package.."
         twine upload dist/*
-        @echo -e "\n~ Done deploying!"
+        echo -e "\n~ Done deploying!"
         ;;
     *)
         echo "No command detected from first argument.."

@@ -2,8 +2,8 @@
 ## The Protein Structure Prediction Toolbox
 **Author:** Okke van Eck  
 **Last update:** 24 June 2020  
-**Live version:** 0.1a2  
-**Develop version:** 0.1a3    
+**Live version:** 0.1a4  
+**Develop version:** 0.1a4    
 
 This project is an universal toolbox for protein structure prediction within the HP-model.
 It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.
