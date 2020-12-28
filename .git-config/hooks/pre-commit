@@ -4,3 +4,4 @@
 
 # Compress all core .cpp files into archive.
 bash manage.sh zip_core
+git add prospr_core.zip
