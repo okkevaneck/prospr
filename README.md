@@ -1,8 +1,7 @@
 # ProSPr
 ## The Protein Structure Prediction Toolbox
 **Author:** Okke van Eck  
-**Live version:** 0.1a6  
-**Develop version:** 0.1a6  
+**Version:** 0.1a7
 
 This project is an universal toolbox for protein structure prediction within the HP-model.
 It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.

@@ -13,13 +13,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="prospr",
-    version="0.1a6",
+    version="0.1a10",
     author="okkevaneck",
     description="A toolbox for protein folding with Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/okkevaneck/prospr",
-    license="LICENSE",
+    license_file="LICENSE",
     packages=setuptools.find_packages(),
     install_requires=[
         "matplotlib",
@@ -27,7 +27,7 @@ setuptools.setup(
         "numpy",
         "pandas"
     ],
-    package_data={"prospr": ["datasets/**/.*"]},
+    package_data={"": ["*.so"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",
