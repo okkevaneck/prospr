@@ -5,7 +5,7 @@
 
 %module protein
 %{
-#include "protein.h"
+#include "protein.hpp"
 %}
 
 %include "std_string.i"
@@ -16,4 +16,4 @@ namespace std {
     %template(IntVector) vector<int>;
 }
 
-%include "protein.h"
+%include "protein.hpp"

@@ -23,6 +23,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/okkevaneck/prospr",
     license_file="LICENSE",
+    license="LGPLv3",
     platforms=["any"],
     python_requires=">=3.6",
     ext_modules=[

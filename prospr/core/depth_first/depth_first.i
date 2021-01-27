@@ -4,7 +4,7 @@
 
 %module depth_first
 %{
-#include "depth_first.h"
+#include "depth_first.hpp"
 %}
 
 %include "std_vector.i"
@@ -14,5 +14,5 @@ namespace std {
     %template(IntVector) vector<int>;
 }
 
-%include "../../protein/protein.h"
-%include "depth_first.h"
+%include "../protein/protein.hpp"
+%include "depth_first.hpp"

@@ -5,7 +5,7 @@
 
 %module depth_first_bnb
 %{
-#include "depth_first_bnb.h"
+#include "depth_first_bnb.hpp"
 %}
 
 %include "std_vector.i"
@@ -15,5 +15,5 @@ namespace std {
     %template(IntVector) vector<int>;
 }
 
-%include "../../protein/protein.h"
-%include "depth_first_bnb.h"
+%include "../protein/protein.hpp"
+%include "depth_first_bnb.hpp"

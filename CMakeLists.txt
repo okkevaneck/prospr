@@ -11,30 +11,24 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Find Python3
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
-# Set list with names of the libraries to compile.
-set(libs "protein" "depth_first" "depth_first_bnb")
-
-# Set list with paths to binding files.
-set(swig_bindings "prospr/core/protein/protein.i"
-    "prospr/core/depth_first/depth_first.i"
-    "prospr/core/depth_first_bnb/depth_first_bnb.i")
+# Get source, header and binding files.
+file(GLOB LIB_SOURCES prospr/core/**/*.cpp)
+file(GLOB LIB_HEADERS prospr/core/**/*.hpp)
+file(GLOB LIB_BINDINGS prospr/core/**/*.i)
 
 
-# =================
-# Compile libraries
-# =================
-foreach (lib IN libs)
-    add_library(${lib}
-        prospr/core/${lib}/${lib}.hpp
-        prospr/core/${lib}/${lib}.cpp)
+# ==============
+# Compile prospr
+# ==============
 
-    set_target_properties(protein PROPERTIES
-        PUBLIC_HEADER prospr/core/${lib}/${lib}.hpp)
+add_library(prospr ${LIB_SOURCES} ${LIB_HEADERS})
 
-    target_include_directories(protein PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-endforeach()
+# set_target_properties(${lib} PROPERTIES
+#     PUBLIC_HEADER prospr/core/${lib}/${lib}.hpp)
+
+target_include_directories(prospr PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 
 # =============
@@ -49,7 +43,7 @@ set(UseSWIG_MODULE_VERSION 2)
 include(${SWIG_USE_FILE})
 
 set(swig_name "bindings")
-set_source_files_properties(${swig_bindings} PROPERTIES
+set_source_files_properties(${LIB_BINDINGS} PROPERTIES
     CPLUSPLUS ON
     SWIG_MODULE_NAME "bindings")
 
@@ -58,7 +52,7 @@ swig_add_library(${swig_name}
     LANGUAGE python
     OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/prospr
     OUTFILE_DIR ${CMAKE_CURRENT_BINARY_DIR}
-    SOURCES ${swig_bindings})
+    SOURCES ${LIB_BINDINGS})
 
 target_link_libraries(${swig_name}
     PRIVATE prospr Python3::Python)
