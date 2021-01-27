@@ -37,7 +37,7 @@ case "$1" in
     "zip_core")
         echo "Compressing all C++ files into 'prospr_core.zip'.."
         cd prospr/core
-        zip -Rq prospr_core "*/*.cpp"
+        zip -Rq prospr_core "*/*.cpp" "*/*.h"
         mv prospr_core.zip ../../prospr_core.zip
     ;;
     # Build all python interfaces for the core .cpp files.

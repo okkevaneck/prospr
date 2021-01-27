@@ -1,3 +1,4 @@
+cmake_build_extension>=0.1
 matplotlib==3.3.0
 numpy==1.19.0
 pandas==1.0.5

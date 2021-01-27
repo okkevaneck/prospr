@@ -2,7 +2,7 @@
  * Description:     Source file for a protein object within the HP-model.
  */
 
-#include "protein.h"
+#include "protein.hpp"
 #include <stdlib.h>
 #include <algorithm>
 

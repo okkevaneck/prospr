@@ -4,7 +4,7 @@
  * Description:    Source file for a depth-first search function.
  */
 
-#include "depth_first.h"
+#include "depth_first.hpp"
 #include <stack>
 #include <vector>
 #include <algorithm>

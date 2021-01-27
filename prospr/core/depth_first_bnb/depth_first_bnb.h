@@ -3,7 +3,7 @@
  *                      function.
  */
 
-#include "../../protein/protein.h"
+#include "../protein/protein.hpp"
 
 
 /* A depth-first branch-and-bound search function for finding a minimum energy

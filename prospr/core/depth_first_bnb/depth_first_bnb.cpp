@@ -3,7 +3,7 @@
  *                      function.
  */
 
-#include "depth_first_bnb.h"
+#include "depth_first_bnb.hpp"
 #include <stack>
 #include <vector>
 #include <algorithm>
