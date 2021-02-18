@@ -23,8 +23,9 @@ class Protein {
         void reset_conformation();
         bool is_valid(int move);
         void place_amino(int move, bool track=true);
+        // TODO: Change function to use the last_move attribute.
         void remove_amino(int move);
-        void change_score(int move, int value);
+        void change_score(int move, int weight);
         std::vector<int> hash_fold();
         void set_hash(std::vector<int> fold_hash, bool track=false);
 

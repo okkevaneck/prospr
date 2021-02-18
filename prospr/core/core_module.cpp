@@ -6,7 +6,7 @@
 #include <pybind11/pybind11.h>
 namespace py = pybind11;
 
-#include "src/protein.hpp"
+#include "src/protein.cpp"
 
 
 PYBIND11_MODULE(prospr_core, m) {
@@ -22,16 +22,29 @@ PYBIND11_MODULE(prospr_core, m) {
         .def_property_readonly("score", &Protein::get_score)
         .def_property_readonly("changes", &Protein::get_changes)
 
-        .def("get_amino", &Protein::get_amino)
-        .def("is_hydro", &Protein::is_hydro)
-        .def("reset", &Protein::reset)
-        .def("reset_conformation", &Protein::reset_conformation)
-        .def("is_valid", &Protein::is_valid)
-        .def("place_amino", &Protein::place_amino) // TODO: Check default args, maybe import extra pybind headers? Execution causes segfault.
-        .def("remove_amino", &Protein::remove_amino)
-        .def("change_score", &Protein::change_score)
-        .def("hash_fold", &Protein::hash_fold)
-        .def("set_hash", &Protein::set_hash)
+        .def("get_amino", &Protein::get_amino,
+            "Get amino index and next direction from amino at given position",
+            py::arg("position"))
+        .def("is_hydro", &Protein::is_hydro,
+            "Check if the amino is an H at given position", py::arg("index"))
+        .def("reset", &Protein::reset, "Reset the whole protein")
+        .def("reset_conformation", &Protein::reset_conformation,
+            "Reset only the conformation of the protein, not the statistics")
+        .def("is_valid", &Protein::is_valid, "Check if a given move is valid",
+            py::arg("move"))
+        .def("place_amino", &Protein::place_amino,
+            "Place a protein in a given direction", py::arg("move"),
+            py::arg("track")=true) // TODO: Check default args, maybe import extra pybind headers? Execution causes segfault.
+        .def("remove_amino", &Protein::remove_amino,
+            "Remove the last placed amino")
+        .def("change_score", &Protein::change_score,
+            "Change the score attribute according to the given move and weight",
+            py::arg("move"), py::arg("value"))
+        .def("hash_fold", &Protein::hash_fold,
+            "Process the current conformation into a sequence of moves")
+        .def("set_hash", &Protein::set_hash,
+            "Set the conformation to the given sequence of moves",
+            py::arg("fold_hash"), py::arg("track")=false)
     ;
     // NOTE: Did not add space or last_move as properties.
 }
