@@ -4,7 +4,7 @@
  * Description:    Header file for a depth-first search function.
  */
 
-#include "../protein/protein.hpp"
+#include "protein.hpp"
 
 
 /* A depth-first search function for finding a minimum energy conformation. */
