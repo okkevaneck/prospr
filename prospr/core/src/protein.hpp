@@ -13,6 +13,8 @@ class Protein {
         std::string get_sequence();
         int get_dim();
         int get_cur_len();
+        std::map<std::vector<int>, std::vector<int>> get_space();
+        int get_last_move();
         std::vector<int> get_last_pos();
         std::vector<int> get_amino(std::vector<int> position);
         int get_score();

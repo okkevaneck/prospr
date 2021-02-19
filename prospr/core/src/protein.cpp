@@ -9,7 +9,7 @@
 
 Protein::Protein(std::string sequence, int dim) {
     this->sequence = sequence;
-    space = {};
+    space = {}; // TODO: Init Protein with first amino set at origin.
     cur_len = 0;
     this->dim = dim;
     last_move = 0;
@@ -36,6 +36,14 @@ int Protein::get_dim() {
 
 int Protein::get_cur_len() {
     return cur_len;
+}
+
+std::map<std::vector<int>, std::vector<int>> Protein::get_space() {
+    return space;
+}
+
+int Protein::get_last_move() {
+    return last_move;
 }
 
 std::vector<int> Protein::get_last_pos() {
