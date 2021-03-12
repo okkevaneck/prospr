@@ -8,29 +8,19 @@
 namespace py = pybind11;
 
 #include "src/protein.cpp"
-#include <tuple>
+#include "src/depth_first.cpp"
+#include "src/depth_first_bnb.cpp"
 
 
 PYBIND11_MODULE(prospr_core, m) {
     m.doc() = "Prospr core written in C++.";
+
+    /* Protein class definition. */
     py::class_<Protein>(m, "Protein")
         .def(py::init<const std::string, int &>(), "Protein constructor",
                 py::arg("sequence"), py::arg("dim")=2)
         .def_property_readonly("sequence", &Protein::get_sequence)
         .def_property_readonly("h_idxs", &Protein::get_h_idxs)
-        /* Custom getter that parses vectors to tuples for Python printing. */
-        .def_property_readonly("space", [](Protein &p) {
-            std::map<std::vector<int>, std::vector<int>> space = p.get_space();
-            std::map<std::tuple<auto>, std::vector<int>> retval = {};
-
-            for (auto item : space) {
-                // Key: item.first, value: item.second
-                // TODO: Create tuples with length of the vector as the key.
-                retval[std::make_tuple(item.first)] = item.second;
-            }
-
-            return retval;
-        })
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
         .def_property_readonly("last_move", &Protein::get_last_move)
@@ -50,7 +40,7 @@ PYBIND11_MODULE(prospr_core, m) {
             py::arg("move"))
         .def("place_amino", &Protein::place_amino,
             "Place a protein in a given direction", py::arg("move"),
-            py::arg("track")=true) // TODO: Segfault due to not knowing var space.
+            py::arg("track")=true)
         .def("remove_amino", &Protein::remove_amino,
             "Remove the last placed amino")
         .def("change_score", &Protein::change_score,
@@ -62,5 +52,14 @@ PYBIND11_MODULE(prospr_core, m) {
             "Set the conformation to the given sequence of moves",
             py::arg("fold_hash"), py::arg("track")=false)
     ;
-    // NOTE: Did not add space or last_move as properties.
+
+    /* Depth-first search function definition. */
+    m.def("depth_first", &dfs::depth_first,
+        "Finds the optimal conformation via depth-first search",
+        py::arg("protein"));
+
+    /* Depth-first branch-and-bound search function definition. */
+    m.def("depth_first_bnb", &dfs_bnb::depth_first_bnb,
+        "Finds the optimal conformation via depth-first branch-and-bound search",
+        py::arg("protein"));
 }

@@ -2,6 +2,8 @@
  * Description:     Header file for a depth-first branch-and-bound search
  *                      function.
  */
+#ifndef DEPTH_FIRST_BNB_H
+#define DEPTH_FIRST_BNB_H
 
 #include "protein.hpp"
 
@@ -10,3 +12,5 @@
  * conformation.
  */
 Protein depth_first_bnb(Protein protein);
+
+#endif

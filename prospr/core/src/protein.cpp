@@ -38,10 +38,6 @@ int Protein::get_cur_len() {
     return cur_len;
 }
 
-std::map<std::vector<int>, std::vector<int>> Protein::get_space() {
-    return space;
-}
-
 int Protein::get_last_move() {
     return last_move;
 }
