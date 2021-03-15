@@ -1,6 +1,8 @@
 /* File:            protein.h
  * Description:     Header file for a protein object within the HP-model.
  */
+#ifndef PROTEIN_H
+#define PROTEIN_H
 
 #include <string.h>
 #include <map>
@@ -13,6 +15,7 @@ class Protein {
         std::string get_sequence();
         int get_dim();
         int get_cur_len();
+        int get_last_move();
         std::vector<int> get_last_pos();
         std::vector<int> get_amino(std::vector<int> position);
         int get_score();
@@ -23,8 +26,9 @@ class Protein {
         void reset_conformation();
         bool is_valid(int move);
         void place_amino(int move, bool track=true);
+        // TODO: Change function to use the last_move attribute.
         void remove_amino(int move);
-        void change_score(int move, int value);
+        void change_score(int move, int weight);
         std::vector<int> hash_fold();
         void set_hash(std::vector<int> fold_hash, bool track=false);
 
@@ -39,3 +43,5 @@ class Protein {
         int score;
         int changes;
 };
+
+#endif

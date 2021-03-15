@@ -2,14 +2,14 @@
  * Description:     Source file for a protein object within the HP-model.
  */
 
-#include "protein.h"
+#include "protein.hpp"
 #include <stdlib.h>
 #include <algorithm>
 
 
 Protein::Protein(std::string sequence, int dim) {
     this->sequence = sequence;
-    space = {};
+    space = {}; // TODO: Init Protein with first amino set at origin.
     cur_len = 0;
     this->dim = dim;
     last_move = 0;
@@ -36,6 +36,10 @@ int Protein::get_dim() {
 
 int Protein::get_cur_len() {
     return cur_len;
+}
+
+int Protein::get_last_move() {
+    return last_move;
 }
 
 std::vector<int> Protein::get_last_pos() {
@@ -121,6 +125,7 @@ void Protein::place_amino(int move, bool track) {
     cur_len++;
 }
 
+// TODO: Change function to use the last_move attribute.
 void Protein::remove_amino(int move) {
     /* Change score according to removal of the last amino. */
     cur_len--;
@@ -134,7 +139,7 @@ void Protein::remove_amino(int move) {
     space[last_pos][1] = 0;
 }
 
-void Protein::change_score(int move, int value) {
+void Protein::change_score(int move, int weight) {
     /* Change score according to the addition or removal of the given move. */
     std::vector<int> moves;
 
@@ -150,7 +155,7 @@ void Protein::change_score(int move, int value) {
         cur_pos[abs(move) - 1] += move / abs(move);
 
         if (space.count(cur_pos) > 0 && is_hydro(space[cur_pos][0]))
-            score += value;
+            score += weight;
     }
 }
 

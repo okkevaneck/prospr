@@ -4,30 +4,44 @@ File:           setup.py
 Description:    This file contains the setup required for distributing the
                 package on PyPi.org.
 """
+from setuptools import setup
+from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-import setuptools
 
+__version__ = "0.1a12"
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+ext_modules = [
+    Pybind11Extension("prospr",
+                      ["prospr/core/core_module.cpp"],
+                      define_macros=[("VERSION_INFO", __version__)],
+                      ),
+]
 
-setuptools.setup(
+with open("README.md", "r") as f:
+    long_description = f.read()
+
+setup(
     name="prospr",
-    version="0.1a10",
+    version=__version__,
     author="okkevaneck",
     description="A toolbox for protein folding with Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/okkevaneck/prospr",
     license_file="LICENSE",
-    packages=setuptools.find_packages(),
+    license="LGPLv3",
+    ext_modules=ext_modules,
+    cmdclass={"build_ext": build_ext},
+    package_dir={"": "prospr"},
+    platforms=["any"],
+    python_requires=">=3.6",
+    zip_safe=False,
     install_requires=[
         "matplotlib",
         "seaborn",
         "numpy",
-        "pandas"
+        "pandas",
     ],
-    package_data={"": ["*.so"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",
@@ -38,4 +52,6 @@ setuptools.setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
+    keywords=["prospr protein structure prediction toolbox python c++ swig " + \
+              "cmake extension heuristics pypi package"],
 )

@@ -36,41 +36,14 @@ case "$1" in
     # Zip all .cpp files from core to 'prospr_core.zip'.
     "zip_core")
         echo "Compressing all C++ files into 'prospr_core.zip'.."
-        cd prospr/core
-        zip -Rq prospr_core "*/*.cpp"
-        mv prospr_core.zip ../../prospr_core.zip
+        zip -jrq prospr_core.zip "${COREDIR}/src/"
     ;;
     # Build all python interfaces for the core .cpp files.
     "build")
-        echo "~ Creating all .so and .py interfaces.."
-        SETUP_PATHS=$(find ${COREDIR}/ -type f -name "*setup.py")
-
-        declare -a MODULE_PATHS=()
-        for SPATH in ${SETUP_PATHS}; do
-            MODULE_PATHS+=( "$(dirname $SPATH)" );
-        done
-
-        # Get index of protein path and set it as first string in array.
-        for i in "${!MODULE_PATHS[@]}"; do
-           if [[ $(basename "${MODULE_PATHS[$i]}") = "protein" ]]; then
-               P_IDX=${i};
-               break
-           fi
-        done
-
-        MODULE_PATHS=( "${MODULE_PATHS[${P_IDX}]}" \
-            "${MODULE_PATHS[@]:0:${P_IDX}}" "${MODULE_PATHS[@]:${P_IDX}+1}" )
-
-        # Loop over modules and compile them. Skip any NULL values.
-        for MPATH in "${MODULE_PATHS[@]/}"; do
-            MODULE=$(basename "${MPATH%/}")
-            echo "Building ${MODULE}.."
-            echo -e "\tCompiling source with SWIG.."
-            swig -python -c++ "${MPATH}/${MODULE}.i"
-            echo -e "\tConstructing module with setuptools.."
-            python "${MPATH}/setup.py" -q build_ext --build-lib="${MPATH}"
-        done
-
+        echo "~ Creating the .py interface for the core.."
+        c++ -O3 -Wall -shared -std=c++11 -fPIC \
+            $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
+            -o "$COREDIR"/prospr_core$(python3-config --extension-suffix)
         echo "~ Done building!"
         ;;
     # Remove all Python interfaces, .cxx files, and Python caches.

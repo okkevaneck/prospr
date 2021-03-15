@@ -3,7 +3,7 @@
 **Author:** Okke van Eck  
 **Version:** 0.1a7
 
-This project is an universal toolbox for protein structure prediction within the HP-model.
+This project is a universal toolbox for protein structure prediction within the HP-model.
 It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.
 Besides folding proteins, this package will also make it possible to determine the relative hardness of a protein for an algorithm.
 This allows for a fair comparison across the different algorithms.
