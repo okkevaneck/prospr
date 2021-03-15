@@ -32,7 +32,7 @@ setup(
     license="LGPLv3",
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
-    # package_dir={"": "prospr"},
+    package_dir={"": "prospr"},
     platforms=["any"],
     python_requires=">=3.6",
     zip_safe=False,
