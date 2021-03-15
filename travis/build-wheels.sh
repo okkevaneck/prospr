@@ -16,7 +16,7 @@ yum install -y atlas-devel
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" install -r /io/dev-requirements.txt
+    "${PYBIN}/pip" install -r /io/requirements.txt
     "${PYBIN}/pip" wheel /io/ --no-deps -w wheelhouse/
 done
 
@@ -27,6 +27,6 @@ done
 
 # Install packages and test
 for PYBIN in /opt/python/*/bin/; do
-    "${PYBIN}/pip" install python-manylinux-demo --no-index -f /io/wheelhouse
-    (cd "$HOME"; "${PYBIN}/nosetests" pymanylinuxdemo)
+    "${PYBIN}/pip" install prospr --no-index -f /io/wheelhouse
+    (cd "$HOME"; "${PYBIN}/nosetests" prospr)
 done
