@@ -10,22 +10,22 @@ function repair_wheel {
     fi
 }
 
+# Install required system packages.
+/opt/python/cp37-cp37m/bin/pip install twine
 
-# Install a system package required by our library
-yum install -y atlas-devel
-
-# Compile wheels
-for PYBIN in /opt/python/*/bin; do
+# Compile wheels.
+for PYBIN in /opt/python/cp3*/bin; do
     "${PYBIN}/pip" install -r /io/requirements.txt
     "${PYBIN}/pip" wheel /io/ --no-deps -w wheelhouse/
+    # TODO: Run setup.py?
 done
 
-# Bundle external shared libraries into the wheels
+# Bundle external shared libraries into the wheels.
 for whl in wheelhouse/*.whl; do
     repair_wheel "$whl"
 done
 
-# Install packages and test
+# Install packages and test.
 for PYBIN in /opt/python/*/bin/; do
     "${PYBIN}/pip" install prospr --no-index -f /io/wheelhouse
     (cd "$HOME"; "${PYBIN}/nosetests" prospr)
