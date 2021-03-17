@@ -34,14 +34,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
 
       - name: Install Visual C++ for Python 2.7
         if: runner.os == 'Windows'
@@ -49,9 +43,8 @@ jobs:
 
       - name: Build wheels
         uses: joerick/cibuildwheel@v1.10.0
-          # to supply options, put them in 'env', like:
-          # env:
-          #   CIBW_SOME_OPTION: value
+        env:
+          CIBW_SKIP: cp27-* cp35-*
 
       - uses: actions/upload-artifact@v2
         with:
