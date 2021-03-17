@@ -13,13 +13,8 @@ function repair_wheel {
 # Install required system packages.
 /opt/python/cp37-cp37m/bin/pip install twine
 
-# Remove old Python versions.
-ls -al /opt/python/
-rm -rf /opt/python/cp26-*
-rm -rf /opt/python/cp33-*
-rm -rf /opt/python/cp34-*
+# Remove old Python versions. The manylinux image includes 3.5 till 3.9.
 rm -rf /opt/python/cp35-*
-ls -al /opt/python/
 
 # Compile wheels.
 for PYBIN in /opt/python/cp3*/bin; do

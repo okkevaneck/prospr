@@ -22,7 +22,7 @@ PYCACHES=$(find prospr/ -type d -name "__pycache__")
 case "$1" in
     # Setup a developing environment.
     "init")
-        git config core.hooksPath .git-config/hooks
+        git config core.hooksPath .github/hooks
         pip install -r requirements.txt
     ;;
     # Echo all global variables.
