@@ -41,14 +41,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
       - name: Set up Python
         uses: actions/setup-python@v2
 
-      - name: Build wheels
+      - name: Build wheels for Ubuntu & MacOS
+        if: runner.os != "Windows"
         uses: joerick/cibuildwheel@v1.10.0
         env:
           CIBW_SKIP: cp27-* cp35-*
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
+
+      - name: Build wheels for Windows
+        if: runner.os == "Windows"
+        uses: joerick/cibuildwheel@v1.10.0
+        env:
+          CIBW_SKIP: cp27-* cp35-*
+          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
+          DISTUTILS_USE_SDK: 1
+          MSSdk: 1
 
       - uses: actions/upload-artifact@v2
         with:
