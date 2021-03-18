@@ -34,10 +34,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - runs-on: windows-latest
+            args: >
+              -DPYBIND11_FINDPYTHON=ON
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v2
 
       - name: Build wheels
