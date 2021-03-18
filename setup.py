@@ -7,6 +7,7 @@ Description:    This file contains the setup required for distributing the
 import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
+import pybind11
 
 
 __version__ = "0.1a12"
@@ -16,7 +17,11 @@ ext_modules = [
                       ["prospr/core/core_module.cpp"],
                       define_macros=[("VERSION_INFO", __version__)],
                       optional=os.environ.get('CIBUILDWHEEL', '0') != '1',
-                      libraries=["pybind11"],
+                      include_dirs=[
+                          pybind11.get_include(False),
+                          pybind11.get_include(True),
+                      ],
+                      language='c++',
                       ),
 ]
 
@@ -44,6 +49,7 @@ setup(
         "seaborn",
         "numpy",
         "pandas",
+        "pybind11",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
