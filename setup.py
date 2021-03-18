@@ -16,6 +16,7 @@ ext_modules = [
                       ["prospr/core/core_module.cpp"],
                       define_macros=[("VERSION_INFO", __version__)],
                       optional=os.environ.get('CIBUILDWHEEL', '0') != '1',
+                      libraries=["pybind11"],
                       ),
 ]
 

@@ -34,10 +34,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        include:
-          - runs-on: windows-latest
-            args: >
-              -DPYBIND11_FINDPYTHON=ON
     steps:
       - uses: actions/checkout@v2
 
@@ -48,15 +44,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
 
-      - name: Build wheels for Ubuntu & MacOS
-        if: runner.os != 'Windows'
-        uses: joerick/cibuildwheel@v1.10.0
-        env:
-          CIBW_SKIP: cp27-* cp35-*
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
-
-      - name: Build wheels for Windows
-        if: runner.os == 'Windows'
+      - name: Build wheels
         uses: joerick/cibuildwheel@v1.10.0
         env:
           CIBW_SKIP: cp27-* cp35-*
