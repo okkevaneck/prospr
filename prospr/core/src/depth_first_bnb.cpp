@@ -59,7 +59,7 @@ namespace dfs_bnb {
                                                                   h_idxs.end(),
                                                                   cur_len - 1);
         int h_left = h_idxs.size() - (next_h_idx - h_idxs.begin());
-        int free_places = pow(2, (protein.get_dim() - 1));
+        int free_places = (int)pow(2, (protein.get_dim() - 1));
         int branch_score = -free_places * h_left;
 
         if (cur_len != max_length && h_idxs.back() == max_length - 1)
