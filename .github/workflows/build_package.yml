@@ -59,7 +59,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: joerick/cibuildwheel@v1.10.0
         env:
-          CIBW_SKIP: cp27-* cp35-* *-win32
+          CIBW_SKIP: cp27-* cp35-*
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
 
       - uses: actions/upload-artifact@v2
