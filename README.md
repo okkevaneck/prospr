@@ -1,7 +1,7 @@
 # ProSPr
 ## The Protein Structure Prediction Toolbox
 **Author:** Okke van Eck  
-**Version:** 0.1a12
+**Version:** 0.1a13
 
 ![Travis (.org) branch](https://img.shields.io/travis/okkevaneck/prospr/master)
 

@@ -76,6 +76,7 @@ jobs:
           path: dist/*.tar.gz
 
   deploy:
+    if: github.ref == 'refs/heads/master'
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
