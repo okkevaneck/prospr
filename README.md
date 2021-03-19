@@ -1,7 +1,8 @@
-# ProSPr
-## The Protein Structure Prediction Toolbox
-**Author:** Okke van Eck  
-**Version:** 0.1a13
+## Prospr: The Protein Structure Prediction Toolbox  
+![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/OkkeVanEck/prospr/CI-CD/master)  
+**Creator:** Okke van Eck  
 
 This project is a universal toolbox for protein structure prediction within the HP-model.
 It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.
