@@ -3,8 +3,6 @@
 **Author:** Okke van Eck  
 **Version:** 0.1a13
 
-![Travis (.org) branch](https://img.shields.io/travis/okkevaneck/prospr/master)
-
 This project is a universal toolbox for protein structure prediction within the HP-model.
 It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.
 Besides folding proteins, this package will also make it possible to determine the relative hardness of a protein for an algorithm.
