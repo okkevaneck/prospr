@@ -1,4 +1,4 @@
-name: Build and deploy package
+name: CI/CD
 
 on: [push, pull_request]
 
