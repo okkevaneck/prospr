@@ -13,7 +13,7 @@ import seaborn as sns
 import pandas as pd
 
 
-def plot_protein_structure_2d(protein, ax):
+def _plot_protein_2d(protein, ax):
     """
 
     :param protein:
@@ -38,7 +38,7 @@ def plot_protein_structure_2d(protein, ax):
                 color="indianred", alpha=0.9, zorder=1, lw=1.5)
 
     # Set axis labels.
-    ax.set_title(f"2D conformation with {protein.get_score()} energy")
+    ax.set_title(f"2D conformation with {protein.score} energy")
     ax.set_xlabel("x-axis", fontsize=13)
     ax.set_ylabel("y-axis", fontsize=13)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -50,10 +50,10 @@ def plot_protein_structure_2d(protein, ax):
                          label="Contact", lw=1.5)
     handles.append(score_patch)
     labels.append(score_patch.get_label())
-    ax.legend(handles=handles[1:], labels=labels[1:])
+    ax.legend(handles=handles, labels=labels)
 
 
-def plot_protein_structure_3d(protein, ax):
+def _plot_protein_3d(protein, ax):
     """
 
     :param protein:
@@ -83,7 +83,7 @@ def plot_protein_structure_3d(protein, ax):
                 linestyle=":", color="indianred", alpha=0.9, zorder=1, lw=1.5)
 
     # Set axis labels and tics.
-    ax.set_title(f"3D conformation with {protein.get_score()} energy")
+    ax.set_title(f"3D conformation with {protein.score} energy")
     ax.set_xlabel("x-axis", fontsize=13)
     ax.set_ylabel("y-axis", fontsize=13)
     ax.set_zlabel("z-axis", fontsize=13)
@@ -100,7 +100,7 @@ def plot_protein_structure_3d(protein, ax):
     ax.legend(handles=handles, labels=labels)
 
 
-def plot_protein_structure(protein):
+def plot_protein(protein):
     """
     Plot conformation of a protein.
     :param Protein      protein:        Protein object to plot the hash of.
@@ -109,16 +109,14 @@ def plot_protein_structure(protein):
     sns.set_style("whitegrid")
 
     # Plot data according to used dimension.
-    dim = protein.get_dim()
-
-    if dim == 2:
+    if protein.dim == 2:
         ax = fig.gca()
-        plot_protein_structure_2d(protein, ax)
-    elif dim == 3:
+        _plot_protein_2d(protein, ax)
+    elif protein.dim == 3:
         ax = fig.gca(projection="3d")
-        plot_protein_structure_3d(protein, ax)
+        _plot_protein_3d(protein, ax)
     else:
         raise RuntimeError(f"Cannot plot the structure of a protein with "
-                           f"dimension '{dim}'")
+                           f"dimension '{protein.dim}'")
 
     plt.show()

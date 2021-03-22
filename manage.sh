@@ -14,7 +14,7 @@ set -e
 
 COREDIR=prospr/core
 CXX_FILES=$(find ${COREDIR}/ -type f -name "*.cxx")
-SO_FILES=$(find ${COREDIR}/ -type f -name "*.so")
+SO_FILES=$(find prospr/ -type f -name "*.so")
 PY_FILES=$(find ${COREDIR}/ -type f -name "*.py" ! -name "__init__.py" \
     ! -name "setup.py")
 PYCACHES=$(find prospr/ -type d -name "__pycache__")
@@ -43,7 +43,7 @@ case "$1" in
         echo "~ Creating the .py interface for the core.."
         c++ -O3 -Wall -shared -std=c++11 -fPIC \
             $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
-            -o "$COREDIR"/prospr_core$(python3-config --extension-suffix)
+            -o "prospr"/prospr_core$(python3-config --extension-suffix)
         echo "~ Done building!"
         ;;
     # Remove all Python interfaces, .cxx files, and Python caches.
