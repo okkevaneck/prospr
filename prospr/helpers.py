@@ -12,11 +12,10 @@ def get_scoring_aminos(protein):
     Collect all placed aminos from a protein that may score points.
     """
     score_pos = {}
-    cur_pos = [0 for _ in range(protein.get_dim())]
+    cur_pos = [0 for _ in range(protein.dim)]
     idx, next_dir = protein.get_amino(cur_pos)
 
     # Store origin if it may score points.
-    # if amino == "H":
     if protein.is_hydro(idx):
         score_pos[tuple(cur_pos)] = np.array([0, next_dir], dtype=np.int64)
 
@@ -46,8 +45,8 @@ def get_scoring_pairs(protein):
     score_aminos = get_scoring_aminos(protein)
 
     # Sort positions from bottom-left to upper-rigth.
-    moves = np.array([m for m in range(1, protein.get_dim() + 1)])
-    pairs = np.empty((1, 2, protein.get_dim()), dtype=np.int64)
+    moves = np.array([m for m in range(1, protein.dim + 1)])
+    pairs = np.empty((1, 2, protein.dim), dtype=np.int64)
 
     # Check if a score can be made with the amino above or to the right.
     for pos, [prev_dir, next_dir] in score_aminos.items():
@@ -76,11 +75,10 @@ def get_ordered_positions(protein):
     """
     # Fetch done moves and the aminos used so far.
     moves = protein.hash_fold()
-    aminos = protein.get_sequence()[:len(moves) + 1]
-    dim = protein.get_dim()
+    aminos = protein.sequence[:len(moves) + 1]
 
     # Setup storage of the amino positions.
-    cur_pos = np.array([0 for _ in range(dim)], dtype=np.int64)
+    cur_pos = np.array([0 for _ in range(protein.dim)], dtype=np.int64)
     positions = np.array([*cur_pos, aminos[0]])
 
     # Save the coordinates of the aminos in order.
