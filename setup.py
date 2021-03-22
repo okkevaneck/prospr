@@ -8,7 +8,6 @@ import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-
 __version__ = "0.1a13"
 
 ext_modules = [
@@ -35,7 +34,7 @@ setup(
     license="LGPLv3",
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
-    package_dir={"": "prospr"},
+    packages=["prospr"],
     platforms=["any"],
     python_requires=">=3.6",
     zip_safe=False,
@@ -55,6 +54,6 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
-    keywords=["prospr protein structure prediction toolbox python c++ swig " + \
+    keywords=["prospr protein structure prediction toolbox python c++ swig " +
               "cmake extension heuristics pypi package"],
 )
