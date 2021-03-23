@@ -19,6 +19,11 @@ This package can simply be installed via pip by running:
 pip install prospr
 ```
 
+## C++ core archives
+All the core code which prospr runs on, is available as a compressed archive.
+The folder `core_archives` contains a [.zip](core_archives/prospr_core.zip) and
+a [.tar.gz](core_archives/prospr_core.tar.gz) archive.
+
 ## Example usage
 *Work in progress*
 
