@@ -3,12 +3,10 @@
 # Description:      This bash file supports the commands:
 #                       - "init"        for setting up a developing environment.
 #                       - "echo_debug"  for printing the used global variables.
-#                       - "zip_core"    for zipping all core .cpp files.
 #						- "build"	    for building the Python interfaces for
 #										    the core .cpp files.
 #						- "clean"	    for removing all Python interfaces,
 #	                    					.cxx files, and Python caches.
-#						- "deploy"	    for updating the live version on PyPI.
 
 set -e
 
@@ -22,8 +20,8 @@ PYCACHES=$(find prospr/ -type d -name "__pycache__")
 case "$1" in
     # Setup a developing environment.
     "init")
-#        git config core.hooksPath .github/hooks
         pip install -r requirements.txt
+        pre-commit install
     ;;
     # Echo all global variables.
     "echo_debug")
@@ -33,11 +31,6 @@ case "$1" in
         echo -e "PY files:\n${PY_FILES}\n"
         echo -e "PyCaches:\n${PYCACHES}\n"
         ;;
-    # Zip all .cpp files from core to 'prospr_core.zip'.
-    "zip_core")
-        echo "Compressing all C++ files into 'prospr_core.zip'.."
-        zip -jrq prospr_core.zip "${COREDIR}/src/"
-    ;;
     # Build all python interfaces for the core .cpp files.
     "build")
         echo "~ Creating the .py interface for the core.."
@@ -53,16 +46,6 @@ case "$1" in
         echo -e "\n~ Removing all __pycache__ directories.."
         rm -rf ${PYCACHES}
         echo -e "\n~ Done cleaning!"
-        ;;
-    # Update the live version on PyPI.
-    "deploy")
-        echo "~ Removing old files.."
-        rm -rf build dist prospr.egg-info
-        echo -e "\n~ Creating new package.."
-        python3 setup.py sdist bdist_wheel
-        echo -e "\n~ Uploading package.."
-        twine upload dist/*
-        echo -e "\n~ Done deploying!"
         ;;
     *)
         echo "No command detected from first argument.."
