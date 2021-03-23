@@ -19,5 +19,5 @@ mv prospr_core.zip "${ARCHIVEDIR}/prospr_core.zip"
 
 # Add archives to git stage.
 #git add "${ARCHIVEDIR}"/prospr_core.zip "${ARCHIVEDIR}"/prospr_core.tar.gz
-git add "${ARCHIVEDIR}"/prospr_core.tar.gz
+#git add "${ARCHIVEDIR}"/prospr_core.tar.gz
 git add "${ARCHIVEDIR}"/prospr_core.zip
