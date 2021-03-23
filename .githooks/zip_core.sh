@@ -5,19 +5,21 @@
 
 set -e
 
-COREDIR=prospr/core
+COREDIR=prospr/core/src
 ARCHIVEDIR=core_archives
 
 # Create .zip archive.
-zip -jrq prospr_core.zip "${COREDIR}/src/"
+zip -jrq prospr_core.zip "${COREDIR}/"
 mv prospr_core.zip "${ARCHIVEDIR}/prospr_core.zip"
-#zip -jrq "${ARCHIVEDIR}/prospr_core.zip" . -i "${COREDIR}/src/"
 
 # Create .tar.gz archive.
-#cd "${COREDIR}/src"
-#tar -czf "../../../${ARCHIVEDIR}/prospr_core.tar.gz" *.cpp *.hpp
+cd "${COREDIR}"
+tar -czf prospr_core.tar.gz *.cpp *.hpp
+cd ../../../
+mv "${COREDIR}"/prospr_core.tar.gz "${ARCHIVEDIR}"/prospr_core.tar.gz
+#tar -czf "./../../../${ARCHIVEDIR}/prospr_core.tar.gz" *.cpp *.hpp
 
 # Add archives to git stage.
 #git add "${ARCHIVEDIR}"/prospr_core.zip "${ARCHIVEDIR}"/prospr_core.tar.gz
-#git add "${ARCHIVEDIR}"/prospr_core.tar.gz
+git add "${ARCHIVEDIR}"/prospr_core.tar.gz
 git add "${ARCHIVEDIR}"/prospr_core.zip
