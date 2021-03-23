@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# TODO: Run all tests and exit if test failed.
-
-# Compress all core .cpp files into archive.
-./manage.sh zip_core
-git add prospr_core.zip

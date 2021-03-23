@@ -1,8 +1,9 @@
-## Prospr: The Protein Structure Prediction Toolbox  
+## Prospr: The Protein Structure Prediction Toolbox
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/OkkeVanEck/prospr/CI-CD/master)  
-**Creator:** Okke van Eck  
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/OkkeVanEck/prospr/CI-CD/master)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+**Creator:** Okke van Eck
 
 This project is a universal toolbox for protein structure prediction within the HP-model.
 It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.
@@ -18,12 +19,17 @@ This package can simply be installed via pip by running:
 pip install prospr
 ```
 
+## C++ core archives
+All the core code which prospr runs on, is available as a compressed archive.
+The folder `core_archives` contains a [.zip](core_archives/prospr_core.zip) and
+a [.tar.gz](core_archives/prospr_core.tar.gz) archive.
+
 ## Example usage
 *Work in progress*
 
 ## Future work
 This toolbox could be used for other protein folding problems within discrete models.
-It would be a great extension to support different models by creating a modular amino acid. 
+It would be a great extension to support different models by creating a modular amino acid.
 
 ## Changelog
 *Work in progress*
