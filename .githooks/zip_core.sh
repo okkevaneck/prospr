@@ -17,9 +17,6 @@ cd "${COREDIR}"
 tar -czf prospr_core.tar.gz *.cpp *.hpp
 cd ../../../
 mv "${COREDIR}"/prospr_core.tar.gz "${ARCHIVEDIR}"/prospr_core.tar.gz
-#tar -czf "./../../../${ARCHIVEDIR}/prospr_core.tar.gz" *.cpp *.hpp
 
 # Add archives to git stage.
-#git add "${ARCHIVEDIR}"/prospr_core.zip "${ARCHIVEDIR}"/prospr_core.tar.gz
-git add "${ARCHIVEDIR}"/prospr_core.tar.gz
-git add "${ARCHIVEDIR}"/prospr_core.zip
+git add "${ARCHIVEDIR}"/prospr_core.zip "${ARCHIVEDIR}"/prospr_core.tar.gz
