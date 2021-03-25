@@ -11,12 +11,13 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 __version__ = "0.1a13"
 
 ext_modules = [
-    Pybind11Extension("prospr_core",
-                      ["prospr/core/core_module.cpp"],
-                      define_macros=[("VERSION_INFO", __version__)],
-                      optional=os.environ.get('CIBUILDWHEEL', '0') != '1',
-                      language='c++',
-                      ),
+    Pybind11Extension(
+        "prospr_core",
+        ["prospr/core/core_module.cpp"],
+        define_macros=[("VERSION_INFO", __version__)],
+        optional=os.environ.get("CIBUILDWHEEL", "0") != "1",
+        language="c++",
+    ),
 ]
 
 with open("README.md", "r") as f:
@@ -35,6 +36,7 @@ setup(
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
     packages=["prospr"],
+    package_data={"": ["prospr/data/**/*.csv"]},
     platforms=["any"],
     python_requires=">=3.6",
     zip_safe=False,
@@ -48,12 +50,14 @@ setup(
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",
         "License :: OSI Approved :: GNU Lesser General Public License v3 "
-        "(LGPLv3)",
+        + "(LGPLv3)",
         "Operating System :: OS Independent",
         "Topic :: Education",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
-    keywords=["prospr protein structure prediction toolbox python c++ swig " +
-              "cmake extension heuristics pypi package"],
+    keywords=[
+        "prospr protein structure prediction toolbox python c++ swig cmake "
+        + "extension heuristics pypi package"
+    ],
 )
