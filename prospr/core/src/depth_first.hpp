@@ -1,6 +1,7 @@
 /* File:            depth_first.h
  * Description:     Header file for a depth-first search function.
  */
+
 #ifndef DEPTH_FIRST_H
 #define DEPTH_FIRST_H
 

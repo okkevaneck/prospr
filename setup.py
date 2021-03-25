@@ -4,6 +4,7 @@ File:           setup.py
 Description:    This file contains the setup required for distributing the
                 package on PyPi.org.
 """
+
 import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
