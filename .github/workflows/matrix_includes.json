@@ -20,19 +20,19 @@
     {
         "runOn": "always",
         "os": "ubuntu-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp36-manylinux_x86_64"
     },
     {
         "runOn": "always",
         "os": "windows-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp36-win_amd64"
     },
     {
         "runOn": "always",
         "os": "macos-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp36-macosx_x86_64"
     }
 ]
