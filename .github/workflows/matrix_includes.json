@@ -2,5 +2,9 @@
     {
         "os": ["ubuntu-latest", "windows-latest", "macos-latest"],
         "runOn": "always"
+    },
+    {
+        "os": ["ubuntu-latest", "windows-latest", "macos-latest"],
+        "runOn": "master"
     }
 ]
