@@ -1,5 +1,6 @@
 [
     {
-        "os": ["ubuntu-latest", "windows-latest", "macos-latest"]
+        "os": ["ubuntu-latest", "windows-latest", "macos-latest"],
+        "runOn": "always"
     }
 ]
