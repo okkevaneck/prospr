@@ -4,21 +4,25 @@ File:           setup.py
 Description:    This file contains the setup required for distributing the
                 package on PyPi.org.
 """
+
 import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-__version__ = "0.1a13"
+__version__ = "0.2a1"
 
+# Define core module extension.
 ext_modules = [
-    Pybind11Extension("prospr_core",
-                      ["prospr/core/core_module.cpp"],
-                      define_macros=[("VERSION_INFO", __version__)],
-                      optional=os.environ.get('CIBUILDWHEEL', '0') != '1',
-                      language='c++',
-                      ),
+    Pybind11Extension(
+        "prospr_core",
+        ["prospr/core/core_module.cpp"],
+        define_macros=[("VERSION_INFO", __version__)],
+        optional=os.environ.get("CIBUILDWHEEL", "0") != "1",
+        language="c++",
+    ),
 ]
 
+# Load README for PyPI description.
 with open("README.md", "r") as f:
     long_description = f.read()
 
@@ -30,11 +34,11 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/okkevaneck/prospr",
-    license_file="LICENSE",
     license="LGPLv3",
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
     packages=["prospr"],
+    package_data={"prospr": ["data/*/*.csv"]},
     platforms=["any"],
     python_requires=">=3.6",
     zip_safe=False,
@@ -48,12 +52,14 @@ setup(
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",
         "License :: OSI Approved :: GNU Lesser General Public License v3 "
-        "(LGPLv3)",
+        + "(LGPLv3)",
         "Operating System :: OS Independent",
         "Topic :: Education",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
-    keywords=["prospr protein structure prediction toolbox python c++ swig " +
-              "cmake extension heuristics pypi package"],
+    keywords=[
+        "prospr protein structure prediction toolbox python c++ swig cmake "
+        + "extension heuristics pypi package"
+    ],
 )

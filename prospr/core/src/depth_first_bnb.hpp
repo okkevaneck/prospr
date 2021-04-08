@@ -2,6 +2,7 @@
  * Description:     Header file for a depth-first branch-and-bound search
  *                      function.
  */
+
 #ifndef DEPTH_FIRST_BNB_H
 #define DEPTH_FIRST_BNB_H
 
