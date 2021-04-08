@@ -19,10 +19,19 @@ This package can simply be installed via pip by running:
 pip install prospr
 ```
 
-## C++ core archives
+## Archives
+All the C++ core files and datasets are also available as compressed archives.
+See the subsections below for direct links.
+
+### C++ core
 All the core code which prospr runs on, is available as a compressed archive.
-The folder `core_archives` contains a [.zip](core_archives/prospr_core.zip) and
-a [.tar.gz](core_archives/prospr_core.tar.gz) archive.
+The folder `archives` contains a [.zip](archives/prospr_core.zip) and
+a [.tar.gz](archives/prospr_core.tar.gz) archive.
+
+### Datasets
+The complete collection of datasets is available as a compressed archive in the
+`archives` folder. It is available as a [.zip](archives/prospr_data.zip) and a
+[.tar.tz](archives/prospr_data.tar.gz) archive.
 
 ## Example usage
 *Work in progress*
