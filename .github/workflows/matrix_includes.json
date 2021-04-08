@@ -1,10 +1,38 @@
 [
     {
+        "runOn": "master",
         "os": "ubuntu-latest",
-        "runOn": "always"
+        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_build": ""
     },
     {
-        "os": ["ubuntu-latest", "windows-latest", "macos-latest"],
-        "runOn": "master"
+        "runOn": "master",
+        "os": "windows-latest",
+        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_build": ""
+    },
+    {
+        "runOn": "master",
+        "os": "macos-latest",
+        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_build": ""
+    },
+    {
+        "runOn": "always",
+        "os": "ubuntu-latest",
+        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_build": ""
+    },
+    {
+        "runOn": "always",
+        "os": "windows-latest",
+        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_build": ""
+    },
+    {
+        "runOn": "always",
+        "os": "macos-latest",
+        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_build": ""
     }
 ]
