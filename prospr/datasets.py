@@ -11,7 +11,7 @@ import pandas as pd
 def _load_dataset(folder, filename):
     """Returns a specified dataset as a dataframe."""
     stream = pkg_resources.resource_stream(
-        __name__, f"data/{folder}/{filename}"
+        "prospr", f"data/{folder}/{filename}"
     )
     return pd.read_csv(stream)
 

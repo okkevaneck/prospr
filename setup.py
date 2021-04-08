@@ -11,6 +11,7 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 __version__ = "0.2a1"
 
+# Define core module extension.
 ext_modules = [
     Pybind11Extension(
         "prospr_core",
@@ -21,6 +22,7 @@ ext_modules = [
     ),
 ]
 
+# Load README for PyPI description.
 with open("README.md", "r") as f:
     long_description = f.read()
 
@@ -32,12 +34,11 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/okkevaneck/prospr",
-    license_file="LICENSE",
     license="LGPLv3",
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
     packages=["prospr"],
-    package_data={"": ["prospr/data/**/*.csv"]},
+    package_data={"prospr": ["data/*/*.csv"]},
     platforms=["any"],
     python_requires=">=3.6",
     zip_safe=False,
