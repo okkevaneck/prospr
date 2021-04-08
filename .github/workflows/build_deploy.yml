@@ -29,13 +29,26 @@ jobs:
           # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+  prep_matrix:
+    name: Prepare Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: set-matrix
+        run: |
+          branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
+          matrix=$(jq --arg branchName "$branchName" 'map(. | select((.runOn==$branchName) or (.runOn=="always")) )' matrix_includes.json)
+          echo ::set-output name=matrix::{\"include\":$(echo $matrix)}\"
+
   build_wheels:
     name: Build wheels
-    needs: syntax_check
+    needs: [syntax_check, prep_matrix]
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+      matrix: ${{fromJson(needs.prep_matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
 
