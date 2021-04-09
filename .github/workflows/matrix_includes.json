@@ -2,19 +2,19 @@
     {
         "runOn": "release-",
         "os": "ubuntu-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
         "cibw_build": ""
     },
     {
         "runOn": "release-",
         "os": "windows-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
         "cibw_build": ""
     },
     {
         "runOn": "release-",
         "os": "macos-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32",
+        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
         "cibw_build": ""
     },
     {
