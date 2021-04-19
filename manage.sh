@@ -7,6 +7,7 @@
 #										    the core .cpp files.
 #						- "clean"	    for removing all Python interfaces,
 #	                    					.cxx files, and Python caches.
+#                       - "test"        for testing all Python code with pytest.
 
 set -e
 
@@ -31,7 +32,7 @@ case "$1" in
         echo -e "PY files:\n${PY_FILES}\n"
         echo -e "PyCaches:\n${PYCACHES}\n"
         ;;
-    # Build all python interfaces for the core .cpp files.
+    # Build all Python interfaces for the core .cpp files.
     "build")
         echo "~ Creating the .py interface for the core.."
         c++ -O3 -Wall -shared -std=c++11 -fPIC \
@@ -47,7 +48,7 @@ case "$1" in
         rm -rf ${PYCACHES}
         echo -e "\n~ Done cleaning!"
         ;;
-    # Build core, test all python code, and then clean everything.
+    # Build core, test all Python code, and then clean everything.
     "test")
         DIR2="$(basename "$PWD")"
         cd ..
