@@ -44,9 +44,12 @@ case "$1" in
     "clean")
         echo "~ Removing all built .cxx, .so and .py files.."
         rm -f ${CXX_FILES} ${SO_FILES} ${PY_FILES}
-        echo -e "\n~ Removing all __pycache__ directories.."
+        echo -e "~ Removing all __pycache__ directories.."
         rm -rf ${PYCACHES}
-        echo -e "\n~ Done cleaning!"
+        echo -e "~ Removing build directories.."
+        rm -rf build
+        rm -rf prospr.egg-info
+        echo -e "~ Done cleaning!"
         ;;
     # Build core, test all Python code, and then clean everything.
     "test")

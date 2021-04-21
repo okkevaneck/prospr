@@ -57,7 +57,7 @@ jobs:
           python -m pip install -e .
 
   syntax_check:
-    name: Check for syntax errors.
+    name: Check for syntax errors
     needs: setup_env
     runs-on: ubuntu-latest
     strategy:
