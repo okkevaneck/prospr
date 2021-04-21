@@ -3,10 +3,10 @@
 # Description:      This bash file supports the commands:
 #                       - "init"        for setting up a developing environment.
 #                       - "echo_debug"  for printing the used global variables.
-#						- "build"	    for building the Python interfaces for
-#										    the core .cpp files.
-#						- "clean"	    for removing all Python interfaces,
-#	                    					.cxx files, and Python caches.
+#                       - "build"       for building the Python interfaces for
+#                                           the core .cpp files.
+#                       - "clean"       for removing all Python interfaces,
+#                                           .cxx files, and Python caches.
 #                       - "test"        for testing all Python code with pytest.
 
 set -e
