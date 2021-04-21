@@ -56,7 +56,7 @@ case "$1" in
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Installing new prospr.."
-        pip install .
+        pip install -q .
         echo "~ Running pytest.."
         pytest || true
         echo "~ Uninstalling old prospr.."
