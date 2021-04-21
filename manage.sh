@@ -50,15 +50,10 @@ case "$1" in
         ;;
     # Build core, test all Python code, and then clean everything.
     "test")
-        DIR2="$(basename "$PWD")"
-        cd ..
-        DIR1="$(basename "$PWD")"
-        cd ..
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Installing new prospr.."
-        pip install -q "./$DIR1/$DIR2/"
-        cd "./$DIR1/$DIR2/"
+        pip install .
         echo "~ Running pytest.."
         pytest || true
         echo "~ Uninstalling old prospr.."
