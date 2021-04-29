@@ -100,12 +100,14 @@ jobs:
         uses: py-actions/flake8@v1.1.0
         with:
           args: --count --select=E9,F63,F7,F82 --show-source --statistics
+          update-pip: "true"
 
       - name: Lint with flake8 2
         uses: py-actions/flake8@v1.1.0
         with:
           args: --count --exit-zero --max-complexity=10 --statistics
           max-line-length: 127
+          update-pip: "true"
 
 #      - name: Lint with flake8
 #        run: |
