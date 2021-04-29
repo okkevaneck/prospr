@@ -53,11 +53,11 @@ jobs:
       - name: Install dependencies
 #        if: steps.venv-cache.outputs.cache-hit != 'true'
         run: |
-          cd /
           python -m pip install --upgrade pip
-          python -m pip install flake8
           python -m pip install -r requirements.txt
           python -m pip install -e .
+          cd /
+          python -m pip install flake8
 
   syntax_check:
     name: Check for syntax errors
