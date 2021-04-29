@@ -1,5 +1,8 @@
 /* File:            protein.h
  * Description:     Header file for a protein object within the HP-model.
+
+
+ * TEEESSSTTT
  */
 
 #ifndef PROTEIN_H
