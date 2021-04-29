@@ -14,8 +14,8 @@ DATADIR=prospr/data
 
 
 # Create .zip core archive.
-zip -jqr "prospr_core.zip" "${COREDIR}/"
-mv "prospr_core.zip" "${ARCHIVEDIR}/prospr_core.zip"
+zip -jqr prospr_core.zip "${COREDIR}/"
+mv prospr_core.zip "${ARCHIVEDIR}/prospr_core.zip"
 
 # Create .tar.gz core archive.
 cd "${COREDIR}"
