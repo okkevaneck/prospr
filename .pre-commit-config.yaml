@@ -31,5 +31,6 @@ repos:
     hooks:
       - id: compress-files
         name: compress-files
+        pass_filenames: false
         entry: ./.githooks/compress_files.sh
         language: script

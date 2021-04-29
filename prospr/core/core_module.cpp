@@ -42,7 +42,7 @@ PYBIND11_MODULE(prospr_core, m) {
             "Place a protein in a given direction", py::arg("move"),
             py::arg("track")=true)
         .def("remove_amino", &Protein::remove_amino,
-            "Remove the last placed amino")
+            "Remove the last placed amino", py::arg("move"))
         .def("change_score", &Protein::change_score,
             "Change the score attribute according to the given move and weight",
             py::arg("move"), py::arg("value"))

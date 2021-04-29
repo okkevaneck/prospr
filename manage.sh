@@ -3,10 +3,11 @@
 # Description:      This bash file supports the commands:
 #                       - "init"        for setting up a developing environment.
 #                       - "echo_debug"  for printing the used global variables.
-#						- "build"	    for building the Python interfaces for
-#										    the core .cpp files.
-#						- "clean"	    for removing all Python interfaces,
-#	                    					.cxx files, and Python caches.
+#                       - "build"       for building the Python interfaces for
+#                                           the core .cpp files.
+#                       - "clean"       for removing all Python interfaces,
+#                                           .cxx files, and Python caches.
+#                       - "test"        for testing all Python code with pytest.
 
 set -e
 
@@ -31,7 +32,7 @@ case "$1" in
         echo -e "PY files:\n${PY_FILES}\n"
         echo -e "PyCaches:\n${PYCACHES}\n"
         ;;
-    # Build all python interfaces for the core .cpp files.
+    # Build all Python interfaces for the core .cpp files.
     "build")
         echo "~ Creating the .py interface for the core.."
         c++ -O3 -Wall -shared -std=c++11 -fPIC \
@@ -43,9 +44,24 @@ case "$1" in
     "clean")
         echo "~ Removing all built .cxx, .so and .py files.."
         rm -f ${CXX_FILES} ${SO_FILES} ${PY_FILES}
-        echo -e "\n~ Removing all __pycache__ directories.."
+        echo -e "~ Removing all __pycache__ directories.."
         rm -rf ${PYCACHES}
-        echo -e "\n~ Done cleaning!"
+        echo -e "~ Removing build directories.."
+        rm -rf build
+        rm -rf prospr.egg-info
+        echo -e "~ Done cleaning!"
+        ;;
+    # Build core, test all Python code, and then clean everything.
+    "test")
+        echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Installing new prospr.."
+        pip install -q .
+        echo "~ Running pytest.."
+        pytest || true
+        echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Done running tests!"
         ;;
     *)
         echo "No command detected from first argument.."
