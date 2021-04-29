@@ -9,17 +9,17 @@ from prospr import Protein, depth_first_bnb
 import pytest
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture()
 def protein_2d():
     return Protein("PHPHPHPPH", 2)
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture()
 def protein_3d():
     return Protein("HPPHPHPHPH", 3)
 
 
-@pytest.mark.order(after="TestProtein")
+@pytest.mark.order(after="test_protein.TestProtein")
 class TestDepthFirstBnB:
     def test_protein_2d_depth_first_bnb(self, protein_2d):
         """

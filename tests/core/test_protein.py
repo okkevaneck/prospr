@@ -8,12 +8,12 @@ from prospr import Protein
 import pytest
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture()
 def protein_2d():
     return Protein("HPPHPPHH", 2)
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture()
 def protein_3d():
     return Protein("HPPHPPHH", 3)
 
