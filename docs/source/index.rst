@@ -9,13 +9,14 @@ Release v\ |release|
 
 Welcome to Prospr's documentation! Prospr is a Python toolbox for protein
 structure prediction, build on a C++ core. The Python package can be used when
-maximum execution speed is unnecessary, and when Prospr's datasets and
-visualization module are of interest. The C++ core is available for all
+quick development is of key, and when Prospr's datasets and visualization module
+are of interest. The C++ core is available as a standalone for all
 high-performance computing applications. Often, the C++ core is used for
 gathering data while the Python package is used for managing the experiments.
 
 See the :doc:`installation` and :doc:`quickstart` pages for an easy introduction
-to the basics of Prospr. There is also the :doc:`manpage` where all
+to the basics of Prospr. The both pages also contain example usages of the
+C++ core for data gathering. There is also the  page where all
 functionality of Prospr is explained in-depth per module.
 
 .. toctree::
@@ -24,4 +25,4 @@ functionality of Prospr is explained in-depth per module.
 
    installation
    quickstart
-   manpage
+   manpages
