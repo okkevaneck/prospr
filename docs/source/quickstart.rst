@@ -8,8 +8,7 @@ package may lower development time and offers more functionality.
 
 Example usage is given using the Python package and only shows basic usage.
 Please refer to the :doc:`manpages` to see the equivalent usage in C++ and all
-functionality. The :doc:`heterogeneous_setup` page contains an example of how to
-setup a heterogeneous approach.
+functionality.
 
 Please take a look at the :doc:`installation` page first to see how Prospr can
 be installed.

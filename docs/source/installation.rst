@@ -51,9 +51,7 @@ to see how to use the basics, or read the :doc:`manpages` for all functionality.
 C++ core
 --------
 Using the C++ core for your project is very easy. Follow the installation steps
-below and include the header files you want to use in your code. An example
-project setup for using Python and C++ next to another is given on the
-:doc:`heterogeneous_setup` page.
+below and include the header files you want to use in your code.
 
 Installing Prospr
 ~~~~~~~~~~~~~~~~~
@@ -62,6 +60,8 @@ Using the C++ core is very easy. Download a *prospr_core.x* archive from the
 on GitHub, then drag the source files to your code directory. Add the files to
 your Makefile in order to compile the Prospr files with your project. No
 additional libraries need to be linked during compile time.
+
+.. TODO: Add an example of how to setup the project + an example Makefile.
 
 Congratulations! Prospr is now installed. Check out the :doc:`quickstart`
 to see how to use the basics, or read the :doc:`manpages` for all functionality.
