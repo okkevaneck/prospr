@@ -7,7 +7,7 @@ handy for maximizing the execution speed of your experiments, while the Python
 package may lower development time and offers more functionality.
 
 Example usage is given using the Python package and only shows basic usage.
-Please refer to the :doc:`manpages` to see the equivalent usage in C++ and all
+Please refer to the :doc:`api` to see the equivalent usage in C++ and all
 functionality.
 
 Please take a look at the :doc:`installation` page first to see how Prospr can
@@ -32,7 +32,7 @@ Protein attributes
 ------------------
 A Protein object keeps track of multiple properties while it is being folded.
 These properties can be checked as attributes of the Protein object. Below all
-properties are listed, but please refer to the :doc:`manpages` to see what they
+properties are listed, but please refer to the :doc:`api` to see what they
 all keep track of exactly.
 
 .. code-block:: python
@@ -283,7 +283,7 @@ Built-in algorithms
 -------------------
 Prospr offers some algorithms for finding the most optimal conformation of a
 Protein. These are included in the C++ core, making them time efficient relative
-to Python alternatives. The :doc:`manpages` contain a list of all available
+to Python alternatives. The :doc:`api` contain a list of all available
 built-in algorithms. They can all easily be used via a direct import, as is
 shown below.
 
@@ -326,7 +326,7 @@ Using datasets
 Datasets are valuable for a fair comparison between algorithms. That is why
 Prospr's Python package comes with a built-in collection of datasets. Loading a
 dataset can easily be done via the available load functions in the
-*prospr.datasets* module. Please refer to the :doc:`manpages` for all available
+*prospr.datasets* module. Please refer to the :doc:`api` for all available
 datasets.
 
 .. code-block:: python

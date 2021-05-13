@@ -17,7 +17,7 @@ experiments. However, the Python package wraps all the C++ core's functionality,
 hence one can solely rely on using the Python package.
 
 See the :doc:`installation` and :doc:`quickstart` pages for an easy introduction
-to the basics of Prospr. There are also the :doc:`manpages` where all
+to the basics of Prospr. There are also the :doc:`api` where all
 functionality of Prospr is explained in-depth per module.
 
 .. toctree::
@@ -26,4 +26,4 @@ functionality of Prospr is explained in-depth per module.
 
    installation
    quickstart
-   manpages
+   api

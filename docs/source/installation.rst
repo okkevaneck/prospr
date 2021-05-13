@@ -45,7 +45,7 @@ After activating the environment, use pip to install Prospr:
     $ pip install prospr
 
 Congratulations! Prospr is now installed. Check out the :doc:`quickstart`
-to see how to use the basics, or read the :doc:`manpages` for all functionality.
+to see how to use the basics, or read the :doc:`api` for all functionality.
 
 
 C++ core
@@ -64,4 +64,4 @@ additional libraries need to be linked during compile time.
 .. TODO: Add an example of how to setup the project + an example Makefile.
 
 Congratulations! Prospr is now installed. Check out the :doc:`quickstart`
-to see how to use the basics, or read the :doc:`manpages` for all functionality.
+to see how to use the basics, or read the :doc:`api` for all functionality.
