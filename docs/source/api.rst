@@ -3,10 +3,10 @@
 API Reference
 =============
 The sections beneath contain all functions that can be used, ordered by module.
-For each function, first the Python syntax is given, followed by the C++ syntax
-if they originate from the C++ core. The modules that are part of the C++ core
-are indicated in their section title. All API references are given in
-alphabetical order.
+The modules that are part of the C++ core are indicated by their section title.
+All functions have the same signature in the Python package and the C++ core.
+Only the properties of the Protein class are called differently. All API
+references are given in alphabetical order.
 
 Algorithms - core
 -----------------
@@ -23,7 +23,7 @@ specifying a submodule, e.g.
     |     Finds the most optimal conformation using a depth-first algorithm.
     |     *Does not reset the Protein properties beforehand!*
     |         *Parameters:*
-    |             * **protein** - a Protein object to fold.
+    |             * **protein** - *Protein*: the Protein object to fold.
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found conformation
                     and with updated properties according to the performed
@@ -34,7 +34,7 @@ specifying a submodule, e.g.
           branch-and-bound algorithm.
     |     *Does not reset the Protein properties beforehand!*
     |         *Parameters:*
-    |             * **protein** - a Protein object to fold.
+    |             * **protein** - *Protein*: the Protein object to fold.
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found conformation
                     and with updated properties according to the performed
@@ -54,8 +54,8 @@ submodule, e.g.
     |     Loads the vanEck250 dataset containing 250 proteins per length, with
           lengths from 10 till 100.
     |         *Parameters:*
-    |             * **length** - (optional) the length of the protein sequences
-                    to load.
+    |             * **length** - *int (optional)*: the length of the protein
+                    sequences to load.
     |         *Returns:*
     |             * **DataFrame** - a Pandas DataFrame containing the protein
                     sequences.
@@ -64,8 +64,8 @@ submodule, e.g.
     |     Loads the vanEck250 dataset containing 1000 proteins per length, with
           lengths from 10 till 100.
     |         *Parameters:*
-    |             * **length** - (optional) the length of the protein sequences
-                    to load.
+    |             * **length** - *int (optional)*: the length of the protein
+                    sequences to load.
     |         *Returns:*
     |             * **DataFrame** - a Pandas DataFrame containing the protein
                     sequences.
@@ -85,7 +85,8 @@ can be imported from the *prospr.helpers* submodule, e.g.
     |     Returns a Numpy ndarray with the positions of all placed amino acids
           in order of placement.
     |         *Parameters:*
-    |             * **protein** - a Protein object to fetch the positions from.
+    |             * **protein** - *Protein*: the Protein object to fetch the
+                    positions from.
     |         *Returns:*
     |             * **ndarray** - a Numpy ndarray with the positions and types
                     of all placed amino acids and in order of placement.
@@ -96,8 +97,8 @@ can be imported from the *prospr.helpers* submodule, e.g.
     |     Returns a dictionary with the positions of all placed amino acids
           from the given protein that may score points.
     |         *Parameters:*
-    |             * **protein** - a Protein object to compute the scoring amino
-                    acids from.
+    |             * **protein** - *Protein*: the Protein object to compute the
+                    scoring amino acids from.
     |         *Returns:*
     |             * **dict** - a dictionary mapping the locations of all amino
                     acids that may score points to their previous move and next
@@ -108,8 +109,8 @@ can be imported from the *prospr.helpers* submodule, e.g.
     |     Returns a Numpy ndarray with arrays containing tuples of the positions
           of amino acid pairs from the given protein that score points.
     |         *Parameters:*
-    |             * **protein** - a Protein object to compute the scoring pairs
-                    from.
+    |             * **protein** - *Protein*: the Protein object to compute the
+                    scoring pairs from.
     |         *Returns:*
     |             * **ndarray** - a Numpy ndarray with arrays containing tuples
                     of the positions of amino acid pairs from the given protein
@@ -131,9 +132,9 @@ directly from *prospr* without specifying a submodule, e.g.
 
 Properties
 ~~~~~~~~~~
-Each property can be directly called in Python as an attribute, and via a
-specific function when using the C++ core. Each property below has both
-described.
+In Python, each property can be directly called in Python as an attribute. A
+method needs to be called when using the C++ core. Each property is described
+below and shows how to access it for both languages.
 
     | **changes**
     |     The number of amino acids placed so far.
@@ -147,70 +148,70 @@ described.
              +-----------------+------------------+
 
     | **cur_len**
-    |     The number of amino acids placed so far.
+    |     The length of the current conformation.
 
              +-----------------+------------------+
-             | **Python**      | *.changes*       |
+             | **Python**      | *.cur_len*       |
              +-----------------+------------------+
-             | **C++**         | *.get_changes()* |
+             | **C++**         | *.get_cur_len()* |
              +-----------------+------------------+
              | **Return type** | *int*            |
              +-----------------+------------------+
 
     | **dim**
-    |     The number of amino acids placed so far.
+    |     The maximum dimension in which the Protein can fold.
 
-             +-----------------+------------------+
-             | **Python**      | *.changes*       |
-             +-----------------+------------------+
-             | **C++**         | *.get_changes()* |
-             +-----------------+------------------+
-             | **Return type** | *int*            |
-             +-----------------+------------------+
+             +-----------------+--------------+
+             | **Python**      | *.dim*       |
+             +-----------------+--------------+
+             | **C++**         | *.get_dim()* |
+             +-----------------+--------------+
+             | **Return type** | *int*        |
+             +-----------------+--------------+
 
     | **h_idxs**
-    |     The number of amino acids placed so far.
+    |     The indexes of the "H" amino acids in the sequence.
 
-             +-----------------+------------------+
-             | **Python**      | *.changes*       |
-             +-----------------+------------------+
-             | **C++**         | *.get_changes()* |
-             +-----------------+------------------+
-             | **Return type** | *int*            |
-             +-----------------+------------------+
+             +-----------------+-----------------+
+             | **Python**      | *.h_idxs*       |
+             +-----------------+-----------------+
+             | **C++**         | *.get_h_idxs()* |
+             +-----------------+-----------------+
+             | **Return type** | *List[int]*     |
+             +-----------------+-----------------+
 
     | **last_move**
-    |     The number of amino acids placed so far.
+    |     The last performed move.
 
-             +-----------------+------------------+
-             | **Python**      | *.changes*       |
-             +-----------------+------------------+
-             | **C++**         | *.get_changes()* |
-             +-----------------+------------------+
-             | **Return type** | *int*            |
-             +-----------------+------------------+
+             +-----------------+--------------------+
+             | **Python**      | *.last_move*       |
+             +-----------------+--------------------+
+             | **C++**         | *.get_last_move()* |
+             +-----------------+--------------------+
+             | **Return type** | *List[int]*        |
+             +-----------------+--------------------+
 
     | **last_pos**
-    |     The number of amino acids placed so far.
+    |     The position of the amimo acid at the end of the current conformation.
 
-             +-----------------+------------------+
-             | **Python**      | *.changes*       |
-             +-----------------+------------------+
-             | **C++**         | *.get_changes()* |
-             +-----------------+------------------+
-             | **Return type** | *int*            |
-             +-----------------+------------------+
+             +-----------------+-------------------+
+             | **Python**      | *.last_pos*       |
+             +-----------------+-------------------+
+             | **C++**         | *.get_last_pos()* |
+             +-----------------+-------------------+
+             | **Return type** | *List[int]*       |
+             +-----------------+-------------------+
 
     | **score**
-    |     The number of amino acids placed so far.
+    |     The score of the current conformation.
 
-             +-----------------+------------------+
-             | **Python**      | *.changes*       |
-             +-----------------+------------------+
-             | **C++**         | *.get_changes()* |
-             +-----------------+------------------+
-             | **Return type** | *int*            |
-             +-----------------+------------------+
+             +-----------------+----------------+
+             | **Python**      | *.score*       |
+             +-----------------+----------------+
+             | **C++**         | *.get_score()* |
+             +-----------------+----------------+
+             | **Return type** | *int*          |
+             +-----------------+----------------+
 
     | **sequence**
     |     The amino acid sequence of the Protein.
@@ -223,11 +224,82 @@ described.
          | **Return type** | *str*             |
          +-----------------+-------------------+
 
-
-
 Methods
 ~~~~~~~
+The Protein class knows many methods to interact with an object. The Python
+package and C++ core have the same signatures, so no distinction is made in the
+references below.
 
+    | **.get_amino**\ (*position*)
+    |     Returns a list with the amino acid index and next move of the amino
+          acid placed at the given position.
+    |         *Parameters:*
+    |             * **position** - *List[int]*: position of the amino acid.
+    |         *Returns:*
+    |             * **List[int]** - a list with the amino acid's index and next
+                    move.
+    |             E.g. `[0, 1]`
+
+    | **.hash_fold**\ ()
+    |     Returns a list of moves representing the current conformation.
+    |         *Parameters:*
+    |             * **None**
+    |         *Returns:*
+    |             * **List[int]** - a list of moves.
+    |             E.g. `[1, 2, -1]`
+
+    | **.is_hydro**\ (*index*)
+    |     Returns if the amino acid at the given index is an H.
+    |         *Parameters:*
+    |             * **index** - *int*: index of the amino acid.
+    |         *Returns:*
+    |             * **bool** - A boolean indicating if the amino acid is an H.
+
+    | **.is_valid**\ (*move*)
+    |     Returns if the given move is a valid next move.
+    |         *Parameters:*
+    |             * **move** - *int*: possible next move to perform.
+    |         *Returns:*
+    |             * **bool** - A boolean indicating if the given move is valid.
+
+    | **.place_amino**\ (*move, track=True*)
+    |     Places the next amino acid in the given direction.
+    |         *Parameters:*
+    |             * **move** - *int*: direction to place the next amino acid.
+    |             * **track** - *bool (optional)*: set to True if the move
+                    should be tracked as a change.
+    |         *Returns:*
+    |             * **None**
+
+    | **.remove_amino**\ ()
+    |     Removes the previously placed amino acid.
+    |         *Parameters:*
+    |             * **None**
+    |         *Returns:*
+    |             * **None**
+
+    | **.reset**\ ()
+    |     Reset the whole Protein as if it was just created.
+    |         *Parameters:*
+    |             * **None**
+    |         *Returns:*
+    |             * **None**
+
+    | **.reset_conformation**\ ()
+    |     Reset the placement of amino acids for the given Protein. Also sets
+          the *.score* property to 0.
+    |         *Parameters:*
+    |             * **None**
+    |         *Returns:*
+    |             * **None**
+
+    | **.set_hash**\ (*fold_hash*)
+    |     Set the conformation to the given sequence of moves.
+    |         *Parameters:*
+    |             * **List[int]** - a list of moves as provided by
+                    **.hash_fold()**.
+    |         *Returns:*
+    |             * **None**
 
 Visualize
 ---------
