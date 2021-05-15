@@ -6,19 +6,35 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 **Creator:** Okke van Eck
 
-This project is a universal toolbox for protein structure prediction within the HP-model.
-It will contain a datastructure for creating own algorithms, pre-created algorithms, datasets and visualization functions.
-Besides folding proteins, this package will also make it possible to determine the relative hardness of a protein for an algorithm.
-This allows for a fair comparison across the different algorithms.
+Prospr is a universal toolbox for protein structure prediction within the
+HP-model.
+At the core, Prospr offers an easy-to-use Protein data structure, which can be
+used to simulate protein folding.
+It also offers pre-created algorithms, datasets and visualization functions.
+The Protein data structure tracks many properties when folding the protein.
+This includes tracking the number of conformation changes, which makes it
+possible to determine the relative hardness of a protein for an algorithm.
+This allows for a fair comparison between different algorithms.
 
 So far, only square lattices are supported in n-dimensions.
-The amino acids can only be placed in the corners of the squares and have to be one unit away from the previously placed amino acid.
+The amino acids can only be placed in the corners of the squares and have to be
+one unit distance away from the previously placed amino acid.
 
-## Installation guide
+The Python package is based on a C++ core, which gives Prospr its high
+performance.
+The C++ core is made available as a separate zip file to facilitate
+high-performance computing applications.
+See the [C++ core](#c++-core) section below for direct links to the core.
+
+## Installation and documentation
 This package can simply be installed via pip by running:
 ```bash
 pip install prospr
 ```
+A quickstart and reference documentation can be found at
+[prospr.readthedocs.io](https://prospr.readthedocs.io).
+The PDF version of the complete documentation can be found
+[here](https://prospr.readthedocs.io/_/downloads/en/latest/pdf/).
 
 ## Archives
 All the C++ core files and datasets are also available as compressed archives.
@@ -34,15 +50,11 @@ The complete collection of datasets is available as a compressed archive in the
 `archives` folder. It is available as a [.zip](archives/prospr_data.zip) and a
 [.tar.tz](archives/prospr_data.tar.gz) archive.
 
-## Example usage
-*Work in progress*
-
 ## Future work
-This toolbox could be used for other protein folding problems within discrete models.
-It would be a great extension to support different models by creating a modular amino acid.
-
-## Changelog
-*Work in progress*
+This toolbox could be used for other protein folding problems within discrete
+models.
+It would be a great extension to support different models by creating a modular
+amino acid.
 
 ## License
 The used license is the GNU LESSER GENERAL PUBLIC LICENSE.
