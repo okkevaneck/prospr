@@ -132,9 +132,10 @@ directly from *prospr* without specifying a submodule, e.g.
 
 Properties
 ~~~~~~~~~~
-In Python, each property can be directly called in Python as an attribute. A
-method needs to be called when using the C++ core. Each property is described
-below and shows how to access it for both languages.
+When using the Python package, each property can be directly called as an
+attribute. If the C++ core is used, the property can be accessed using a method.
+Each property is described below with the Python and C++ syntax for accessing
+them.
 
     | **changes**
     |     The number of amino acids placed so far.
@@ -226,8 +227,8 @@ below and shows how to access it for both languages.
 
 Methods
 ~~~~~~~
-The Protein class knows many methods to interact with an object. The Python
-package and C++ core have the same signatures, so no distinction is made in the
+The Protein class knows many methods to interact with a protein. The Python
+package and C++ core use the same signatures, so no distinction is made in the
 references below.
 
     | **.get_amino**\ (*position*)
