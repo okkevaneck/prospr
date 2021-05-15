@@ -18,7 +18,8 @@ hence one can solely rely on using the Python package.
 
 See the :doc:`installation` and :doc:`quickstart` pages for an easy introduction
 to the basics of Prospr. There are also the :doc:`api` where all
-functionality of Prospr is explained in-depth per module.
+functionality of Prospr is explained in-depth per module. It is recommended to
+first take a look at the :doc:`quickstart` before consulting the :doc:`api`.
 
 .. toctree::
    :maxdepth: 2
