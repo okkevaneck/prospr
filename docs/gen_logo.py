@@ -20,10 +20,12 @@ if __name__ == "__main__":
     )
     df = df.astype({"x": "int32", "y": "int32"})
 
-    ax.plot(df["x"], df["y"], color="black", alpha=0.65, zorder=1)
-    last_amino = {"x": 4, "y": -0.5, "Type": "H"}
+    # Plot straight lines and add last amino acid.
+    ax.plot(df["x"], df["y"], color="black", alpha=0.65, zorder=1, lw=4)
+    last_amino = {"x": 3.5, "y": -0.75, "Type": "H"}
     df = df.append(last_amino, ignore_index=True)
 
+    # Plot curvy line.
     verts = [
         (df.iloc[-2]["x"], df.iloc[-2]["y"]),
         (1.5, -0.5),
@@ -36,10 +38,11 @@ if __name__ == "__main__":
     ]
     path = Path(verts, codes)
     patch = patches.PathPatch(
-        path, facecolor="none", edgecolor="black", lw=1.5, alpha=0.65, zorder=1
+        path, facecolor="none", edgecolor="black", lw=4, alpha=0.65, zorder=1
     )
     ax.add_patch(patch)
 
+    # Add amino acids.
     sns.scatterplot(
         x="x",
         y="y",
@@ -49,7 +52,8 @@ if __name__ == "__main__":
         style="Type",
         markers={"H": "o", "P": "s"},
         palette={"H": "royalblue", "P": "orange"},
-        s=80,
+        s=100,
+        linewidth=0,
         zorder=2,
         ax=ax,
     )
@@ -65,12 +69,18 @@ if __name__ == "__main__":
             color="indianred",
             alpha=0.9,
             zorder=1,
-            lw=1.5,
+            lw=4,
         )
+
+    # Plot text.
+    ax.text(0.80, -1.83, "rospr", fontsize=110, fontstyle="italic")
 
     # Remove axis and legend.
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
     ax.get_legend().remove()
 
+    fig.savefig(
+        "source/_static/gen_logo.png", bbox_inches="tight", pad_inches=0
+    )
     plt.show()
