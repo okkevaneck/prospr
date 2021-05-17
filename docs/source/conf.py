@@ -59,6 +59,5 @@ html_theme_options = {
     "description_font_style": "italic",
     "github_user": "OkkeVanEck",
     "github_repo": "prospr",
-    "github_banner": True,
     "github_type": "star",
 }
