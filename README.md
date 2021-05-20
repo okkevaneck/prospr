@@ -1,7 +1,6 @@
 ## Prospr: The Protein Structure Prediction Toolbox
-
-[comment]: <> (![Prospr's logo]&#40;https://github.com/OkkeVanEck/prospr/tree/master/docs/source/_static/prospr_logo.png&#41;  )
-![Prospr's logo](https://github.com/OkkeVanEck/prospr/blob/add_documentation/docs/source/_static/prospr_logo.png)  
+![Prospr's logo](docs/source/_static/prospr_logo.png)  
+<img src="https://github.com/OkkeVanEck/prospr/docs/source/_static/prospr_logo.png" width="50")  
 
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
@@ -28,7 +27,7 @@ The Python package is based on a C++ core, which gives Prospr its high
 performance.
 The C++ core is made available as a separate zip file to facilitate
 high-performance computing applications.
-See the [C++ core](#c++-core) section below for direct links to the core.
+See the C++ core section below for direct links to the core.
 
 ## Installation and documentation
 This package can simply be installed via pip by running:
