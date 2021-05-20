@@ -1,6 +1,6 @@
 ## Prospr: The Protein Structure Prediction Toolbox
 <p align="center">
-    <img src="docs/source/_static/prospr_logo.png" alt="Prospr's logo" width="516" height="320">  
+    <img src="docs/source/_static/prospr_logo.png" alt="Prospr's logo" width="496" height="308">  
 </p>
 
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
