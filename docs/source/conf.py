@@ -54,7 +54,7 @@ html_theme = "alabaster"
 html_static_path = ["_static"]
 
 html_theme_options = {
-    "logo": "prospr_logo_v1.png",
+    "logo": "prospr_logo.png",
     "description": "Optimized Protein folding in Python and C++.",
     "description_font_style": "italic",
     "github_user": "OkkeVanEck",

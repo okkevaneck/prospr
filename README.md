@@ -1,4 +1,6 @@
 ## Prospr: The Protein Structure Prediction Toolbox
+[logo]: https://github.com/OkkeVanEck/prospr/tree/add_documentation/docs/source/_static/prospr_logo.png "Logo Prospr"
+
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/OkkeVanEck/prospr/CI-CD/master)
