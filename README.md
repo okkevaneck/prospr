@@ -1,5 +1,7 @@
 ## Prospr: The Protein Structure Prediction Toolbox
-<img src="docs/source/_static/prospr_logo.png" alt="Prospr's logo" width="750" height="350" style="text-align: center;">  
+<p align="center">
+    <img src="docs/source/_static/prospr_logo.png" alt="Prospr's logo" width="516" height="320">  
+</p>
 
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
