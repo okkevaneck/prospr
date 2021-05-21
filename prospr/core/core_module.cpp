@@ -19,14 +19,14 @@ PYBIND11_MODULE(prospr_core, m) {
     py::class_<Protein>(m, "Protein")
         .def(py::init<const std::string, int &>(), "Protein constructor",
                 py::arg("sequence"), py::arg("dim")=2)
-        .def_property_readonly("sequence", &Protein::get_sequence)
-        .def_property_readonly("h_idxs", &Protein::get_h_idxs)
+        .def_property_readonly("changes", &Protein::get_changes)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
+        .def_property_readonly("h_idxs", &Protein::get_h_idxs)
         .def_property_readonly("last_move", &Protein::get_last_move)
         .def_property_readonly("last_pos", &Protein::get_last_pos)
         .def_property_readonly("score", &Protein::get_score)
-        .def_property_readonly("changes", &Protein::get_changes)
+        .def_property_readonly("sequence", &Protein::get_sequence)
 
         .def("get_amino", &Protein::get_amino,
             "Get amino index and next direction from amino at given position",
