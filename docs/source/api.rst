@@ -25,9 +25,9 @@ specifying a submodule, e.g.
     |         *Parameters:*
     |             * **protein** - *Protein*: the Protein object to fold.
     |         *Returns:*
-    |             * **Protein** - the Protein object set at the found conformation
-                    and with updated properties according to the performed
-                    moves.
+    |             * **Protein** - the Protein object set at the found
+                    conformation and with updated properties according to the
+                    performedmoves.
 
     | **depth_first_bnb**\ (*protein*)
     |     Finds the most optimal conformation using a depth-first
@@ -36,9 +36,9 @@ specifying a submodule, e.g.
     |         *Parameters:*
     |             * **protein** - *Protein*: the Protein object to fold.
     |         *Returns:*
-    |             * **Protein** - the Protein object set at the found conformation
-                    and with updated properties according to the performed
-                    moves.
+    |             * **Protein** - the Protein object set at the found
+                    conformationand with updated properties according to the
+                    performed moves.
 
 Datasets
 --------
@@ -297,7 +297,7 @@ references below.
     | **.set_hash**\ (*fold_hash*)
     |     Set the conformation to the given sequence of moves.
     |         *Parameters:*
-    |             * **List[int]** - a list of moves as provided by
+    |             * **fold_hash** - *List[int]*: a list of moves as provided by
                     **.hash_fold()**.
     |         *Returns:*
     |             * **None**
@@ -316,6 +316,7 @@ e.g.
     | **plot_protein**\ (*protein*)
     |     Plots the current set conformation of the given Protein object.
     |         *Parameters:*
-    |             * **protein** - a Protein object to plot the conformation of.
+    |             * **protein** - *Protein*: a Protein object to plot the
+                    conformation of.
     |         *Returns:*
     |             * **None**

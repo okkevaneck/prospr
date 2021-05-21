@@ -13,6 +13,9 @@ COREDIR=prospr/core/src
 DATADIR=prospr/data
 
 
+# Move into the git root.
+cd $(git rev-parse --show-toplevel)
+
 # Create .zip core archive.
 zip -jqr prospr_core.zip "${COREDIR}/"
 mv prospr_core.zip "${ARCHIVEDIR}/prospr_core.zip"
