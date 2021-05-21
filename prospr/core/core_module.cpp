@@ -7,6 +7,7 @@
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
+#include "src/amino_acid.cpp"
 #include "src/protein.cpp"
 #include "src/depth_first.cpp"
 #include "src/depth_first_bnb.cpp"
@@ -14,6 +15,13 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(prospr_core, m) {
     m.doc() = "Prospr core written in C++.";
+
+    /* AminoAcid class definition. */
+    py::class_<AminoAcid>(m, "AminoAcid")
+        .def(py::init<const std::string, int , int, int, int&>(),
+                "AminoAcid constructor", py::arg("type"), py::arg("bond_value"),
+                py::arg("index"), py::arg("prev_move"), py::arg("next_move"))
+    ;
 
     /* Protein class definition. */
     py::class_<Protein>(m, "Protein")
