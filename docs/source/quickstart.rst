@@ -153,15 +153,21 @@ acids.
 
     p_2d = Protein("HPPH")
     p_2d.place_amino(1)
+    p_2d.place_amino(2)
     p_2d.score
     >>> 0
 
-    p_2d.place_amino(2)
     p_2d.place_amino(-1)
     p_2d.score
     >>> -1
 
-.. TODO: Add a figure of the fold.
+|no_score| |with_score|
+
+.. |no_score| image:: _static/quickstart_example_fold_no_score.png
+   :width: 49%
+
+.. |with_score| image:: _static/quickstart_example_fold.png
+   :width: 49%
 
 Checking number of changes
 --------------------------
@@ -319,7 +325,10 @@ function from the *prospr.visualize* module.
     plot_protein(p_2d)
     >>>
 
-.. TODO: Give example image of visualization.
+.. image:: _static/quickstart_example_fold.png
+    :alt: Image of an example fold.
+    :align: center
+    :scale: 85
 
 Using datasets
 --------------

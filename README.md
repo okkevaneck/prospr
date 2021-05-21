@@ -14,10 +14,11 @@ Prospr is a universal toolbox for protein structure prediction within the
 HP-model.
 At the core, Prospr offers an easy-to-use Protein data structure, which can be
 used to simulate protein folding.
-It also offers pre-created algorithms, datasets and visualization functions.
+It also offers algorithms, datasets and visualization functions.
 The Protein data structure tracks many properties when folding the protein.
 This includes tracking the number of conformation changes, which makes it
-possible to determine the relative hardness of a protein for an algorithm.
+possible to determine the relative hardness of a protein for a specific 
+algorithm.
 This allows for a fair comparison between different algorithms.
 
 So far, only square lattices are supported in n-dimensions.

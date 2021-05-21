@@ -17,12 +17,13 @@ experiments. However, the Python package wraps all the C++ core's functionality,
 hence one can solely rely on using the Python package.
 
 See the :doc:`installation` and :doc:`quickstart` pages for an easy introduction
-to the basics of Prospr. There are also the :doc:`api` where all
+to the basics of Prospr. There is also the :doc:`api` where all
 functionality of Prospr is explained in-depth per module. It is recommended to
 first take a look at the :doc:`quickstart` before consulting the :doc:`api`.
 
 The source code of Prospr is publicly available on
-`GitHub <https://github.com/OkkeVanEck/prospr>`_.
+`GitHub <https://github.com/OkkeVanEck/prospr>`_. All code is licenced under the
+:ref:`LGPL V3 license<license>`.
 
 .. toctree::
    :maxdepth: 2
@@ -31,3 +32,4 @@ The source code of Prospr is publicly available on
    installation
    quickstart
    api
+   license
