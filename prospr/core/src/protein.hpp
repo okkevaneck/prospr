@@ -5,6 +5,7 @@
 #ifndef PROTEIN_H
 #define PROTEIN_H
 
+#include "amino_acid.hpp"
 #include <string.h>
 #include <map>
 #include <vector>
@@ -12,38 +13,77 @@
 
 class Protein {
     public:
-        Protein(std::string sequence, int dim=2);
+        /* Construct a new Protein. */
+        Protein(std::string sequence, int dim=2,
+                std::map<std::string, int> bond_values={{"H", -1}, {"P", 0}});
+
+        /* Returns the Protein's sequence. */
         std::string get_sequence();
+
+        /* Returns the Protein's set maximum dimension. */
         int get_dim();
+
+        /* Returns the Protein's current length. */
         int get_cur_len();
+
+        /* Returns the last performed move. */
         int get_last_move();
+
+        /* Returns the last position an amino acid was placed. */
         std::vector<int> get_last_pos();
-        std::vector<int> get_amino(std::vector<int> position);
+
+        /* Returns the AminoAcid at the given position, or NULL if there is
+         * none.
+         */
+        AminoAcid get_amino(std::vector<int> position);
+
+        /* Returns the Protein's current score. */
         int get_score();
+
+        /* Returns the number of performed changes. */
         int get_changes();
+
+        /* Returns the indexes of the "H" amino acids in the sequence. */
         std::vector<int> get_h_idxs();
+
+        /* Returns if the amino acid at the given index is hydrophobic. */
         bool is_hydro(int index);
+
+        /* Reset all variables of a protein as if it was just initialized. */
         void reset();
+
+        /* Reset only the conformation variables of a protein. */
         void reset_conformation();
+
+        /* Returns true if a move is valid, returns false otherwise. */
         bool is_valid(int move);
+
+        /* Place the next amino acid and update the conformation accordingly. */
         void place_amino(int move, bool track=true);
-        // TODO: Change function to use the last_move attribute.
+
+        /* Change score according to removal of the last amino. */
         void remove_amino(int move);
-        // TODO: Make the change_score function private.
-        void change_score(int move, int weight);
+
+        /* Hash and return the fold of the current conformation. */
         std::vector<int> hash_fold();
+
+        /* Set the conformation to the given hash. */
         void set_hash(std::vector<int> fold_hash, bool track=false);
 
     private:
         std::string sequence;
         std::vector<int> h_idxs;
-        std::map<std::vector<int>, std::vector<int>> space;
+        std::map<std::vector<int>, AminoAcid> space;
         int cur_len;
         int dim;
         int last_move;
         std::vector<int> last_pos;
         int score;
         int changes;
+        std::vector<AminoAcid> amino_acids;
+
+        /* Change score according to the addition or removal of the given move. */
+        void change_score(int move, int weight);
 };
 
 #endif

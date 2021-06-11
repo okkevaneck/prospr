@@ -47,7 +47,7 @@ namespace dfs_bnb {
         }
     }
 
-
+    /* Returns true if the branch cannot produce a better score.  */
     bool prune_branch(Protein protein, int max_length, int move, int best_score) {
         protein.place_amino(move);
 
@@ -69,7 +69,6 @@ namespace dfs_bnb {
 
         return cur_score + branch_score >= best_score;
     }
-
 
     /* A depth-first search function for finding a minimum energy conformation. */
     Protein depth_first_bnb(Protein protein) {

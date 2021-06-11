@@ -5,11 +5,31 @@
 #include "amino_acid.hpp"
 
 
-AminoAcid::AminoAcid(std::string type, int bond_value, int index, int prev_move,
-                     int next_move) {
+/* Construct a new AminoAcid. */
+AminoAcid::AminoAcid(std::string type, int index, int prev_move,
+        int next_move) {
     this->type = type;
-    this->bond_value = bond_value;
     this->index = index;
     this->prev_move = prev_move;
     this->next_move = next_move;
+}
+
+/* Returns the AminoAcid's type. */
+std::string AminoAcid::get_type() {
+    return this->type;
+}
+
+/* Returns the AminoAcid's index. */
+int AminoAcid::get_index() {
+    return this->index;
+}
+
+/* Returns the AminoAcid's previous move. */
+int AminoAcid::get_prev_move() {
+    return this->prev_move;
+}
+
+/* Returns the AminoAcid's next move. */
+int AminoAcid::get_next_move() {
+    return this->next_move;
 }

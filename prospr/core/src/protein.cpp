@@ -7,9 +7,11 @@
 #include <algorithm>
 
 
-Protein::Protein(std::string sequence, int dim) {
+/* Construct a new Protein. */
+Protein::Protein(std::string sequence, int dim,
+        std::map<std::string, int> bond_values) {
     this->sequence = sequence;
-    space = {}; // TODO: Init Protein with first amino set at origin.
+    space = {};
     cur_len = 0;
     this->dim = dim;
     last_move = 0;
@@ -24,56 +26,73 @@ Protein::Protein(std::string sequence, int dim) {
         h_idxs.push_back(pos);
         pos = sequence.find("H", pos + 1);
     }
+
+    /* Create AminoAcid objects for all amino acids. */
+    for(std::string::size_type i = 0; i < sequence.size(); i++) {
+        amino_acids.push_back(AminoAcid::AminoAcid(c, sequence[i], NULL, NULL));
+    }
+
+    /* Place the first amino acid at the origin. */
+    space[last_pos] = amino_acids[0];
 }
 
+/* Returns the Protein's sequence. */
 std::string Protein::get_sequence() {
     return sequence;
 }
 
+/* Returns the Protein's set maximum dimension. */
 int Protein::get_dim() {
     return dim;
 }
 
+/* Returns the Protein's current length. */
 int Protein::get_cur_len() {
     return cur_len;
 }
 
+/* Returns the last performed move. */
 int Protein::get_last_move() {
     return last_move;
 }
 
+/* Returns the last position an amino acid was placed. */
 std::vector<int> Protein::get_last_pos() {
     return last_pos;
 }
 
-std::vector<int> Protein::get_amino(std::vector<int> position) {
-    /* Return the amino acid and next direction at the given position or an
-     * empty std::vector if there is no amino acid at the given position.
-     */
+/* Returns the AminoAcid at the given position, or NULL if there is
+ * none.
+ */
+AminoAcid Protein::get_amino(std::vector<int> position) {
      if (space.count(position))
         return space.at(position);
      else
-        return {};
+        return NULL;
 }
 
+/* Returns the Protein's current score. */
 int Protein::get_score() {
     return score;
 }
 
+/* Returns the number of performed changes. */
 int Protein::get_changes() {
     return changes;
 }
 
+/* Returns the indexes of the "H" amino acids in the sequence. */
 std::vector<int> Protein::get_h_idxs() {
     return h_idxs;
 }
 
+/* Returns if the amino acid at the given index is hydrophobic. */
 bool Protein::is_hydro(int index) {
     return find(h_idxs.begin(), h_idxs.end(), index) != h_idxs.end();
 }
 
+/* Reset all variables of a protein as if it was just initialized. */
 void Protein::reset() {
-    /* Reset all variables of a protein as it was just initialized. */
     space.clear();
     cur_len = 0;
     last_pos.assign(dim, 0);
@@ -82,8 +101,8 @@ void Protein::reset() {
     changes = 0;
 }
 
+/* Reset only the conformation variables of a protein. */
 void Protein::reset_conformation() {
-    /* Reset only the conformation variables of a protein. */
     space.clear();
     cur_len = 0;
     last_pos.assign(dim, 0);
@@ -91,20 +110,20 @@ void Protein::reset_conformation() {
     score = 0;
 }
 
+/* Returns true if a move is valid, returns false otherwise. */
 bool Protein::is_valid(int move) {
-    /* Returns True if a move does not cause overlap, returns False otherwise.
-     */
     std::vector<int> check_pos = last_pos;
     check_pos[abs(move) - 1] += move / abs(move);
 
+    /* Check if the placement causes overlap. */
     if (space.count(check_pos) == 0)
         return true;
     else
         return false;
 }
 
+/* Place the next amino acid and update the conformation accordingly. */
 void Protein::place_amino(int move, bool track) {
-    /* Place amino acid and update score accordingly. */
     if (track)
         changes++;
 
@@ -126,8 +145,8 @@ void Protein::place_amino(int move, bool track) {
 }
 
 // TODO: Change function to use the last_move attribute.
+/* Change score according to removal of the last amino. */
 void Protein::remove_amino(int move) {
-    /* Change score according to removal of the last amino. */
     cur_len--;
 
     if (move != 0 && is_hydro(cur_len))
@@ -139,8 +158,8 @@ void Protein::remove_amino(int move) {
     space[last_pos][1] = 0;
 }
 
+/* Change score according to the addition or removal of the given move. */
 void Protein::change_score(int move, int weight) {
-    /* Change score according to the addition or removal of the given move. */
     std::vector<int> moves;
 
     for (int i = -dim; i <= dim; i++) {
@@ -159,8 +178,8 @@ void Protein::change_score(int move, int weight) {
     }
 }
 
+/* Hash and return the fold of the current conformation. */
 std::vector<int> Protein::hash_fold() {
-    /* Hash and return the fold of the current conformation. */
     std::vector<int> fold_hash;
     std::vector<int> cur_pos(dim, 0);
     std::vector<int> item;
@@ -178,8 +197,8 @@ std::vector<int> Protein::hash_fold() {
     return fold_hash;
 }
 
+/* Set the conformation to the given hash. */
 void Protein::set_hash(std::vector<int> fold_hash, bool track) {
-    /* Set the conformation to the given hash. */
     reset_conformation();
     place_amino(0, track);
 

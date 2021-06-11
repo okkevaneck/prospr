@@ -10,12 +10,23 @@
 
 class AminoAcid {
     public:
-        AminoAcid(std::string type, int bond_value, int index, int prev_move,
-                    int next_move);
+        /* Construct a new AminoAcid. */
+        AminoAcid(std::string type, int index, int prev_move, int next_move);
+
+        /* Returns the AminoAcid's type. */
+        std::string get_type();
+
+        /* Returns the AminoAcid's index. */
+        int get_index();
+
+        /* Returns the AminoAcid's previous move. */
+        int get_prev_move();
+
+        /* Returns the AminoAcid's next move. */
+        int get_next_move();
 
     private:
         std::string type;
-        int bond_value;
         int index;
         int prev_move;
         int next_move;

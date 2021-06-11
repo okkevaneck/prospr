@@ -19,14 +19,19 @@ PYBIND11_MODULE(prospr_core, m) {
     /* AminoAcid class definition. */
     py::class_<AminoAcid>(m, "AminoAcid")
         .def(py::init<const std::string, int , int, int, int&>(),
-                "AminoAcid constructor", py::arg("type"), py::arg("bond_value"),
-                py::arg("index"), py::arg("prev_move"), py::arg("next_move"))
+                "AminoAcid constructor", py::arg("type"), py::arg("index"),
+                py::arg("prev_move"), py::arg("next_move"))
+        .def_property_readonly("type", &AminoAcid::get_type)
+        .def_property_readonly("index", &AminoAcid::get_index())
+        .def_property_readonly("prev_move", &AminoAcid::get_prev_move)
+        .def_property_readonly("next_move", &AminoAcid::get_next_move)
     ;
 
     /* Protein class definition. */
     py::class_<Protein>(m, "Protein")
         .def(py::init<const std::string, int &>(), "Protein constructor",
-                py::arg("sequence"), py::arg("dim")=2)
+                py::arg("sequence"), py::arg("dim")=2,
+                py::arg("bond_values")={"H": -1, "P": 0})
         .def_property_readonly("changes", &Protein::get_changes)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
