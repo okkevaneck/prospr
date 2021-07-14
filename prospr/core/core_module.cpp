@@ -12,11 +12,7 @@ namespace py = pybind11;
 #include "src/depth_first.cpp"
 #include "src/depth_first_bnb.cpp"
 
-
-/* Definition for bond_values as default parameter value. */
-std::map<char, int> bond_values_cpp = {{'H', -1}, {'P', 0}};
-py::object bond_values = py::cast(bond_values_cpp);
-
+// {"H": -1, "P": 0}
 PYBIND11_MODULE(prospr_core, m) {
     m.doc() = "Prospr core written in C++.";
 
@@ -30,6 +26,10 @@ PYBIND11_MODULE(prospr_core, m) {
         .def_property_readonly("prev_move", &AminoAcid::get_prev_move)
         .def_property_readonly("next_move", &AminoAcid::get_next_move)
     ;
+
+    /* Definition for bond_values as default parameter value. */
+    std::map<char, int> bond_values_cpp = {{'H', -1}, {'P', 0}};
+    py::object bond_values = py::cast(bond_values_cpp);
 
     /* Protein class definition. */
     py::class_<Protein>(m, "Protein")
