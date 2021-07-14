@@ -15,7 +15,6 @@ namespace dfs_bnb {
     /* Initialize the stack and all_moves vector. */
     void initialize_vars(Protein* protein,
                          std::stack<std::vector<int>>* dfs_stack,
-                         std::stack<int>* prev_moves,
                          std::vector<int>* all_moves,
                          int max_length,
                          int first_move) {
@@ -33,7 +32,6 @@ namespace dfs_bnb {
         for (int i = 0; i < max_length - 2; i++) {
             protein->place_amino(2);
             dfs_stack->push(*all_moves);
-            prev_moves->push(2);
         }
 
         /* Setup all_moves for further usage. */
@@ -65,7 +63,7 @@ namespace dfs_bnb {
         if (cur_len != max_length && h_idxs.back() == max_length - 1)
             branch_score--;
 
-        protein.remove_amino(move);
+        protein.remove_amino();
 
         return cur_score + branch_score >= best_score;
     }
@@ -75,26 +73,21 @@ namespace dfs_bnb {
         int max_length = protein.get_sequence().length();
 
         /* The first two amino acids are fixed in order to prevent symmetry. */
-        if (max_length >= 1)
-            protein.place_amino(0);
-        if (max_length >= 2)
+        if (max_length > 1)
             protein.place_amino(2);
-        if (max_length < 3)
+        if (max_length <= 2)
             return protein;
 
         /* Setup all_moves for initializing the stack. */
         int move = 2;
         std::vector<int> all_moves;
         std::stack<std::vector<int>> dfs_stack;
-        std::stack<int> prev_moves;
-        initialize_vars(&protein, &dfs_stack, &prev_moves, &all_moves, max_length,
-                        move);
+        initialize_vars(&protein, &dfs_stack, &all_moves, max_length, move);
 
         /* Declare and set variables for the depth-first search. */
         int best_score = 1;
         std::vector<int> best_hash;
         std::vector<int> remaining_moves;
-        int prev_move;
         int score;
         bool placed_amino;
 
@@ -132,7 +125,6 @@ namespace dfs_bnb {
                                                                 move, best_score)) {
                         protein.place_amino(move);
                         dfs_stack.push(remaining_moves);
-                        prev_moves.push(move);
                         placed_amino = true;
                     }
                 }
@@ -141,10 +133,8 @@ namespace dfs_bnb {
                 while (!placed_amino && remaining_moves.empty() &&
                        !dfs_stack.empty()) {
                     remaining_moves = dfs_stack.top();
-                    prev_move = prev_moves.top();
                     dfs_stack.pop();
-                    prev_moves.pop();
-                    protein.remove_amino(prev_move);
+                    protein.remove_amino();
                 }
 
                 /* Check if there are no moves left. */

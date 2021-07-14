@@ -9,7 +9,7 @@
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim,
-        std::map<std::string, int> bond_values) {
+        std::map<char, int> bond_values) {
     this->sequence = sequence;
     space = {};
     cur_len = 0;
@@ -19,6 +19,7 @@ Protein::Protein(std::string sequence, int dim,
     score = 0;
     changes = 0;
 
+    // TODO: Change to return dict with all bond_value chars to list of idxs.
     /* Store all indices of the H-amino acid characters in hIdxs. */
     size_t pos = sequence.find("H", 0);
 
@@ -28,8 +29,9 @@ Protein::Protein(std::string sequence, int dim,
     }
 
     /* Create AminoAcid objects for all amino acids. */
-    for(std::string::size_type i = 0; i < sequence.size(); i++) {
-        amino_acids.push_back(AminoAcid::AminoAcid(c, sequence[i], NULL, NULL));
+    for (std::string::size_type i = 0; i < sequence.size(); i++) {
+        AminoAcid* new_aa = new AminoAcid(sequence[i], (int)i, 0, 0);
+        amino_acids.push_back(new_aa);
     }
 
     /* Place the first amino acid at the origin. */
@@ -64,7 +66,7 @@ std::vector<int> Protein::get_last_pos() {
 /* Returns the AminoAcid at the given position, or NULL if there is
  * none.
  */
-AminoAcid Protein::get_amino(std::vector<int> position) {
+AminoAcid* Protein::get_amino(std::vector<int> position) {
      if (space.count(position))
         return space.at(position);
      else
@@ -81,11 +83,13 @@ int Protein::get_changes() {
     return changes;
 }
 
+// TODO: Change to return dict with all bond_value chars to list of idxs.
 /* Returns the indexes of the "H" amino acids in the sequence. */
 std::vector<int> Protein::get_h_idxs() {
     return h_idxs;
 }
 
+// TODO: Change to us all bond_value chars and check with extra char parameter.
 /* Returns if the amino acid at the given index is hydrophobic. */
 bool Protein::is_hydro(int index) {
     return find(h_idxs.begin(), h_idxs.end(), index) != h_idxs.end();
@@ -127,35 +131,39 @@ void Protein::place_amino(int move, bool track) {
     if (track)
         changes++;
 
-    if (move != 0) {
-        space[last_pos][1] = move;
-        last_pos[abs(move) - 1] += move / abs(move);
-    }
+    space[last_pos]->set_next_move(move);
+    last_pos[abs(move) - 1] += move / abs(move);
 
+    /* Check for illegal folds. */
     if (space.count(last_pos) > 0)
         throw std::runtime_error("Protein folded onto itself..");
 
     /* Change score according to placement of the new amino. */
-    if (move != 0 && is_hydro(cur_len))
+    if (is_hydro(cur_len))
         change_score(move, -1);
 
-    space[last_pos] = std::vector<int>{cur_len, 0};
+    space[last_pos] = amino_acids[cur_len];
+    space[last_pos]->set_prev_move(-move);
     last_move = move;
     cur_len++;
 }
 
-// TODO: Change function to use the last_move attribute.
-/* Change score according to removal of the last amino. */
-void Protein::remove_amino(int move) {
+/* Remove last placed amino acid and change score accordingly. */
+void Protein::remove_amino() {
+    if (cur_len == 1) {
+        throw std::runtime_error("Cannot remove the last amino acid at origin..");
+    }
+
     cur_len--;
 
-    if (move != 0 && is_hydro(cur_len))
-        change_score(move, 1);
+    if (is_hydro(cur_len))
+        change_score(last_move, 1);
 
     /* Remove the last amino. */
     space.erase(last_pos);
-    last_pos[abs(move) - 1] -= move / abs(move);
-    space[last_pos][1] = 0;
+    last_pos[abs(last_move) - 1] -= last_move / abs(last_move);
+    space[last_pos]->set_next_move(0);
+    last_move = space[last_pos]->get_prev_move();
 }
 
 /* Change score according to the addition or removal of the given move. */
@@ -173,7 +181,7 @@ void Protein::change_score(int move, int weight) {
         cur_pos = last_pos;
         cur_pos[abs(move) - 1] += move / abs(move);
 
-        if (space.count(cur_pos) > 0 && is_hydro(space[cur_pos][0]))
+        if (space.count(cur_pos) > 0 && is_hydro(space[cur_pos]->get_index()))
             score += weight;
     }
 }
@@ -182,15 +190,17 @@ void Protein::change_score(int move, int weight) {
 std::vector<int> Protein::hash_fold() {
     std::vector<int> fold_hash;
     std::vector<int> cur_pos(dim, 0);
-    std::vector<int> item;
+    AminoAcid* cur_amino;
+    int next_move = 0;
 
     if (space.count(cur_pos) > 0) {
-        item = space.at(cur_pos);
+        cur_amino = space.at(cur_pos);
+        next_move = cur_amino->get_next_move();
 
-        while (item[1] != 0) {
-            cur_pos[abs(item[1]) - 1] += item[1] / abs(item[1]);
-            fold_hash.push_back(item[1]);
-            item = space.at(cur_pos);
+        while (next_move != 0) {
+            cur_pos[abs(next_move) - 1] += next_move / abs(next_move);
+            fold_hash.push_back(next_move);
+            cur_amino = space.at(cur_pos);
         }
     }
 

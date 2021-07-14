@@ -6,8 +6,7 @@
 
 
 /* Construct a new AminoAcid. */
-AminoAcid::AminoAcid(std::string type, int index, int prev_move,
-        int next_move) {
+AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move) {
     this->type = type;
     this->index = index;
     this->prev_move = prev_move;
@@ -15,7 +14,7 @@ AminoAcid::AminoAcid(std::string type, int index, int prev_move,
 }
 
 /* Returns the AminoAcid's type. */
-std::string AminoAcid::get_type() {
+char AminoAcid::get_type() {
     return this->type;
 }
 
@@ -32,4 +31,14 @@ int AminoAcid::get_prev_move() {
 /* Returns the AminoAcid's next move. */
 int AminoAcid::get_next_move() {
     return this->next_move;
+}
+
+/* Sets the AminoAcid's previous move. */
+void AminoAcid::set_prev_move(int move) {
+    this->prev_move = move;
+}
+
+/* Sets the AminoAcid's next move. */
+void AminoAcid::set_next_move(int move) {
+    this->next_move = move;
 }

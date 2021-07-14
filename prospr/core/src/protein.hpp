@@ -15,7 +15,7 @@ class Protein {
     public:
         /* Construct a new Protein. */
         Protein(std::string sequence, int dim=2,
-                std::map<std::string, int> bond_values={{"H", -1}, {"P", 0}});
+                std::map<char, int> bond_values={{'H', -1}, {'P', 0}});
 
         /* Returns the Protein's sequence. */
         std::string get_sequence();
@@ -35,7 +35,7 @@ class Protein {
         /* Returns the AminoAcid at the given position, or NULL if there is
          * none.
          */
-        AminoAcid get_amino(std::vector<int> position);
+        AminoAcid* get_amino(std::vector<int> position);
 
         /* Returns the Protein's current score. */
         int get_score();
@@ -61,8 +61,8 @@ class Protein {
         /* Place the next amino acid and update the conformation accordingly. */
         void place_amino(int move, bool track=true);
 
-        /* Change score according to removal of the last amino. */
-        void remove_amino(int move);
+        /* Remove last placed amino acid and change score accordingly. */
+        void remove_amino();
 
         /* Hash and return the fold of the current conformation. */
         std::vector<int> hash_fold();
@@ -73,14 +73,14 @@ class Protein {
     private:
         std::string sequence;
         std::vector<int> h_idxs;
-        std::map<std::vector<int>, AminoAcid> space;
+        std::map<std::vector<int>, AminoAcid*> space;
         int cur_len;
         int dim;
         int last_move;
         std::vector<int> last_pos;
         int score;
         int changes;
-        std::vector<AminoAcid> amino_acids;
+        std::vector<AminoAcid*> amino_acids;
 
         /* Change score according to the addition or removal of the given move. */
         void change_score(int move, int weight);

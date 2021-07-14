@@ -13,6 +13,10 @@ namespace py = pybind11;
 #include "src/depth_first_bnb.cpp"
 
 
+/* Definition for bond_values as default parameter value. */
+std::map<char, int> bond_values_cpp = {{'H', -1}, {'P', 0}};
+py::object bond_values = py::cast(bond_values_cpp);
+
 PYBIND11_MODULE(prospr_core, m) {
     m.doc() = "Prospr core written in C++.";
 
@@ -22,7 +26,7 @@ PYBIND11_MODULE(prospr_core, m) {
                 "AminoAcid constructor", py::arg("type"), py::arg("index"),
                 py::arg("prev_move"), py::arg("next_move"))
         .def_property_readonly("type", &AminoAcid::get_type)
-        .def_property_readonly("index", &AminoAcid::get_index())
+        .def_property_readonly("index", &AminoAcid::get_index)
         .def_property_readonly("prev_move", &AminoAcid::get_prev_move)
         .def_property_readonly("next_move", &AminoAcid::get_next_move)
     ;
@@ -31,7 +35,7 @@ PYBIND11_MODULE(prospr_core, m) {
     py::class_<Protein>(m, "Protein")
         .def(py::init<const std::string, int &>(), "Protein constructor",
                 py::arg("sequence"), py::arg("dim")=2,
-                py::arg("bond_values")={"H": -1, "P": 0})
+                py::arg("bond_values")=bond_values) // TODO: Check if set correctly.
         .def_property_readonly("changes", &Protein::get_changes)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
@@ -55,10 +59,7 @@ PYBIND11_MODULE(prospr_core, m) {
             "Place a protein in a given direction", py::arg("move"),
             py::arg("track")=true)
         .def("remove_amino", &Protein::remove_amino,
-            "Remove the last placed amino", py::arg("move"))
-        .def("change_score", &Protein::change_score,
-            "Change the score attribute according to the given move and weight",
-            py::arg("move"), py::arg("value"))
+            "Remove the last placed amino")
         .def("hash_fold", &Protein::hash_fold,
             "Process the current conformation into a sequence of moves")
         .def("set_hash", &Protein::set_hash,

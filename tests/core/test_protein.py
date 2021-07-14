@@ -42,12 +42,12 @@ class TestProtein:
     def test_protein_2d_moves(self, protein_2d):
         """Test if a 2D protein can move in all directions."""
         assert protein_2d.cur_len == 0
-        moves = [0, 1, 2, -1, -1, -2]
+        moves = [1, 2, -1, -1, -2]
 
         for i, m in enumerate(moves):
             protein_2d.place_amino(m)
-            assert protein_2d.hash_fold() == moves[1 : i + 1]
-            assert protein_2d.cur_len == len(moves[: i + 1])
+            assert protein_2d.hash_fold() == moves[: i + 1]
+            assert protein_2d.cur_len == len(moves[: i + 1]) + 1
             assert protein_2d.last_move == m
 
     def test_protein_3d_moves(self, protein_3d):
@@ -57,26 +57,26 @@ class TestProtein:
 
         for i, m in enumerate(moves):
             protein_3d.place_amino(m)
-            assert protein_3d.hash_fold() == moves[1 : i + 1]
-            assert protein_3d.cur_len == len(moves[: i + 1])
+            assert protein_3d.hash_fold() == moves[: i + 1]
+            assert protein_3d.cur_len == len(moves[: i + 1]) + 1
             assert protein_3d.last_move == m
 
     def test_protein_2d_undo_move(self, protein_2d):
         """Test if a 2D protein can remove an amino."""
-        moves = [0, 1, 2, -1, -1, -2]
+        moves = [1, 2, -1, -1, -2]
 
         for m in moves:
             protein_2d.place_amino(m)
 
-        for m in moves[:0:-1]:
-            protein_2d.remove_amino(m)
+        for m in range(len(moves)):
+            protein_2d.remove_amino()
 
     def test_protein_3d_undo_move(self, protein_3d):
         """Test if a 3D protein can remove an amino."""
-        moves = [0, 1, 2, -1, 3, -2, -1, -3]
+        moves = [1, 2, -1, 3, -2, -1, -3]
 
         for m in moves:
             protein_3d.place_amino(m)
 
-        for m in moves[:0:-1]:
+        for m in range(len(moves)):
             protein_3d.remove_amino(m)

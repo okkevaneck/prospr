@@ -5,16 +5,14 @@
 #ifndef AMINO_ACID_H
 #define AMINO_ACID_H
 
-#include <string.h>
-
 
 class AminoAcid {
     public:
         /* Construct a new AminoAcid. */
-        AminoAcid(std::string type, int index, int prev_move, int next_move);
+        AminoAcid(char type, int index, int prev_move, int next_move);
 
         /* Returns the AminoAcid's type. */
-        std::string get_type();
+        char get_type();
 
         /* Returns the AminoAcid's index. */
         int get_index();
@@ -25,8 +23,14 @@ class AminoAcid {
         /* Returns the AminoAcid's next move. */
         int get_next_move();
 
+        /* Sets the AminoAcid's previous move. */
+        void set_prev_move(int move);
+
+        /* Sets the AminoAcid's next move. */
+        void set_next_move(int move);
+
     private:
-        std::string type;
+        char type;
         int index;
         int prev_move;
         int next_move;
