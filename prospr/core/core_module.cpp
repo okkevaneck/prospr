@@ -12,15 +12,15 @@ namespace py = pybind11;
 #include "src/depth_first.cpp"
 #include "src/depth_first_bnb.cpp"
 
-// {"H": -1, "P": 0}
+
 PYBIND11_MODULE(prospr_core, m) {
     m.doc() = "Prospr core written in C++.";
 
     /* AminoAcid class definition. */
     py::class_<AminoAcid>(m, "AminoAcid")
-        .def(py::init<const std::string, int , int, int, int&>(),
+        .def(py::init<char, int , int, int &>(),
                 "AminoAcid constructor", py::arg("type"), py::arg("index"),
-                py::arg("prev_move"), py::arg("next_move"))
+                py::arg("prev_move")=0, py::arg("next_move")=0)
         .def_property_readonly("type", &AminoAcid::get_type)
         .def_property_readonly("index", &AminoAcid::get_index)
         .def_property_readonly("prev_move", &AminoAcid::get_prev_move)
@@ -33,12 +33,13 @@ PYBIND11_MODULE(prospr_core, m) {
 
     /* Protein class definition. */
     py::class_<Protein>(m, "Protein")
-        .def(py::init<const std::string, int &>(), "Protein constructor",
-                py::arg("sequence"), py::arg("dim")=2,
-                py::arg("bond_values")=bond_values) // TODO: Check if set correctly.
+        .def(py::init<const std::string, int, std::map<char, int> &>(),
+                "Protein constructor", py::arg("sequence"), py::arg("dim")=2,
+                py::arg("bond_values")=bond_values)
         .def_property_readonly("changes", &Protein::get_changes)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
+        .def_property_readonly("bond_values", &Protein::get_bond_values)
         .def_property_readonly("h_idxs", &Protein::get_h_idxs)
         .def_property_readonly("last_move", &Protein::get_last_move)
         .def_property_readonly("last_pos", &Protein::get_last_pos)

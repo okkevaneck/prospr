@@ -12,8 +12,9 @@ Protein::Protein(std::string sequence, int dim,
         std::map<char, int> bond_values) {
     this->sequence = sequence;
     space = {};
-    cur_len = 0;
+    cur_len = 1;
     this->dim = dim;
+    this->bond_values = bond_values;
     last_move = 0;
     last_pos.assign(dim, 0);
     score = 0;
@@ -46,6 +47,11 @@ std::string Protein::get_sequence() {
 /* Returns the Protein's set maximum dimension. */
 int Protein::get_dim() {
     return dim;
+}
+
+/* Returns the Protein's set of bond links. */
+std::map<char, int> Protein::get_bond_values() {
+    return bond_values;
 }
 
 /* Returns the Protein's current length. */
@@ -98,7 +104,7 @@ bool Protein::is_hydro(int index) {
 /* Reset all variables of a protein as if it was just initialized. */
 void Protein::reset() {
     space.clear();
-    cur_len = 0;
+    cur_len = 1;
     last_pos.assign(dim, 0);
     last_move = 0;
     score = 0;
@@ -108,7 +114,7 @@ void Protein::reset() {
 /* Reset only the conformation variables of a protein. */
 void Protein::reset_conformation() {
     space.clear();
-    cur_len = 0;
+    cur_len = 1;
     last_pos.assign(dim, 0);
     last_move = 0;
     score = 0;
@@ -128,6 +134,10 @@ bool Protein::is_valid(int move) {
 
 /* Place the next amino acid and update the conformation accordingly. */
 void Protein::place_amino(int move, bool track) {
+    /* Check for illegal moves. */
+    if (move == 0)
+        throw std::runtime_error("Protein folded onto itself..");
+
     if (track)
         changes++;
 
@@ -140,24 +150,23 @@ void Protein::place_amino(int move, bool track) {
 
     /* Change score according to placement of the new amino. */
     if (is_hydro(cur_len))
-        change_score(move, -1);
+        change_score(move, -1); // TODO: Use bond_values
 
     space[last_pos] = amino_acids[cur_len];
-    space[last_pos]->set_prev_move(-move);
+    space[last_pos]->set_prev_move(move);
     last_move = move;
     cur_len++;
 }
 
 /* Remove last placed amino acid and change score accordingly. */
 void Protein::remove_amino() {
-    if (cur_len == 1) {
+    if (cur_len == 1)
         throw std::runtime_error("Cannot remove the last amino acid at origin..");
-    }
 
     cur_len--;
 
     if (is_hydro(cur_len))
-        change_score(last_move, 1);
+        change_score(last_move, 1); // TODO: Use bond_values
 
     /* Remove the last amino. */
     space.erase(last_pos);
@@ -201,6 +210,7 @@ std::vector<int> Protein::hash_fold() {
             cur_pos[abs(next_move) - 1] += next_move / abs(next_move);
             fold_hash.push_back(next_move);
             cur_amino = space.at(cur_pos);
+            next_move = cur_amino->get_next_move();
         }
     }
 
@@ -210,7 +220,6 @@ std::vector<int> Protein::hash_fold() {
 /* Set the conformation to the given hash. */
 void Protein::set_hash(std::vector<int> fold_hash, bool track) {
     reset_conformation();
-    place_amino(0, track);
 
     for (auto &move: fold_hash) {
         place_amino(move, track);

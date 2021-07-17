@@ -23,6 +23,9 @@ class Protein {
         /* Returns the Protein's set maximum dimension. */
         int get_dim();
 
+        /* Returns the Protein's set of bond links. */
+        std::map<char, int> get_bond_values();
+
         /* Returns the Protein's current length. */
         int get_cur_len();
 
@@ -76,6 +79,7 @@ class Protein {
         std::map<std::vector<int>, AminoAcid*> space;
         int cur_len;
         int dim;
+        std::map<char, int> bond_values;
         int last_move;
         std::vector<int> last_pos;
         int score;

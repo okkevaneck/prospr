@@ -15,30 +15,30 @@ AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move) {
 
 /* Returns the AminoAcid's type. */
 char AminoAcid::get_type() {
-    return this->type;
+    return type;
 }
 
 /* Returns the AminoAcid's index. */
 int AminoAcid::get_index() {
-    return this->index;
+    return index;
 }
 
 /* Returns the AminoAcid's previous move. */
 int AminoAcid::get_prev_move() {
-    return this->prev_move;
+    return prev_move;
 }
 
 /* Returns the AminoAcid's next move. */
 int AminoAcid::get_next_move() {
-    return this->next_move;
+    return next_move;
 }
 
 /* Sets the AminoAcid's previous move. */
 void AminoAcid::set_prev_move(int move) {
-    this->prev_move = move;
+    prev_move = move;
 }
 
 /* Sets the AminoAcid's next move. */
 void AminoAcid::set_next_move(int move) {
-    this->next_move = move;
+    next_move = move;
 }

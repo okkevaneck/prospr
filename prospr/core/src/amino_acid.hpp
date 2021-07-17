@@ -9,7 +9,7 @@
 class AminoAcid {
     public:
         /* Construct a new AminoAcid. */
-        AminoAcid(char type, int index, int prev_move, int next_move);
+        AminoAcid(char type, int index, int prev_move=0, int next_move=0);
 
         /* Returns the AminoAcid's type. */
         char get_type();
