@@ -109,6 +109,8 @@ void Protein::reset() {
     last_move = 0;
     score = 0;
     changes = 0;
+
+    space[last_pos] = amino_acids[0];
 }
 
 /* Reset only the conformation variables of a protein. */
@@ -118,6 +120,8 @@ void Protein::reset_conformation() {
     last_pos.assign(dim, 0);
     last_move = 0;
     score = 0;
+
+    space[last_pos] = amino_acids[0];
 }
 
 /* Returns true if a move is valid, returns false otherwise. */
