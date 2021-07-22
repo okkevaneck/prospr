@@ -7,8 +7,8 @@ cd ..
 cd prospr
 
 python3 <<HEREDOC
-from prospr_core import Protein, depth_first
+from prospr_core import Protein, depth_first_bnb
 p = Protein("PHPHPHPPH")
-p2 = depth_first(p)
+p2 = depth_first_bnb(p)
 print(f"PHPHPHPPH score: {p2.score}")
 HEREDOC

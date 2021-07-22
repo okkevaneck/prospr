@@ -7,9 +7,6 @@
 #include <vector>
 #include <algorithm>
 
-// TODO: Remove
-#include <string>
-#include <iostream>
 
 namespace dfs {
     /* A depth-first search function for finding a minimum energy conformation.

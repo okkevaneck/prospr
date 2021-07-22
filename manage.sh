@@ -58,7 +58,7 @@ case "$1" in
         echo "~ Installing new prospr.."
         pip install -q .
         echo "~ Running pytest.."
-        pytest tests/core/test_depth_first.py || true # TODO: Change to test all tests!!
+        pytest || true
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
