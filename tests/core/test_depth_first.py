@@ -11,12 +11,12 @@ import pytest
 
 @pytest.fixture()
 def protein_2d():
-    return Protein("PHPHPHPPH", 2)
+    return Protein("PHPHPHPPH", 2, {"H": -1, "P": 0})
 
 
 @pytest.fixture()
 def protein_3d():
-    return Protein("HPPHPHPHPH", 3)
+    return Protein("HPPHPHPHPH", 3, {"H": -1, "P": 0})
 
 
 @pytest.mark.order(after="test_protein.TestProtein")
