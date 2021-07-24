@@ -13,7 +13,8 @@
 namespace dfs_bnb {
     // TODO: Change to use the new bond_values variables correctly!
     /* Returns true if the branch cannot produce a better score. */
-    bool prune_branch(Protein protein, int max_length, int free_places, int move, int best_score) {
+    bool prune_branch(Protein protein, int max_length, int no_neighbors,
+            int move, int best_score) {
         protein.place_amino(move);
 
         int cur_len = protein.get_cur_len();
@@ -25,7 +26,7 @@ namespace dfs_bnb {
                                                                   h_idxs.end(),
                                                                   cur_len - 1);
         int h_left = h_idxs.size() - (next_h_idx - h_idxs.begin());
-        int branch_score = -free_places * h_left;
+        int branch_score = -no_neighbors * h_left;
 
         /* Lower branch score if the sequence ends on a scoring amino acid. */
         if (cur_len != max_length && h_idxs.back() == max_length - 1)
@@ -42,7 +43,7 @@ namespace dfs_bnb {
     Protein depth_first_bnb(Protein protein) {
         int max_length = protein.get_sequence().length();
         int dim = protein.get_dim();
-        int free_places = (int)pow(2, (dim - 1));
+        int no_neighbors = (int)pow(2, (dim - 1));
 
         /* The first two amino acids are fixed to prevent y-axis symmetry. */
         if (max_length > 1)
@@ -72,7 +73,8 @@ namespace dfs_bnb {
 
             /* Try to place the current amino acid. */
             while (!placed_amino && move != -dim - 1) {
-                if (protein.is_valid(move) && !prune_branch(protein, max_length, free_places, move, best_score)) {
+                if (protein.is_valid(move) && !prune_branch(protein, max_length,
+                        no_neighbors, move, best_score)) {
                     protein.place_amino(move);
                     placed_amino = true;
 
