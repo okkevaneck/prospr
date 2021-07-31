@@ -28,19 +28,19 @@ PYBIND11_MODULE(prospr_core, m) {
     ;
 
     /* Definition for bond_values as default parameter value. */
-    std::map<char, int> bond_values_cpp = {{'H', -1}, {'P', 0}};
+    std::map<std::string, int> bond_values_cpp = {{"HH", -1}};
     py::object bond_values = py::cast(bond_values_cpp);
 
     /* Protein class definition. */
     py::class_<Protein>(m, "Protein")
         .def(py::init<const std::string, int, std::map<char, int> &>(),
                 "Protein constructor", py::arg("sequence"), py::arg("dim")=2,
-                py::arg("bond_values")=bond_values)
+                py::arg("model")="", py::arg("bond_values")=bond_values,
+                py::arg("bond_symmetry")=true)
         .def_property_readonly("changes", &Protein::get_changes)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
         .def_property_readonly("bond_values", &Protein::get_bond_values)
-        .def_property_readonly("h_idxs", &Protein::get_h_idxs)
         .def_property_readonly("last_move", &Protein::get_last_move)
         .def_property_readonly("last_pos", &Protein::get_last_pos)
         .def_property_readonly("score", &Protein::get_score)
@@ -49,8 +49,8 @@ PYBIND11_MODULE(prospr_core, m) {
         .def("get_amino", &Protein::get_amino,
             "Get amino index and next direction from amino at given position",
             py::arg("position"))
-        .def("is_hydro", &Protein::is_hydro,
-            "Check if the amino is an H at given position", py::arg("index"))
+        .def("is_weighted", &Protein::is_weighted,
+            "Check if the amino acid at index is weighted", py::arg("index"))
         .def("reset", &Protein::reset, "Reset the whole protein")
         .def("reset_conformation", &Protein::reset_conformation,
             "Reset only the conformation of the protein, not the statistics")

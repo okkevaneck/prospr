@@ -10,12 +10,12 @@ import pytest
 
 @pytest.fixture()
 def protein_2d():
-    return Protein("HPPHPPHH", dim=2, bond_values={"H": -1, "P": 0})
+    return Protein("HPPHPPHH", dim=2, model="HP")
 
 
 @pytest.fixture()
 def protein_3d():
-    return Protein("HPPHPPHH", dim=3, bond_values={"H": -1, "P": 0})
+    return Protein("HPPHPPHH", dim=3, model="HP")
 
 
 class TestProtein:

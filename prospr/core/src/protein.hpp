@@ -14,8 +14,9 @@
 class Protein {
     public:
         /* Construct a new Protein. */
-        Protein(std::string sequence, int dim=2,
-                std::map<char, int> bond_values={{'H', -1}, {'P', 0}});
+        Protein(std::string sequence, int dim=2, std::string model="",
+                std::map<std::string, int> bond_values={{"HH", -1}},
+                bool bond_symmetry=true);
 
         /* Returns the Protein's sequence. */
         std::string get_sequence();
@@ -24,7 +25,7 @@ class Protein {
         int get_dim();
 
         /* Returns the Protein's set of bond links. */
-        std::map<char, int> get_bond_values();
+        std::map<std::string, int> get_bond_values();
 
         /* Returns the Protein's current length. */
         int get_cur_len();
@@ -46,11 +47,8 @@ class Protein {
         /* Returns the number of performed changes. */
         int get_changes();
 
-        /* Returns the indexes of the "H" amino acids in the sequence. */
-        std::vector<int> get_h_idxs();
-
-        /* Returns if the amino acid at the given index is hydrophobic. */
-        bool is_hydro(int index);
+        /* Returns if the amino acid at the given index is weighted. */
+        bool is_weighted(int index);
 
         /* Reset all variables of a protein as if it was just initialized. */
         void reset();
@@ -79,15 +77,18 @@ class Protein {
         std::map<std::vector<int>, AminoAcid*> space;
         int cur_len;
         int dim;
-        std::map<char, int> bond_values;
+        std::map<std::string, int> bond_values;
+        std::string weighted_amino_acids;
         int last_move;
         std::vector<int> last_pos;
         int score;
         int changes;
         std::vector<AminoAcid*> amino_acids;
 
-        /* Change score according to the addition or removal of the given move. */
-        void change_score(int move, int weight);
+        /* Change score according to the already performed addition or removal of the
+         * given move.
+         */
+        void _change_score(int move);
 };
 
 #endif
