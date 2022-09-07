@@ -12,7 +12,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         std::map<std::string, int> bond_values, bool bond_symmetry) {
     this->sequence = sequence;
     space = {};
-    cur_len = 1;
+    cur_len = (sequence.size() == 0) ? 0 : 1;
     this->dim = dim;
     last_move = 0;
     last_pos.assign(dim, 0);
@@ -21,15 +21,18 @@ Protein::Protein(std::string sequence, int dim, std::string model,
 
     /* Deduct what model to use, or apply custom one. */
     if (model == "HP") {
-        std::map<std::string, int> model_bonds = {{"HH", -4}};
+        /* Store bond_values according to the HP-model. */
+        std::map<std::string, int> model_bonds = {{"HH", -1}};
         this->bond_values = model_bonds;
         this->weighted_amino_acids = "H";
     } else if (model == "HPXN") {
+        /* Store bond_values according to the HPXN-model. */
         std::map<std::string, int> model_bonds = {{"HH", -4}, {"PP", -1},
                                                   {"PN", -1}, {"NN", 1}};
         this->bond_values = model_bonds;
         this->weighted_amino_acids = "HPN";
-    } else if (bond_symmetry) {
+    } else {
+        /* Store the given bond_values weights. */
         std::string weighted_amino_acids = "";
         std::string reversed_bond;
 
@@ -37,40 +40,57 @@ Protein::Protein(std::string sequence, int dim, std::string model,
          * Also add amino acid to list of weighted if not added yet.
          */
         for (std::pair<std::string, int> element : bond_values) {
-            reversed_bond = std::string(1, element.first[1]) + element.first[0];
-
-            if (bond_values.count(reversed_bond) == 0) {
-                bond_values[reversed_bond] = element.second;
-            }
-
+            /* Search all unique weighted amino acids. */
             for (char const &amino_acid: element.first) {
-                if (!weighted_amino_acids.contains(amino_acid))
+                if (weighted_amino_acids.find(amino_acid) == std::string::npos)
                     weighted_amino_acids += amino_acid;
             }
-        }
 
-        this->bond_values = bond_values;
-    } else {
-        std::string weighted_amino_acids = "";
+            /* Add the symmetry bonds as well if specified. */
+            if (bond_symmetry) {
+                reversed_bond = std::string(1, element.first[1]) + element.first[0];
 
-        /* Search all unique weighted amino acids. */
-        for (char const &amino_acid: element.first) {
-            if (!weighted_amino_acids.contains(amino_acid))
-                weighted_amino_acids += amino_acid;
+                /* Add symmetry value of the bond. */
+                if (bond_values.count(reversed_bond) == 0) {
+                    bond_values[reversed_bond] = element.second;
+                }
+            }
         }
 
         this->bond_values = bond_values;
         this->weighted_amino_acids = weighted_amino_acids;
     }
 
+    // TODO: Create internal function dedicated to creating this mapping.
+    /* Create mapping from all weighted amino acids to their maximum achievable
+     * scores. This is used to create a vector of maximum achievable scores per
+     * index.
+     */
+    std::map<char, int> max_amino_weights;
+
+    for (char& c : this->weighted_amino_acids) {
+        max_amino_weights[c] = 0;
+    }
+
+    /* Store the highest achievable weight per amino acid. */
+    for (std::pair<std::string, int> element : bond_values) {
+        for (char& c : element.first) {
+            if (max_amino_weights[c] < element.second)
+                max_amino_weights[c] = element.second;
+        }
+    }
+
     /* Create AminoAcid objects for all amino acids. */
     for (std::string::size_type i = 0; i < sequence.size(); i++) {
         AminoAcid* new_aa = new AminoAcid(sequence[i], (int)i, 0, 0);
         amino_acids.push_back(new_aa);
+        this->max_weights.push_back(max_amino_weights[sequence[i]]);
     }
 
-    /* Place the first amino acid at the origin. */
-    space[last_pos] = amino_acids[0];
+    /* Place the first amino acid at the origin if there is one. */
+    if (sequence.size() != 0) {
+        space[last_pos] = amino_acids[0];
+    }
 }
 
 /* Returns the Protein's sequence. */
@@ -107,9 +127,9 @@ std::vector<int> Protein::get_last_pos() {
  * none.
  */
 AminoAcid* Protein::get_amino(std::vector<int> position) {
-     if (space.count(position))
+    if (space.count(position))
         return space.at(position);
-     else
+    else
         return NULL;
 }
 
@@ -126,6 +146,15 @@ int Protein::get_changes() {
 /* Returns if the amino acid at the given index is weighted. */
 bool Protein::is_weighted(int index) {
     return weighted_amino_acids.find(sequence[index]) != std::string::npos;
+}
+
+/* Returns the weight created between two amino acids. */
+int Protein::get_weight(std::string aminos) {
+    try {
+        return bond_values.at(aminos);      // vector::at throws an out-of-range
+    } catch (const std::out_of_range& oor) {
+        return 0;
+    }
 }
 
 /* Reset all variables of a protein as if it was just initialized. */
@@ -238,7 +267,8 @@ void Protein::set_hash(std::vector<int> fold_hash, bool track) {
 }
 
 /* Change score according to the already performed addition or removal of the
- * given move.
+ * given move. This function is preferably only called when the altered amino
+ * acid is weighted.
  */
 void Protein::_change_score(int move) {
     std::vector<int> moves;
@@ -248,13 +278,18 @@ void Protein::_change_score(int move) {
             moves.push_back(i);
     }
 
+    /* Initialize string with amino character for bond weight checking. */
+    std::string aminos = std::string() + space[last_pos]->get_type();
     std::vector<int> cur_pos;
 
     for (auto &move: moves) {
         cur_pos = last_pos;
         cur_pos[abs(move) - 1] += move / abs(move);
 
-        if (space.count(cur_pos) > 0 && is_weighted(space[cur_pos]->get_index())) // TODO: Change is_hydro to new function get_weight between two indexes.
-            score += weight;
+        /* Update score if placing the amino creates a bond. */
+        if (space.count(cur_pos) > 0) {
+            /* get_weight() returns 0 if no bond is made. */
+            score += get_weight(aminos + space[cur_pos]->get_type());
+        }
     }
 }

@@ -50,6 +50,9 @@ class Protein {
         /* Returns if the amino acid at the given index is weighted. */
         bool is_weighted(int index);
 
+        /* Returns the weight created between two amino acids. */
+        int get_weight(std::string aminos);
+
         /* Reset all variables of a protein as if it was just initialized. */
         void reset();
 
@@ -79,6 +82,7 @@ class Protein {
         int dim;
         std::map<std::string, int> bond_values;
         std::string weighted_amino_acids;
+        std::vector<int> max_weights;
         int last_move;
         std::vector<int> last_pos;
         int score;

@@ -21,16 +21,14 @@ namespace dfs {
         if (max_length <= 2)
             return protein;
 
-        /* Create a stack that tracks possible next moves, and a move variable
-         * that contains the next possible move to try.
-         */
+        /* Create a stack that tracks possible next moves. */
         std::stack<int> dfs_stack;
-        int move;
 
-        /* The third amino acid can only move in negative direction to prevent
-        * x-axis symmetry.
-        */
-        move = -1;
+        /* Create a move variable that contains the next possible move to try.
+         * The third amino acid can only move in negative direction to prevent
+         * x-axis symmetry.
+         */
+        int move = -1;
 
         /* Declare and set variables for the depth-first search. */
         bool placed_amino = false;

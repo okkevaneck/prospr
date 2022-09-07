@@ -11,7 +11,7 @@
 
 
 namespace dfs_bnb {
-    // TODO: Change to use the new bond_values variables correctly!
+    // TODO: Change to use this->max_weights variables correctly instead of h_idxs!
     /* Returns true if the branch cannot produce a better score. */
     bool prune_branch(Protein protein, int max_length, int no_neighbors,
             int move, int best_score) {
@@ -55,12 +55,12 @@ namespace dfs_bnb {
          * that contains the next possible move to try.
          */
         std::stack<int> dfs_stack;
-        int move;
 
-        /* The third amino acid can only move in negative direction to prevent
-        * x-axis symmetry.
-        */
-        move = -1;
+        /* Create a move variable that contains the next possible move to try.
+         * The third amino acid can only move in negative direction to prevent
+         * x-axis symmetry.
+         */
+        int move = -1;
 
         /* Declare and set variables for the depth-first search. */
         bool placed_amino = false;
