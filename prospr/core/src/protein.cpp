@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <algorithm>
 
+#include <iostream> // TODO: REMOVE ME!
+
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,
@@ -18,6 +20,8 @@ Protein::Protein(std::string sequence, int dim, std::string model,
     last_pos.assign(dim, 0);
     score = 0;
     changes = 0;
+
+    std::cout << "Debug";  // TODO: REMOVE ME!
 
     /* Deduct what model to use, or apply custom one. */
     if (model == "HP") {
