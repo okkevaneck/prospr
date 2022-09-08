@@ -157,6 +157,11 @@ int Protein::get_weight(std::string aminos) {
     }
 }
 
+/* Returns the vector with maximum achievable weights per amino acid. */
+std::vector<int> Protein::get_max_weights() {
+    return max_weights;
+}
+
 /* Reset all variables of a protein as if it was just initialized. */
 void Protein::reset() {
     space.clear();

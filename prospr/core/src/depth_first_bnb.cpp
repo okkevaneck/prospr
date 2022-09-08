@@ -8,10 +8,10 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include <numeric>
 
 
 namespace dfs_bnb {
-    // TODO: Change to use this->max_weights variables correctly instead of h_idxs!
     /* Returns true if the branch cannot produce a better score. */
     bool prune_branch(Protein protein, int max_length, int no_neighbors,
             int move, int best_score) {
@@ -19,20 +19,17 @@ namespace dfs_bnb {
 
         int cur_len = protein.get_cur_len();
         int cur_score = protein.get_score();
-        std::vector<int> h_idxs = protein.get_h_idxs();
+        std::vector<int> max_weights = protein.get_max_weights();
 
-        /* Compute the number of possible scoring connections for branch. */
-        std::vector<int>::iterator next_h_idx = std::lower_bound(h_idxs.begin(),
-                                                                  h_idxs.end(),
-                                                                  cur_len - 1);
-        int h_left = h_idxs.size() - (next_h_idx - h_idxs.begin());
-        int branch_score = -no_neighbors * h_left;
+        /* Compute the sum of the remaining possible scoring connections. */
+        int branch_score = -no_neighbors * \
+            std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
 
         /* End of amino has 1 more possible way of connecting, update
          * branch_score accordingly.
          */
-        if (cur_len != max_length && h_idxs.back() == max_length - 1)
-            branch_score--;
+        if (cur_len != max_length && max_weights.back() != 0)
+            branch_score -= max_weights.back();
 
         protein.remove_amino();
 

@@ -53,6 +53,9 @@ class Protein {
         /* Returns the weight created between two amino acids. */
         int get_weight(std::string aminos);
 
+        /* Returns the vector with maximum achievable weights per amino acid. */
+        std::vector<int> get_max_weights();
+
         /* Reset all variables of a protein as if it was just initialized. */
         void reset();
 
@@ -76,7 +79,6 @@ class Protein {
 
     private:
         std::string sequence;
-        std::vector<int> h_idxs;
         std::map<std::vector<int>, AminoAcid*> space;
         int cur_len;
         int dim;
