@@ -28,7 +28,9 @@ namespace dfs_bnb {
         int h_left = h_idxs.size() - (next_h_idx - h_idxs.begin());
         int branch_score = -no_neighbors * h_left;
 
-        /* Lower branch score if the sequence ends on a scoring amino acid. */
+        /* End of amino has 1 more possible way of connecting, update
+         * branch_score accordingly.
+         */
         if (cur_len != max_length && h_idxs.back() == max_length - 1)
             branch_score--;
 

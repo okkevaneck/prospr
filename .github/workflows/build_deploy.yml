@@ -43,7 +43,7 @@ jobs:
     needs: syntax_check
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.9]
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
