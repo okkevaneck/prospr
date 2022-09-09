@@ -10,8 +10,11 @@
 
 
 /* Perform assertion checks for newly generated Protein. */
-void assert_protein_generation(Protein* protein,
-                               std::map<std::string, int> model_bonds={}) {
+void assert_2d_protein_generation(Protein* protein,
+                               std::map<std::string, int> model_bonds) {
+    /* Test getters. */
+
+
     assert (1==1);
 }
 
@@ -19,20 +22,20 @@ void assert_protein_generation(Protein* protein,
 void test_protein_generation() {
     /* Check HP-model Protein generation. */
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
-    assert_protein_generation(protein, {{"HH", -1}});
+    assert_2d_protein_generation(protein, {{"HH", -1}});
 
     /* Check HPXN-model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "HPXN");
-    assert_protein_generation(protein, {{"HH", -4}, {"PP", -1}, {"PN", -1},
+    assert_2d_protein_generation(protein, {{"HH", -4}, {"PP", -1}, {"PN", -1},
                                         {"NN", 1}});
 
     /* Check custom model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}});
-    assert_protein_generation(protein, {{"HH", -4}, {"HP", -2}});
+    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}});
 
     /* Check custom model Protein generation with symmetry option. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}}, true);
-    assert_protein_generation(protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}});
+    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}});
 }
 
 /* Test Protein functionality in 2D space. */

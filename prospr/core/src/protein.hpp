@@ -6,7 +6,7 @@
 #define PROTEIN_H
 
 #include "amino_acid.hpp"
-#include <string.h>
+#include <string>
 #include <map>
 #include <vector>
 

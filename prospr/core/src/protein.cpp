@@ -6,17 +6,13 @@
 #include <stdlib.h>
 #include <algorithm>
 
-#include <iostream> // TODO: REMOVE ME!
-
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,
         std::map<std::string, int> bond_values, bool bond_symmetry) {
     this->sequence = sequence;
     space = {};
-    std::cout << "Before\n";  // TODO: REMOVE ME!
     cur_len = (sequence.size() == 0) ? 0 : 1;
-    std::cout << "After\n";  // TODO: REMOVE ME!
     this->dim = dim;
     last_move = 0;
     last_pos.assign(dim, 0);
