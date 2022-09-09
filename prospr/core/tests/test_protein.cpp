@@ -11,7 +11,7 @@
 
 /* Perform assertion checks for newly generated Protein. */
 void assert_2d_protein_generation(Protein* protein,
-                               std::map<std::string, int> model_bonds) {
+                                  std::map<std::string, int> model_bonds) {
     /* Test getters without arguments. */
     std::string sequence = protein->get_sequence();
     assert (sequence.compare("HPPHPPHH") == 0);
@@ -70,13 +70,13 @@ void test_protein_generation() {
 
     /* Check custom model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}});
-    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}});
+    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}});
     std::cout << "\tCustom model generation successful.\n";
 
     /* Check custom model Protein generation with symmetry option. */
-    protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}}, true);
-    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}});
-    std::cout << "\tCustom symmetry model generation successful.\n";
+    protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}}, false);
+    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}});
+    std::cout << "\tCustom non-symmetry model generation successful.\n";
 }
 
 /* Test Protein functionality in 2D space. */

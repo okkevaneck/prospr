@@ -37,9 +37,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         std::string weighted_amino_acids = "";
         std::string reversed_bond;
 
-        /* For every bond, add symmetry value if not in map already.
-         * Also add amino acid to list of weighted if not added yet.
-         */
+        /* Add amino acid to list of weighted if not added yet. */
         for (std::pair<std::string, int> element : bond_values) {
             /* Search all unique weighted amino acids. */
             for (char const &amino_acid: element.first) {
@@ -47,7 +45,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
                     weighted_amino_acids += amino_acid;
             }
 
-            /* Add the symmetry bonds as well if specified. */
+            /* For every bond, add symmetry value if not in map already. */
             if (bond_symmetry) {
                 reversed_bond = std::string(1, element.first[1]) + element.first[0];
 
