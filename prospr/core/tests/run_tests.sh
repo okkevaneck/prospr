@@ -14,7 +14,7 @@ test_amino_acid() {
     # shellcheck disable=SC2086
     c++ $CFLAGS -o test_amino_acid test_amino_acid.cpp ../src/amino_acid.cpp
 
-    echo "~ Compilation successful, running the code.."
+    echo "~ Compilation successful, running the tests.."
     ./test_amino_acid
     rm test_amino_acid
     echo -e "~ Done"
@@ -26,10 +26,16 @@ test_protein() {
     # shellcheck disable=SC2086
     c++ $CFLAGS -o test_protein test_protein.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
-    echo "~ Compilation successful, running the code.."
+    echo "~ Compilation successful, running the tests.."
     ./test_protein
     rm test_protein
     echo -e "~ Done"
+}
+
+# Test all modules.
+test_all() {
+    test_amino_acid
+    test_protein
 }
 
 # Main entry point of the script.
@@ -40,6 +46,7 @@ main() {
     # Determine what module to test, default to all modules.
     if [[ $# -ne 1 ]]; then
         echo "~ Module:  all"
+        test_all
     else
         case "$1" in
             # Only test amino_acid.
@@ -63,6 +70,7 @@ main() {
             # Default to test all.
             *)
                 echo "~ Module:  all"
+                test_all
                 ;;
         esac
     fi

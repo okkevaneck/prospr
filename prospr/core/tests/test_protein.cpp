@@ -60,19 +60,23 @@ void test_protein_generation() {
     /* Check HP-model Protein generation. */
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
     assert_2d_protein_generation(protein, {{"HH", -1}});
+    std::cout << "\tHP-model generation successful.\n";
 
     /* Check HPXN-model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "HPXN");
     assert_2d_protein_generation(protein, {{"HH", -4}, {"PP", -1}, {"PN", -1},
                                            {"NN", 1}});
+    std::cout << "\tHPXN-model generation successful.\n";
 
     /* Check custom model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}});
     assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}});
+    std::cout << "\tCustom model generation successful.\n";
 
     /* Check custom model Protein generation with symmetry option. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}}, true);
     assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}});
+    std::cout << "\tCustom symmetry model generation successful.\n";
 }
 
 /* Test Protein functionality in 2D space. */
