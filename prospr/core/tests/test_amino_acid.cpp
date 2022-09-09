@@ -8,7 +8,7 @@
 
 
 int main(int argc, char* argv[]) {
-    /* Test creation of amino acid. */
+    /* Test creation of AminoAcid. */
     AminoAcid* new_aa = new AminoAcid('H', 0, 0, 0);
 
     /* Test getters. */

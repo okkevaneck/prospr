@@ -20,6 +20,18 @@ test_amino_acid() {
     echo -e "~ Done"
 }
 
+# Test protein functionality.
+test_protein() {
+    echo -e "\n~ Testing protein.."
+    # shellcheck disable=SC2086
+    c++ $CFLAGS -o test_protein test_protein.cpp ../src/protein.cpp ../src/amino_acid.cpp
+
+    echo "~ Compilation successful, running the code.."
+    ./test_protein
+    rm test_protein
+    echo -e "~ Done"
+}
+
 # Main entry point of the script.
 main() {
     # Move console into test folder.
@@ -38,6 +50,7 @@ main() {
             # Only test protein.
             "protein")
                 echo "~ Module:  protein"
+                test_protein
                 ;;
             # Only test depth_first.
             "depth_first")
