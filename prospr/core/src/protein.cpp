@@ -5,6 +5,7 @@
 #include "protein.hpp"
 #include <stdlib.h>
 #include <algorithm>
+#include <stdexcept>
 
 
 /* Construct a new Protein. */
@@ -150,10 +151,12 @@ bool Protein::is_weighted(int index) {
 
 /* Returns the weight created between two amino acids. */
 int Protein::get_weight(std::string aminos) {
-    try {
-        return bond_values.at(aminos);      // vector::at throws an out-of-range
-    } catch (const std::out_of_range& oor) {
+    std::map<std::string, int>::iterator it = bond_values.find(aminos);
+
+    if (it == bond_values.end()) {
         return 0;
+    } else {
+        return it->second;
     }
 }
 
