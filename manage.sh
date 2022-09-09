@@ -23,7 +23,7 @@ case "$1" in
     "init")
         pip install -r requirements.txt
         pre-commit install
-    ;;
+        ;;
     # Echo all global variables.
     "echo_debug")
         echo -e "Core dir:\n${COREDIR}\n"
@@ -63,13 +63,10 @@ case "$1" in
         pip uninstall -qy prospr
         echo "~ Done running tests!"
         ;;
-    # Debug basic protein behavior.
-    "debug_protein")
-        ./manage.sh build
-        pip uninstall -qy prospr
-        pip install -q .
-        pytest -v tests/core/test_protein.py || true
-        pip uninstall -qy prospr
+    # Test core without building the Python interfaces.
+    "test_core")
+        echo "~ Running core tests.."
+        ./"$COREDIR/tests/run_tests.sh" "$2"
         ;;
     *)
         echo "No command detected from first argument.."

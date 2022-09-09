@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# File:             run_all_tests.sh
+# Description:      This bash file tests the core functionalities without
+#                   building the Python interfaces.
+
+set -e
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+CFLAGS="-O3 -Wall -std=c++11"
+
+# Test amino_acid functionality.
+test_amino_acid() {
+    echo -e "\n~ Testing amino_acid.."
+    # shellcheck disable=SC2086
+    c++ $CFLAGS -o test_amino_acid test_amino_acid.cpp ../src/amino_acid.cpp
+
+    echo "~ Compilation successful, running the code.."
+    ./test_amino_acid
+    rm test_amino_acid
+    echo -e "~ Done"
+}
+
+# Main entry point of the script.
+main() {
+    # Move console into test folder.
+    cd "$SCRIPT_DIR" || exit 1
+
+    # Determine what module to test, default to all modules.
+    if [[ $# -ne 1 ]]; then
+        echo "~ Module:  all"
+    else
+        case "$1" in
+            # Only test amino_acid.
+            "amino_acid")
+                echo "~ Module:  amino_acid"
+                test_amino_acid
+                ;;
+            # Only test protein.
+            "protein")
+                echo "~ Module:  protein"
+                ;;
+            # Only test depth_first.
+            "depth_first")
+                echo "~ Module:  depth_first"
+                ;;
+            # Only test depth_first_bnb.
+            "depth_first_bnb")
+                echo "~ Module:  depth_first_bnb"
+                ;;
+            # Default to test all.
+            *)
+                echo "~ Module:  all"
+                ;;
+        esac
+    fi
+}
+
+main "$@"

@@ -14,14 +14,14 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         std::map<std::string, int> bond_values, bool bond_symmetry) {
     this->sequence = sequence;
     space = {};
+    std::cout << "Before\n";  // TODO: REMOVE ME!
     cur_len = (sequence.size() == 0) ? 0 : 1;
+    std::cout << "After\n";  // TODO: REMOVE ME!
     this->dim = dim;
     last_move = 0;
     last_pos.assign(dim, 0);
     score = 0;
     changes = 0;
-
-    std::cout << "Debug";  // TODO: REMOVE ME!
 
     /* Deduct what model to use, or apply custom one. */
     if (model == "HP") {
