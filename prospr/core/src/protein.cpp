@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include <iostream>
+
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,

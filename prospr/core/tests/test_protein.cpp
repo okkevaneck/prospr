@@ -41,19 +41,20 @@ void assert_2d_protein_generation(Protein* protein,
     std::vector<int> mweights = protein->get_max_weights();
     assert (mweights == max_weights);
 
+    /* Test getters with arguments. */
+    bool weighted = protein->is_weighted(0);
+    assert (weighted == true);
 
+    /* Only test for non-weighted P value in case of HP-model tests. */
+    std::map<std::string, int> hp_model_bonds = {{"HH", -1}};
+    if (bond_values == hp_model_bonds) {
+        weighted = protein->is_weighted(1);
+        assert (weighted == false);
+    }
 
-
-//    /* Returns the AminoAcid at the given position, or NULL if there is
-//     * none.
-//     */
-//    AminoAcid* get_amino(std::vector<int> position);
-//
-//    /* Returns if the amino acid at the given index is weighted. */
-//    bool is_weighted(int index);
-//
-//    /* Returns the weight created between two amino acids. */
-//    int get_weight(std::string aminos);
+    for (const auto &element : model_bonds) {
+        assert (protein->get_weight(element.first) == element.second);
+    }
 }
 
 /* Test different Protein generation options. */
@@ -92,6 +93,9 @@ void test_protein_generation() {
 /* Test Protein functionality in 2D space. */
 void test_2d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
+
+//    AminoAcid* amino = get_amino(std::vector<int>(dim, 0));
+//    assert (amino == )
 }
 
 /* Test Protein functionality in 3D space. */
