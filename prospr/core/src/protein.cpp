@@ -38,7 +38,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         std::string reversed_bond;
 
         /* Add amino acid to list of weighted if not added yet. */
-        for (std::pair<std::string, int> element : bond_values) {
+        for (const auto &element : bond_values) {
             /* Search all unique weighted amino acids. */
             for (char const &amino_acid: element.first) {
                 if (weighted_amino_acids.find(amino_acid) == std::string::npos)
@@ -67,14 +67,16 @@ Protein::Protein(std::string sequence, int dim, std::string model,
      */
     std::map<char, int> max_amino_weights;
 
-    for (char& c : this->weighted_amino_acids) {
+    for (const auto &c : this->weighted_amino_acids) {
         max_amino_weights[c] = 0;
     }
 
     /* Store the highest achievable weight per amino acid. */
-    for (std::pair<std::string, int> element : bond_values) {
-        for (char& c : element.first) {
-            if (max_amino_weights[c] < element.second)
+    for (const auto &element : this->bond_values) {
+        for (const auto &c : element.first) {
+            if (element.second < max_amino_weights[c] ||
+                    (max_amino_weights[c] == 0 &&
+                     element.second > max_amino_weights[c]))
                 max_amino_weights[c] = element.second;
         }
     }

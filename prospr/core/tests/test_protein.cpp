@@ -11,7 +11,8 @@
 
 /* Perform assertion checks for newly generated Protein. */
 void assert_2d_protein_generation(Protein* protein,
-                                  std::map<std::string, int> model_bonds) {
+                                  std::map<std::string, int> model_bonds,
+                                  std::vector<int> max_weights) {
     /* Test getters without arguments. */
     std::string sequence = protein->get_sequence();
     assert (sequence.compare("HPPHPPHH") == 0);
@@ -37,8 +38,8 @@ void assert_2d_protein_generation(Protein* protein,
     int changes = protein->get_changes();
     assert (changes == 0);
 
-    std::vector<int> max_weights = protein->get_max_weights();
-//    assert (max_weights == );
+    std::vector<int> mweights = protein->get_max_weights();
+    assert (mweights == max_weights);
 
 
 
@@ -59,23 +60,32 @@ void assert_2d_protein_generation(Protein* protein,
 void test_protein_generation() {
     /* Check HP-model Protein generation. */
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
-    assert_2d_protein_generation(protein, {{"HH", -1}});
+    assert_2d_protein_generation(protein, {{"HH", -1}},
+                                 std::vector<int>{-1, 0, 0, -1, 0, 0, -1, -1});
     std::cout << "\tHP-model generation successful.\n";
 
     /* Check HPXN-model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "HPXN");
-    assert_2d_protein_generation(protein, {{"HH", -4}, {"PP", -1}, {"PN", -1},
-                                           {"NN", 1}});
+    assert_2d_protein_generation(protein,
+                                 {{"HH", -4}, {"PP", -1}, {"PN", -1},
+                                  {"NN", 1}},
+                                 std::vector<int>{-4, -1, -1, -4, -1, -1, -4,
+                                                  -4});
     std::cout << "\tHPXN-model generation successful.\n";
 
     /* Check custom model Protein generation. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}});
-    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}});
+    assert_2d_protein_generation(protein,
+                                 {{"HH", -4}, {"HP", -2}, {"PH", -2}},
+                                 std::vector<int>{-4, -2, -2, -4, -2, -2, -4,
+                                                  -4});
     std::cout << "\tCustom model generation successful.\n";
 
     /* Check custom model Protein generation with symmetry option. */
     protein = new Protein("HPPHPPHH", 2, "", {{"HH", -4}, {"HP", -2}}, false);
-    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}});
+    assert_2d_protein_generation(protein, {{"HH", -4}, {"HP", -2}},
+                                 std::vector<int>{-4, -2, -2, -4, -2, -2, -4,
+                                                  -4});
     std::cout << "\tCustom non-symmetry model generation successful.\n";
 }
 

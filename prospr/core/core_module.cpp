@@ -28,7 +28,7 @@ PYBIND11_MODULE(prospr_core, m) {
     ;
 
     /* Definition for bond_values as default parameter value. */
-    std::map<std::string, int> bond_values_cpp = {{"HH", -1}};
+    std::map<std::string, int> bond_values_cpp = {};
     py::object bond_values = py::cast(bond_values_cpp);
 
     /* Protein class definition. */
