@@ -107,8 +107,16 @@ void test_2d_protein() {
         assert (protein->get_last_move() == moves[i]);
     }
 
-    AminoAcid* amino = protein->get_amino(std::vector<int>(protein->get_dim(), 0));
+    /* Make sure an amino acid was placed. */
+    std::vector<int> amino_pos = std::vector<int>(protein->get_dim() - 1, 0);
+    amino_pos.push_back(1);
+    AminoAcid* amino = protein->get_amino(amino_pos);
     assert (amino != NULL);
+
+    /* Test removing amino acids. */
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        protein->remove_amino();
+    }
 
     std::cout << "\t2D Protein movements work.\n";
 }
@@ -130,8 +138,16 @@ void test_3d_protein() {
         assert (protein->get_last_move() == moves[i]);
     }
 
-    AminoAcid* amino = protein->get_amino(std::vector<int>(protein->get_dim(), 0));
+    /* Make sure an amino was placed. */
+    std::vector<int> amino_pos = std::vector<int>(protein->get_dim() - 1, 0);
+    amino_pos.push_back(1);
+    AminoAcid* amino = protein->get_amino(amino_pos);
     assert (amino != NULL);
+
+    /* Test removing amino acids. */
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        protein->remove_amino();
+    }
 
     std::cout << "\t3D Protein movements work.\n";
 }
