@@ -227,7 +227,7 @@ void Protein::place_amino(int move, bool track) {
         _change_score(move);
 
     /* Update number of found solutions. */
-    if (track && cur_len == sequence.size()) {
+    if (track && cur_len == (int)sequence.size()) {
         solutions_checked++;
     }
 }

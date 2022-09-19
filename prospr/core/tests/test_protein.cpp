@@ -97,13 +97,13 @@ void test_2d_protein() {
     std::vector<int> performed_moves;
 
     /* Perform predetermined moves and assert correctness of the Protein. */
-    for (int i = 0; i < moves.size(); i++) {
+    for (unsigned int i = 0; i < moves.size(); i++) {
         protein->place_amino(moves[i]);
         performed_moves = std::vector<int>(moves.begin(),
                                            moves.begin() + i + 1);
 
         assert (protein->hash_fold() == performed_moves);
-        assert (protein->get_cur_len() == performed_moves.size() + 1);
+        assert (protein->get_cur_len() == (int)performed_moves.size() + 1);
         assert (protein->get_last_move() == moves[i]);
     }
 
