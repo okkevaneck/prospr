@@ -93,14 +93,44 @@ void test_protein_generation() {
 /* Test Protein functionality in 2D space. */
 void test_2d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
+    std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -2};
+    std::vector<int> performed_moves;
+
+    /* Perform predetermined moves and assert correctness of the Protein. */
+    for (int i = 0; i < moves.size(); i++) {
+        protein->place_amino(moves[i]);
+        performed_moves = std::vector<int>(moves.begin(),
+                                           moves.begin() + i + 1);
+
+        std::cout << "performed_moves:\n";
+        for (const int &pm : performed_moves) {
+            std::cout << pm << " ";
+        }
+        std::cout << "\n\n";
+
+        std::vector<int> hf = protein->hash_fold();
+        std::cout << "hash_fold:\n";
+        for (const int &h : hf) {
+            std::cout << h << " ";
+        }
+        std::cout << "\n\n";
+
+        assert (protein->hash_fold() == performed_moves);
+        assert (protein->get_cur_len() == performed_moves.size() + 1);
+        assert (protein->get_last_move() == moves[i]);
+    }
 
 //    AminoAcid* amino = get_amino(std::vector<int>(dim, 0));
 //    assert (amino == )
+
+    std::cout << "\t2D Protein movements work.\n";
 }
 
 /* Test Protein functionality in 3D space. */
 void test_3d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 3, "HP");
+
+    std::cout << "\t3D Protein movements work.\n";
 }
 
 int main(int argc, char* argv[]) {

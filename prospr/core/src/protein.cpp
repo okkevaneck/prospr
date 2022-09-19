@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include <iostream>
+#include <iostream> // TODO: Remove me.
 
 
 /* Construct a new Protein. */
@@ -299,7 +299,7 @@ void Protein::_change_score(int move) {
         /* Update score if placing the amino creates a bond. */
         if (space.count(cur_pos) > 0) {
             /* get_weight() returns 0 if no bond is made. */
-            score += get_weight(aminos + space[cur_pos]->get_type());
+            score += get_weight(aminos + space[cur_pos]->get_type()); // TODO: Null pointer uit space?
         }
     }
 }

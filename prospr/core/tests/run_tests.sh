@@ -7,6 +7,7 @@ set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CFLAGS="-O3 -Wall -std=c++11"
+DEBUG=""
 
 # Test amino_acid functionality.
 test_amino_acid() {
@@ -15,7 +16,7 @@ test_amino_acid() {
     c++ $CFLAGS -o test_amino_acid test_amino_acid.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    ./test_amino_acid
+    $DEBUG ./test_amino_acid
     rm test_amino_acid
     echo -e "~ Done"
 }
@@ -27,7 +28,7 @@ test_protein() {
     c++ $CFLAGS -o test_protein test_protein.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    ./test_protein
+    $DEBUG ./test_protein
     rm test_protein
     echo -e "~ Done"
 }
@@ -42,6 +43,11 @@ test_all() {
 main() {
     # Move console into test folder.
     cd "$SCRIPT_DIR" || exit 1
+
+    # Determine if code needs to be debugged using gdb.
+    if [[ $# -eq 2 ]] && [ "$2" == "debug" ]; then
+        DEBUG="gdb"
+    fi
 
     # Determine what module to test, default to all modules.
     if [[ $# -ne 1 ]]; then

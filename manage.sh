@@ -68,6 +68,11 @@ case "$1" in
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2"
         ;;
+    # Test core without building the Python interfaces.
+    "debug_core")
+        echo "~ Running core tests.."
+        ./"$COREDIR/tests/run_tests.sh" "$2" "debug"
+        ;;
     *)
         echo "No command detected from first argument.."
         ;;
