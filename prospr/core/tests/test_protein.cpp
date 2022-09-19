@@ -94,7 +94,7 @@ void test_protein_generation() {
 void test_2d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
     std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -2};
-    std::vector<int> scores = std::vector<int>{0, 0, -1, -1, -2};
+    std::vector<int> scores = std::vector<int>{0, 0, -1, -1, -1};
     std::vector<int> performed_moves;
 
     /* Perform predetermined moves and assert correctness of the Protein. */

@@ -220,11 +220,12 @@ void Protein::place_amino(int move, bool track) {
     space[last_pos] = amino_acids[cur_len];
     space[last_pos]->set_prev_move(move);
     last_move = move;
-    cur_len++;
 
     /* Change score according to placement of the new amino. */
     if (is_weighted(cur_len))
         _change_score(move);
+
+    cur_len++;
 
     /* Update number of found solutions. */
     if (track && cur_len == (int)sequence.size()) {

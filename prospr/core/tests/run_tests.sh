@@ -16,7 +16,7 @@ test_amino_acid() {
     c++ $CFLAGS -o test_amino_acid test_amino_acid.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_amino_acid
+    $DEBUG ./test_amino_acid || true
     rm test_amino_acid
     echo -e "~ Done"
 }
@@ -28,7 +28,7 @@ test_protein() {
     c++ $CFLAGS -o test_protein test_protein.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_protein
+    $DEBUG ./test_protein || true
     rm test_protein
     echo -e "~ Done"
 }
