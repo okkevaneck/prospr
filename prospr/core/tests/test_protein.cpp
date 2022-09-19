@@ -35,8 +35,8 @@ void assert_2d_protein_generation(Protein* protein,
     int score = protein->get_score();
     assert (score == 0);
 
-    int changes = protein->get_changes();
-    assert (changes == 0);
+    int solutions_checked = protein->get_solutions_checked();
+    assert (solutions_checked == 0);
 
     std::vector<int> mweights = protein->get_max_weights();
     assert (mweights == max_weights);
@@ -101,19 +101,6 @@ void test_2d_protein() {
         protein->place_amino(moves[i]);
         performed_moves = std::vector<int>(moves.begin(),
                                            moves.begin() + i + 1);
-
-        std::cout << "performed_moves:\n";
-        for (const int &pm : performed_moves) {
-            std::cout << pm << " ";
-        }
-        std::cout << "\n\n";
-
-        std::vector<int> hf = protein->hash_fold();
-        std::cout << "hash_fold:\n";
-        for (const int &h : hf) {
-            std::cout << h << " ";
-        }
-        std::cout << "\n\n";
 
         assert (protein->hash_fold() == performed_moves);
         assert (protein->get_cur_len() == performed_moves.size() + 1);

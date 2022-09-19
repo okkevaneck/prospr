@@ -15,12 +15,12 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         std::map<std::string, int> bond_values, bool bond_symmetry) {
     this->sequence = sequence;
     space = {};
-    cur_len = (sequence.size() == 0) ? 0 : 1;
+    cur_len = 0;
     this->dim = dim;
     last_move = 0;
     last_pos.assign(dim, 0);
     score = 0;
-    changes = 0;
+    solutions_checked = 0;
 
     /* Deduct what model to use, or apply custom one. */
     if (model == "HP") {
@@ -93,6 +93,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
     /* Place the first amino acid at the origin if there is one. */
     if (sequence.size() != 0) {
         space[last_pos] = amino_acids[0];
+        cur_len++;
     }
 }
 
@@ -141,9 +142,9 @@ int Protein::get_score() {
     return score;
 }
 
-/* Returns the number of performed changes. */
-int Protein::get_changes() {
-    return changes;
+/* Returns the number of checked solutions. */
+int Protein::get_solutions_checked() {
+    return solutions_checked;
 }
 
 /* Returns if the amino acid at the given index is weighted. */
@@ -174,7 +175,7 @@ void Protein::reset() {
     last_pos.assign(dim, 0);
     last_move = 0;
     score = 0;
-    changes = 0;
+    solutions_checked = 0;
 
     space[last_pos] = amino_acids[0];
 }
@@ -204,12 +205,9 @@ bool Protein::is_valid(int move) {
 
 /* Place the next amino acid and update the conformation accordingly. */
 void Protein::place_amino(int move, bool track) {
-    /* Check for illegal moves. */
+    /* Check for illegal move. */
     if (move == 0)
         throw std::runtime_error("Protein folded onto itself..");
-
-    if (track)
-        changes++;
 
     space[last_pos]->set_next_move(move);
     last_pos[abs(move) - 1] += move / abs(move);
@@ -218,14 +216,20 @@ void Protein::place_amino(int move, bool track) {
     if (space.count(last_pos) > 0)
         throw std::runtime_error("Protein folded onto itself..");
 
-    /* Change score according to placement of the new amino. */
-    if (is_weighted(cur_len))
-        _change_score(move);
-
+    /* Place amino acid on new (valid) position. */
     space[last_pos] = amino_acids[cur_len];
     space[last_pos]->set_prev_move(move);
     last_move = move;
     cur_len++;
+
+    /* Change score according to placement of the new amino. */
+    if (is_weighted(cur_len))
+        _change_score(move);
+
+    /* Update number of found solutions. */
+    if (track && cur_len == sequence.size()) {
+        solutions_checked++;
+    }
 }
 
 /* Remove last placed amino acid and change score accordingly. */
@@ -299,7 +303,7 @@ void Protein::_change_score(int move) {
         /* Update score if placing the amino creates a bond. */
         if (space.count(cur_pos) > 0) {
             /* get_weight() returns 0 if no bond is made. */
-            score += get_weight(aminos + space[cur_pos]->get_type()); // TODO: Null pointer uit space?
+            score += get_weight(aminos + space[cur_pos]->get_type());
         }
     }
 }

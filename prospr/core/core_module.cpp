@@ -38,7 +38,8 @@ PYBIND11_MODULE(prospr_core, m) {
                 "Protein constructor", py::arg("sequence"), py::arg("dim")=2,
                 py::arg("model")="", py::arg("bond_values")=bond_values,
                 py::arg("bond_symmetry")=true)
-        .def_property_readonly("changes", &Protein::get_changes)
+        .def_property_readonly("solutions_checked",
+            &Protein::get_solutions_checked)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
         .def_property_readonly("bond_values", &Protein::get_bond_values)
