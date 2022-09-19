@@ -81,7 +81,7 @@ jobs:
         env:
           CIBW_BUILD: ${{ matrix.cibw_build }}
           CIBW_SKIP: ${{ matrix.cibw_skip }}
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
+          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
 
       - uses: actions/upload-artifact@v2
         with:

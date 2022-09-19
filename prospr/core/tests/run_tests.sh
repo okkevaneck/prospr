@@ -9,6 +9,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CFLAGS="-O3 -Wall -std=c++11"
 DEBUG=""
 
+
 # Test amino_acid functionality.
 test_amino_acid() {
     echo -e "\n~ Testing amino_acid.."
@@ -33,10 +34,38 @@ test_protein() {
     echo -e "~ Done"
 }
 
+# Test depth_first functionality.
+test_depth_first() {
+    echo -e "\n~ Testing depth_first.."
+    # shellcheck disable=SC2086
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/depth_first.cpp ../src/protein.cpp ../src/amino_acid.cpp
+
+    echo "~ Compilation successful, running the tests.."
+    $DEBUG ./test_algorithms depth_first
+
+    rm test_algorithms
+    echo -e "~ Done"
+}
+
+# Test depth_first functionality.
+test_depth_first_bnb() {
+    echo -e "\n~ Testing depth_first_bnb.."
+    # shellcheck disable=SC2086
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/depth_first.cpp ../src/protein.cpp ../src/amino_acid.cpp
+
+    echo "~ Compilation successful, running the tests.."
+    $DEBUG ./test_algorithms depth_first_bnb
+
+    rm test_algorithms
+    echo -e "~ Done"
+}
+
 # Test all modules.
 test_all() {
     test_amino_acid
     test_protein
+    test_depth_first
+    test_depth_first_bnb
 }
 
 # Main entry point of the script.
@@ -68,10 +97,12 @@ main() {
             # Only test depth_first.
             "depth_first")
                 echo "~ Module:  depth_first"
+                test_depth_first
                 ;;
             # Only test depth_first_bnb.
             "depth_first_bnb")
                 echo "~ Module:  depth_first_bnb"
+                test_depth_first_bnb
                 ;;
             # Default to test all.
             *)
