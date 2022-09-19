@@ -19,7 +19,8 @@ def protein_3d():
     return Protein("HPPHPHPHPH", 3, model="HP")
 
 
-@pytest.mark.order(after="test_protein.TestProtein")
+# @pytest.mark.order(after="test_protein.TestProtein")
+@pytest.mark.order(order=2)
 class TestDepthFirstBnB:
     def test_protein_2d_depth_first_bnb(self, protein_2d):
         """

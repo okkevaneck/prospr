@@ -94,6 +94,7 @@ void test_protein_generation() {
 void test_2d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 2, "HP");
     std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -2};
+    std::vector<int> scores = std::vector<int>{0, 0, -1, -1, -2};
     std::vector<int> performed_moves;
 
     /* Perform predetermined moves and assert correctness of the Protein. */
@@ -105,6 +106,7 @@ void test_2d_protein() {
         assert (protein->hash_fold() == performed_moves);
         assert (protein->get_cur_len() == (int)performed_moves.size() + 1);
         assert (protein->get_last_move() == moves[i]);
+        assert (protein->get_score() == scores[i]);
     }
 
     /* Make sure an amino acid was placed. */
@@ -125,6 +127,7 @@ void test_2d_protein() {
 void test_3d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 3, "HP");
     std::vector<int> moves = std::vector<int>{1, 2, -1, 3, -2, -1, -3};
+    std::vector<int> scores = std::vector<int>{0, 0, -1, -1, -1, -1, -2};
     std::vector<int> performed_moves;
 
     /* Perform predetermined moves and assert correctness of the Protein. */
@@ -136,6 +139,7 @@ void test_3d_protein() {
         assert (protein->hash_fold() == performed_moves);
         assert (protein->get_cur_len() == (int)performed_moves.size() + 1);
         assert (protein->get_last_move() == moves[i]);
+        assert (protein->get_score() == scores[i]);
     }
 
     /* Make sure an amino was placed. */
