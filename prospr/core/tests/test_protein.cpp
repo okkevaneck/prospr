@@ -120,6 +120,8 @@ void test_2d_protein() {
         protein->remove_amino();
     }
 
+    assert (protein->get_score() == 0);
+
     std::cout << "\t2D Protein movements work.\n";
 }
 
@@ -152,6 +154,8 @@ void test_3d_protein() {
     for (unsigned int i = 0; i < moves.size(); i++) {
         protein->remove_amino();
     }
+
+    assert (protein->get_score() == 0);
 
     std::cout << "\t3D Protein movements work.\n";
 }

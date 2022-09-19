@@ -94,7 +94,7 @@ class Protein {
         /* Change score according to the already performed addition or removal of the
          * given move.
          */
-        void _change_score(int move);
+        void _change_score(int move, bool placed);
 };
 
 #endif

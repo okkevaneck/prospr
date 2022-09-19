@@ -223,7 +223,7 @@ void Protein::place_amino(int move, bool track) {
 
     /* Change score according to placement of the new amino. */
     if (is_weighted(cur_len))
-        _change_score(move);
+        _change_score(move, true);
 
     cur_len++;
 
@@ -241,7 +241,7 @@ void Protein::remove_amino() {
     cur_len--;
 
     if (is_weighted(cur_len))
-        _change_score(last_move);
+        _change_score(last_move, false);
 
     /* Remove the last amino. */
     space.erase(last_pos);
@@ -284,8 +284,9 @@ void Protein::set_hash(std::vector<int> fold_hash, bool track) {
 /* Change score according to the already performed addition or removal of the
  * given move. This function is preferably only called when the altered amino
  * acid is weighted.
+ *      :placed is true if the move placed an amino, false otherwise.
  */
-void Protein::_change_score(int move) {
+void Protein::_change_score(int move, bool placed) {
     std::vector<int> moves;
 
     for (int i = -dim; i <= dim; i++) {
@@ -304,7 +305,11 @@ void Protein::_change_score(int move) {
         /* Update score if placing the amino creates a bond. */
         if (space.count(cur_pos) > 0) {
             /* get_weight() returns 0 if no bond is made. */
-            score += get_weight(aminos + space[cur_pos]->get_type());
+            if (placed) {
+                score += get_weight(aminos + space[cur_pos]->get_type());
+            } else {
+                score -= get_weight(aminos + space[cur_pos]->get_type());
+            }
         }
     }
 }
