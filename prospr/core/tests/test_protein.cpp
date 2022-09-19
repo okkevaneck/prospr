@@ -107,8 +107,8 @@ void test_2d_protein() {
         assert (protein->get_last_move() == moves[i]);
     }
 
-//    AminoAcid* amino = get_amino(std::vector<int>(dim, 0));
-//    assert (amino == )
+    AminoAcid* amino = protein->get_amino(std::vector<int>(protein->get_dim(), 0));
+    assert (amino != NULL);
 
     std::cout << "\t2D Protein movements work.\n";
 }
@@ -116,6 +116,22 @@ void test_2d_protein() {
 /* Test Protein functionality in 3D space. */
 void test_3d_protein() {
     Protein* protein = new Protein("HPPHPPHH", 3, "HP");
+    std::vector<int> moves = std::vector<int>{1, 2, -1, 3, -2, -1, -3};
+    std::vector<int> performed_moves;
+
+    /* Perform predetermined moves and assert correctness of the Protein. */
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        protein->place_amino(moves[i]);
+        performed_moves = std::vector<int>(moves.begin(),
+                                           moves.begin() + i + 1);
+
+        assert (protein->hash_fold() == performed_moves);
+        assert (protein->get_cur_len() == (int)performed_moves.size() + 1);
+        assert (protein->get_last_move() == moves[i]);
+    }
+
+    AminoAcid* amino = protein->get_amino(std::vector<int>(protein->get_dim(), 0));
+    assert (amino != NULL);
 
     std::cout << "\t3D Protein movements work.\n";
 }
