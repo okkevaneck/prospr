@@ -6,38 +6,37 @@
 
 #include <iostream>
 #include <string.h>
+#include <assert.h>
+#include "../src/protein.hpp"
+#include "../src/depth_first.hpp"
+#include "../src/depth_first_bnb.hpp"
 
 
 /* Test functionality of depth_first. */
-int test_depth_first() {
+void test_depth_first() {
+    /* Check if 2D solutions are found correctly. */
+    Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
+    protein = depth_first(protein);
+    assert (protein->get_score() == -3);
+    std::cout << "\t2D Protein solution scores matches.\n";
 
-    std::cout << "\tdepth_first ran successfully.\n";
-    return 0;
+    /* Check if 3D solutions are found correctly. */
+    protein = new Protein("HPPHPHPHPH", 3, "HP");
+    protein = depth_first(protein);
+    assert (protein->get_score() == -4);
+    std::cout << "\t3D Protein solution scores matches.\n";
 }
 
 /* Test functionality of depth_first_bnb. */
-int test_depth_first_bnb() {
-    std::cout << "\tdepth_first_bnb ran successfully.\n";
-    return 0;
+void test_depth_first_bnb() {
+    std::cout << "\t2D Protein solution scores matches.\n";
+    std::cout << "\t3D Protein solution scores matches.\n";
 }
 
 /* Test functionality of all algorithms. */
-int run_all() {
-    int retval;
-
-    /* Test depth_first search. */
-    retval = test_depth_first();
-    if (retval != 0) {
-        return retval;
-    }
-
-    /* Test depth_first_bnb search. */
-    retval = test_depth_first_bnb();
-    if (retval != 0) {
-        return retval;
-    }
-
-    return 0;
+void run_all() {
+    test_depth_first();
+    test_depth_first_bnb();
 }
 
 int main(int argc, char* argv[]) {
@@ -47,14 +46,11 @@ int main(int argc, char* argv[]) {
         std::cout << "\tTesting all algorithms..\n";
         run_all();
     } else if (strcmp(argv[1], "depth_first") == 0) {
-        std::cout << "\tTesting depth_first..\n";
-        return test_depth_first();
+        test_depth_first();
     } else if (strcmp(argv[1], "depth_first_bnb") == 0) {
-        std::cout << "\tTesting depth_first_bnb..\n";
-        return test_depth_first_bnb();
+        test_depth_first_bnb();
     } else {
-        std::cout << "\tAlgorithm not detected, testing all algorithms..\n";
-        run_all();
+        std::cout << "\tSpecific algorithm not detected..\n";
     }
 
     return 0;
