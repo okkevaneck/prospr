@@ -21,14 +21,14 @@ bool prune_branch(Protein* protein, int max_length, int no_neighbors,
     std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
-    int branch_score = -no_neighbors * \
+    int branch_score = no_neighbors * \
         std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
 
     /* End of amino has 1 more possible way of connecting, update
      * branch_score accordingly.
      */
     if (cur_len != max_length && max_weights.back() != 0)
-        branch_score -= max_weights.back();
+        branch_score += max_weights.back();
 
     protein->remove_amino();
 

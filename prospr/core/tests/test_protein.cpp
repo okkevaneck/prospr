@@ -118,6 +118,7 @@ void test_2d_protein() {
     /* Test removing amino acids. */
     for (unsigned int i = 0; i < moves.size(); i++) {
         protein->remove_amino();
+        assert (protein->get_cur_len() == (int)(moves.size() - i));
     }
 
     assert (protein->get_score() == 0);
@@ -153,6 +154,7 @@ void test_3d_protein() {
     /* Test removing amino acids. */
     for (unsigned int i = 0; i < moves.size(); i++) {
         protein->remove_amino();
+        assert (protein->get_cur_len() == (int)(moves.size() - i));
     }
 
     assert (protein->get_score() == 0);
