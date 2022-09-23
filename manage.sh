@@ -35,7 +35,7 @@ case "$1" in
     # Build all Python interfaces for the core .cpp files.
     "build")
         echo "~ Creating the .py interface for the core.."
-        c++ -O3 -Wall -shared -std=c++11 -fPIC -undefined=dynamic_lookup \
+        c++ -O3 -Wall -shared -std=c++11 -fPIC -undefined dynamic_lookup \
             $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
             -o "prospr"/prospr_core$(python3-config --extension-suffix)
         echo "~ Done building!"
