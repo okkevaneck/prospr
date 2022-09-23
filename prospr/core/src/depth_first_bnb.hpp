@@ -12,6 +12,6 @@
 /* A depth-first branch-and-bound search function for finding a minimum energy
  * conformation.
  */
-Protein depth_first_bnb(Protein protein);
+Protein* depth_first_bnb(Protein* protein);
 
 #endif

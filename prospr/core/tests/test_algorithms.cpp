@@ -29,7 +29,16 @@ void test_depth_first() {
 
 /* Test functionality of depth_first_bnb. */
 void test_depth_first_bnb() {
+    /* Check if 2D solutions are found correctly. */
+    Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
+    protein = depth_first_bnb(protein);
+    assert (protein->get_score() == -3);
     std::cout << "\t2D Protein solution scores matches.\n";
+
+    /* Check if 3D solutions are found correctly. */
+    protein = new Protein("HPPHPHPHPH", 3, "HP");
+    protein = depth_first_bnb(protein);
+    assert (protein->get_score() == -4);
     std::cout << "\t3D Protein solution scores matches.\n";
 }
 
