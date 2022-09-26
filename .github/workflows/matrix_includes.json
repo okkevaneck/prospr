@@ -2,38 +2,38 @@
     {
         "runOn": "master",
         "os": "ubuntu-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "master",
         "os": "windows-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "master",
         "os": "macos-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "release-",
         "os": "ubuntu-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "release-",
         "os": "windows-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "release-",
         "os": "macos-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "always",
