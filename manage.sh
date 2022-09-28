@@ -23,7 +23,7 @@ case "$1" in
     "init")
         pip install -r requirements.txt
         pre-commit install
-    ;;
+        ;;
     # Echo all global variables.
     "echo_debug")
         echo -e "Core dir:\n${COREDIR}\n"
@@ -35,9 +35,16 @@ case "$1" in
     # Build all Python interfaces for the core .cpp files.
     "build")
         echo "~ Creating the .py interface for the core.."
-        c++ -O3 -Wall -shared -std=c++11 -fPIC \
+        # Add -undefined flag for MacOS builds.
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            c++ -O3 -Wall -shared -std=c++11 -fPIC -undefined dynamic_lookup \
             $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
             -o "prospr"/prospr_core$(python3-config --extension-suffix)
+        else
+            c++ -O3 -Wall -shared -std=c++11 -fPIC \
+            $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
+            -o "prospr"/prospr_core$(python3-config --extension-suffix)
+        fi
         echo "~ Done building!"
         ;;
     # Remove all Python interfaces, .cxx files, and Python caches.
@@ -62,6 +69,16 @@ case "$1" in
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
+        ;;
+    # Test core without building the Python interfaces.
+    "test_core")
+        echo "~ Running core tests.."
+        ./"$COREDIR/tests/run_tests.sh" "$2"
+        ;;
+    # Test core without building the Python interfaces.
+    "debug_core")
+        echo "~ Running core tests.."
+        ./"$COREDIR/tests/run_tests.sh" "$2" "debug"
         ;;
     *)
         echo "No command detected from first argument.."

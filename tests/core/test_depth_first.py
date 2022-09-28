@@ -11,15 +11,16 @@ import pytest
 
 @pytest.fixture()
 def protein_2d():
-    return Protein("PHPHPHPPH", 2)
+    return Protein("PHPHPHPPH", 2, model="HP")
 
 
 @pytest.fixture()
 def protein_3d():
-    return Protein("HPPHPHPHPH", 3)
+    return Protein("HPPHPHPHPH", 3, model="HP")
 
 
-@pytest.mark.order(after="test_protein.TestProtein")
+# @pytest.mark.order(after="test_protein.TestProtein")
+@pytest.mark.order(order=2)
 class TestDepthFirst:
     def test_protein_2d_depth_first(self, protein_2d):
         """

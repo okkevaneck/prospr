@@ -8,10 +8,10 @@ import matplotlib.patches as patches
 
 
 if __name__ == "__main__":
-    protein = Protein("HPPHP")
+    protein = Protein("HPPHP", dim=2, bond_values={"H": -1, "P": 0})
     protein.set_hash([1, -2, -1, -2])
-
-    fig = plt.figure(figsize=(8, 5))
+    fig = plt.figure(figsize=(14, 6))
+    plt.axis("off")
     sns.set_style("whitegrid")
     ax = fig.gca()
 
@@ -31,13 +31,15 @@ if __name__ == "__main__":
         zorder=1,
         lw=line_width,
     )
-    last_amino = {"x": 3.5, "y": -0.75, "Type": "H"}
+    # last_amino = {"x": 3.5, "y": -0.75, "Type": "H"}
+    last_amino = {"x": 5, "y": -0.80, "Type": "H"}
     df = df.append(last_amino, ignore_index=True)
 
     # Plot curvy line.
     verts = [
         (df.iloc[-2]["x"], df.iloc[-2]["y"]),
-        (1.375, -0.5),
+        (0.70, 0),
+        # (1.375, -0.5),
         (last_amino["x"], last_amino["y"]),
     ]
     codes = [
@@ -51,7 +53,8 @@ if __name__ == "__main__":
         facecolor="none",
         edgecolor="black",
         lw=line_width,
-        alpha=alpha_val,
+        # alpha=alpha_val,
+        alpha=0.7,
         zorder=1,
     )
     ax.add_patch(patch)
@@ -87,7 +90,16 @@ if __name__ == "__main__":
         )
 
     # Plot text.
-    ax.text(0.73, -1.88, "rospr", fontsize=121, fontstyle="italic")
+    # ax.text(0.73, -1.88, "rospr", fontsize=121, fontstyle="italic")
+    ax.text(
+        0.60,
+        -1.95,
+        "rospr",
+        size=225,
+        style="italic",
+        variant="small-caps",
+        weight=5,
+    )
 
     # Remove axis and legend.
     ax.get_xaxis().set_visible(False)

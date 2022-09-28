@@ -9,7 +9,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: nelonoel/branch-name@v1.0.1
 
@@ -23,7 +23,7 @@ jobs:
     name: Check for syntax errors
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Flake8 - Error on syntax errors or undefined names
         uses: py-actions/flake8@v1.1.0
@@ -43,11 +43,11 @@ jobs:
     needs: syntax_check
     strategy:
       matrix:
-        python-version: [3.6]
+        python-version: [3.9]
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -58,6 +58,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+          ./manage.sh build
           python -m pip install -e .
 
       - name: Test with pytest
@@ -70,19 +71,19 @@ jobs:
       matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v2
 
       - name: Build wheels
-        uses: joerick/cibuildwheel@v1.10.0
+        uses: pypa/cibuildwheel@v2.10.1
         env:
           CIBW_BUILD: ${{ matrix.cibw_build }}
           CIBW_SKIP: ${{ matrix.cibw_skip }}
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
+          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
 
@@ -91,7 +92,7 @@ jobs:
     needs: pytest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -105,7 +106,7 @@ jobs:
       - name: Check metadata
         run: twine check dist/*
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           path: dist/*.tar.gz
 
