@@ -28,6 +28,9 @@ follows:
     p_5d = Protein("HPPHPPH", dim=5)
     ...
 
+There are many other options for constructing a Protein object. Please see
+:doc:`api` for more details.
+
 Protein attributes
 ------------------
 A Protein object keeps track of multiple properties while it is being folded.
@@ -44,9 +47,6 @@ all keep track of exactly.
     p_2d.sequence
     >>> "HPPH"
 
-    p_2d.h_idxs
-    >>> [0, 3]
-
     p_2d.cur_len
     >>> 0
 
@@ -62,8 +62,11 @@ all keep track of exactly.
     p_2d.score
     >>> 0
 
-    p_2d.changes
+    p_2d.solutions_checked
     >>> 0
+
+    p_2d.bond_values
+    >>> {"HH": -1}
 
 Placing amino acids
 -------------------
@@ -127,18 +130,18 @@ containing the amino acids index, previous direction, and next direction.
     >>> [1, -1, 2]
 
 It might also occur that you want to check if an amino acid at a specific index
-is hydrophilic. This can be checked via the *.is_hydro(index)* function, which
-takes the index of the requested amino acid as an argument.
+can create bonds. This can be checked via the *.is_weighted(index)* function,
+which takes the index of the requested amino acid as an argument.
 
 .. code-block:: python
 
     from prospr import Protein
 
     p_2d = Protein("HPPH")
-    p_2d.is_hydro(0)
+    p_2d.is_weighted(0)
     >>> True
 
-    p_2d.is_hydro(1)
+    p_2d.is_weighted(1)
     >>> False
 
 Checking stability

@@ -7,8 +7,6 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include <iostream> // TODO: Remove me.
-
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,
@@ -62,7 +60,6 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         this->weighted_amino_acids = weighted_amino_acids;
     }
 
-    // TODO: Create internal function dedicated to creating this mapping.
     /* Create mapping from all weighted amino acids to their maximum achievable
      * scores. This is used to create a vector of maximum achievable scores per
      * index.
