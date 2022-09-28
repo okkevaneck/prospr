@@ -1,6 +1,9 @@
 /* File:            depth_first_bnb.cpp
  * Description:     Source file for a depth-first branch-and-bound search
- *                      function.
+ *                  function.
+ * License:         This file is licensed under the GNU LGPL V3 license by
+ *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
+ *                  specifics.
  */
 
 #include "depth_first_bnb.hpp"

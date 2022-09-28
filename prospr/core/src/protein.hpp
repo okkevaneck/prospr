@@ -1,5 +1,8 @@
 /* File:            protein.h
  * Description:     Header file for a protein object within the HP-model.
+ * License:         This file is licensed under the GNU LGPL V3 license by
+ *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
+ *                  specifics.
  */
 
 #ifndef PROTEIN_H

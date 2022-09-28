@@ -2,6 +2,9 @@
 """
 File:           helpers.py
 Description:    This file contains helper functions for a Protein instance.
+License:        This file is licensed under the GNU LGPL V3 license by
+                Okke van Eck (2020 - 2022). See the LICENSE file for the
+                specifics.
 """
 
 import numpy as np
