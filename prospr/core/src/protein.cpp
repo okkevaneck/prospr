@@ -1,146 +1,292 @@
 /* File:            protein.cpp
  * Description:     Source file for a protein object within the HP-model.
+ * License:         This file is licensed under the GNU LGPL V3 license by
+ *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
+ *                  specifics.
  */
 
 #include "protein.hpp"
 #include <stdlib.h>
 #include <algorithm>
+#include <stdexcept>
 
 
-Protein::Protein(std::string sequence, int dim) {
+/* Construct a new Protein. */
+Protein::Protein(std::string sequence, int dim, std::string model,
+        std::map<std::string, int> bond_values, bool bond_symmetry) {
     this->sequence = sequence;
-    space = {}; // TODO: Init Protein with first amino set at origin.
+    space = {};
     cur_len = 0;
     this->dim = dim;
     last_move = 0;
     last_pos.assign(dim, 0);
     score = 0;
-    changes = 0;
+    solutions_checked = 0;
 
-    /* Store all indices of the H-amino acid characters in hIdxs. */
-    size_t pos = sequence.find("H", 0);
+    /* Deduct what model to use, or apply custom one. */
+    if (model == "HP") {
+        /* Store bond_values according to the HP-model. */
+        std::map<std::string, int> model_bonds = {{"HH", -1}};
+        this->bond_values = model_bonds;
+        this->weighted_amino_acids = "H";
+    } else if (model == "HPXN") {
+        /* Store bond_values according to the HPXN-model. */
+        std::map<std::string, int> model_bonds = {{"HH", -4}, {"PP", -1},
+                                                  {"PN", -1}, {"NN", 1}};
+        this->bond_values = model_bonds;
+        this->weighted_amino_acids = "HPN";
+    } else {
+        /* Store the given bond_values weights. */
+        std::string weighted_amino_acids = "";
+        std::string reversed_bond;
 
-    while (pos != std::string::npos) {
-        h_idxs.push_back(pos);
-        pos = sequence.find("H", pos + 1);
+        /* Add amino acid to list of weighted if not added yet. */
+        for (const auto &element : bond_values) {
+            /* Search all unique weighted amino acids. */
+            for (char const &amino_acid: element.first) {
+                if (weighted_amino_acids.find(amino_acid) == std::string::npos)
+                    weighted_amino_acids += amino_acid;
+            }
+
+            /* For every bond, add symmetry value if not in map already. */
+            if (bond_symmetry) {
+                reversed_bond = std::string(1, element.first[1]) + element.first[0];
+
+                /* Add symmetry value of the bond. */
+                if (bond_values.count(reversed_bond) == 0) {
+                    bond_values[reversed_bond] = element.second;
+                }
+            }
+        }
+
+        this->bond_values = bond_values;
+        this->weighted_amino_acids = weighted_amino_acids;
+    }
+
+    /* Create mapping from all weighted amino acids to their maximum achievable
+     * scores. This is used to create a vector of maximum achievable scores per
+     * index.
+     */
+    std::map<char, int> max_amino_weights;
+
+    for (const auto &c : this->weighted_amino_acids) {
+        max_amino_weights[c] = 0;
+    }
+
+    /* Store the highest achievable weight per amino acid. */
+    for (const auto &element : this->bond_values) {
+        for (const auto &c : element.first) {
+            if (element.second < max_amino_weights[c] ||
+                    (max_amino_weights[c] == 0 &&
+                     element.second > max_amino_weights[c]))
+                max_amino_weights[c] = element.second;
+        }
+    }
+
+    /* Create AminoAcid objects for all amino acids. */
+    for (std::string::size_type i = 0; i < sequence.size(); i++) {
+        AminoAcid* new_aa = new AminoAcid(sequence[i], (int)i, 0, 0);
+        amino_acids.push_back(new_aa);
+        this->max_weights.push_back(max_amino_weights[sequence[i]]);
+    }
+
+    /* Place the first amino acid at the origin if there is one. */
+    if (sequence.size() != 0) {
+        space[last_pos] = amino_acids[0];
+        cur_len++;
     }
 }
 
+/* Returns the Protein's sequence. */
 std::string Protein::get_sequence() {
     return sequence;
 }
 
+/* Returns the Protein's set maximum dimension. */
 int Protein::get_dim() {
     return dim;
 }
 
+/* Returns the Protein's set of bond links. */
+std::map<std::string, int> Protein::get_bond_values() {
+    return bond_values;
+}
+
+/* Returns the Protein's current length. */
 int Protein::get_cur_len() {
     return cur_len;
 }
 
+/* Returns the last performed move. */
 int Protein::get_last_move() {
     return last_move;
 }
 
+/* Returns the last position an amino acid was placed. */
 std::vector<int> Protein::get_last_pos() {
     return last_pos;
 }
 
-std::vector<int> Protein::get_amino(std::vector<int> position) {
-    /* Return the amino acid and next direction at the given position or an
-     * empty std::vector if there is no amino acid at the given position.
-     */
-     if (space.count(position))
+/* Returns the AminoAcid at the given position, or NULL if there is
+ * none.
+ */
+AminoAcid* Protein::get_amino(std::vector<int> position) {
+    if (space.count(position))
         return space.at(position);
-     else
-        return {};
+    else
+        return NULL;
 }
 
+/* Returns the Protein's current score. */
 int Protein::get_score() {
     return score;
 }
 
-int Protein::get_changes() {
-    return changes;
+/* Returns the number of checked solutions. */
+int Protein::get_solutions_checked() {
+    return solutions_checked;
 }
 
-std::vector<int> Protein::get_h_idxs() {
-    return h_idxs;
+/* Returns if the amino acid at the given index is weighted. */
+bool Protein::is_weighted(int index) {
+    return weighted_amino_acids.find(sequence[index]) != std::string::npos;
 }
 
-bool Protein::is_hydro(int index) {
-    return find(h_idxs.begin(), h_idxs.end(), index) != h_idxs.end();
+/* Returns the weight created between two amino acids. */
+int Protein::get_weight(std::string aminos) {
+    std::map<std::string, int>::iterator it = bond_values.find(aminos);
+
+    if (it == bond_values.end()) {
+        return 0;
+    } else {
+        return it->second;
+    }
 }
 
+/* Returns the vector with maximum achievable weights per amino acid. */
+std::vector<int> Protein::get_max_weights() {
+    return max_weights;
+}
+
+/* Reset all variables of a protein as if it was just initialized. */
 void Protein::reset() {
-    /* Reset all variables of a protein as it was just initialized. */
     space.clear();
-    cur_len = 0;
+    cur_len = 1;
     last_pos.assign(dim, 0);
     last_move = 0;
     score = 0;
-    changes = 0;
+    solutions_checked = 0;
+
+    space[last_pos] = amino_acids[0];
 }
 
+/* Reset only the conformation variables of a protein. */
 void Protein::reset_conformation() {
-    /* Reset only the conformation variables of a protein. */
     space.clear();
-    cur_len = 0;
+    cur_len = 1;
     last_pos.assign(dim, 0);
     last_move = 0;
     score = 0;
+
+    space[last_pos] = amino_acids[0];
 }
 
+/* Returns true if a move is valid, returns false otherwise. */
 bool Protein::is_valid(int move) {
-    /* Returns True if a move does not cause overlap, returns False otherwise.
-     */
     std::vector<int> check_pos = last_pos;
     check_pos[abs(move) - 1] += move / abs(move);
 
+    /* Check if the placement causes overlap. */
     if (space.count(check_pos) == 0)
         return true;
     else
         return false;
 }
 
+/* Place the next amino acid and update the conformation accordingly. */
 void Protein::place_amino(int move, bool track) {
-    /* Place amino acid and update score accordingly. */
-    if (track)
-        changes++;
+    /* Check for illegal move. */
+    if (move == 0)
+        throw std::runtime_error("Protein folded onto itself..");
 
-    if (move != 0) {
-        space[last_pos][1] = move;
-        last_pos[abs(move) - 1] += move / abs(move);
-    }
+    space[last_pos]->set_next_move(move);
+    last_pos[abs(move) - 1] += move / abs(move);
 
+    /* Check for illegal folds. */
     if (space.count(last_pos) > 0)
         throw std::runtime_error("Protein folded onto itself..");
 
-    /* Change score according to placement of the new amino. */
-    if (move != 0 && is_hydro(cur_len))
-        change_score(move, -1);
-
-    space[last_pos] = std::vector<int>{cur_len, 0};
+    /* Place amino acid on new (valid) position. */
+    space[last_pos] = amino_acids[cur_len];
+    space[last_pos]->set_prev_move(move);
     last_move = move;
+
+    /* Change score according to placement of the new amino. */
+    if (is_weighted(cur_len))
+        _change_score(move, true);
+
     cur_len++;
+
+    /* Update number of found solutions. */
+    if (track && cur_len == (int)sequence.size()) {
+        solutions_checked++;
+    }
 }
 
-// TODO: Change function to use the last_move attribute.
-void Protein::remove_amino(int move) {
-    /* Change score according to removal of the last amino. */
+/* Remove last placed amino acid and change score accordingly. */
+void Protein::remove_amino() {
+    if (cur_len == 1)
+        throw std::runtime_error("Cannot remove the last amino acid at origin..");
+
     cur_len--;
 
-    if (move != 0 && is_hydro(cur_len))
-        change_score(move, 1);
+    if (is_weighted(cur_len))
+        _change_score(last_move, false);
 
     /* Remove the last amino. */
     space.erase(last_pos);
-    last_pos[abs(move) - 1] -= move / abs(move);
-    space[last_pos][1] = 0;
+    last_pos[abs(last_move) - 1] -= last_move / abs(last_move);
+    space[last_pos]->set_next_move(0);
+    last_move = space[last_pos]->get_prev_move();
 }
 
-void Protein::change_score(int move, int weight) {
-    /* Change score according to the addition or removal of the given move. */
+/* Hash and return the fold of the current conformation. */
+std::vector<int> Protein::hash_fold() {
+    std::vector<int> fold_hash;
+    std::vector<int> cur_pos(dim, 0);
+    AminoAcid* cur_amino;
+    int next_move = 0;
+
+    if (space.count(cur_pos) > 0) {
+        cur_amino = space.at(cur_pos);
+        next_move = cur_amino->get_next_move();
+
+        while (next_move != 0) {
+            cur_pos[abs(next_move) - 1] += next_move / abs(next_move);
+            fold_hash.push_back(next_move);
+            cur_amino = space.at(cur_pos);
+            next_move = cur_amino->get_next_move();
+        }
+    }
+
+    return fold_hash;
+}
+
+/* Set the conformation to the given hash. */
+void Protein::set_hash(std::vector<int> fold_hash, bool track) {
+    reset_conformation();
+
+    for (auto &move: fold_hash) {
+        place_amino(move, track);
+    }
+}
+
+/* Change score according to the already performed addition or removal of the
+ * given move. This function is preferably only called when the altered amino
+ * acid is weighted.
+ *      :placed is true if the move placed an amino, false otherwise.
+ */
+void Protein::_change_score(int move, bool placed) {
     std::vector<int> moves;
 
     for (int i = -dim; i <= dim; i++) {
@@ -148,42 +294,22 @@ void Protein::change_score(int move, int weight) {
             moves.push_back(i);
     }
 
+    /* Initialize string with amino character for bond weight checking. */
+    std::string aminos = std::string() + space[last_pos]->get_type();
     std::vector<int> cur_pos;
 
     for (auto &move: moves) {
         cur_pos = last_pos;
         cur_pos[abs(move) - 1] += move / abs(move);
 
-        if (space.count(cur_pos) > 0 && is_hydro(space[cur_pos][0]))
-            score += weight;
-    }
-}
-
-std::vector<int> Protein::hash_fold() {
-    /* Hash and return the fold of the current conformation. */
-    std::vector<int> fold_hash;
-    std::vector<int> cur_pos(dim, 0);
-    std::vector<int> item;
-
-    if (space.count(cur_pos) > 0) {
-        item = space.at(cur_pos);
-
-        while (item[1] != 0) {
-            cur_pos[abs(item[1]) - 1] += item[1] / abs(item[1]);
-            fold_hash.push_back(item[1]);
-            item = space.at(cur_pos);
+        /* Update score if placing the amino creates a bond. */
+        if (space.count(cur_pos) > 0) {
+            /* get_weight() returns 0 if no bond is made. */
+            if (placed) {
+                score += get_weight(aminos + space[cur_pos]->get_type());
+            } else {
+                score -= get_weight(aminos + space[cur_pos]->get_type());
+            }
         }
-    }
-
-    return fold_hash;
-}
-
-void Protein::set_hash(std::vector<int> fold_hash, bool track) {
-    /* Set the conformation to the given hash. */
-    reset_conformation();
-    place_amino(0, track);
-
-    for (auto &move: fold_hash) {
-        place_amino(move, track);
     }
 }

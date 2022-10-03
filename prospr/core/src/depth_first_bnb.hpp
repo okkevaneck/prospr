@@ -1,6 +1,9 @@
 /* File:            depth_first_bnb.h
  * Description:     Header file for a depth-first branch-and-bound search
- *                      function.
+ *                  function.
+ * License:         This file is licensed under the GNU LGPL V3 license by
+ *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
+ *                  specifics.
  */
 
 #ifndef DEPTH_FIRST_BNB_H
@@ -12,6 +15,6 @@
 /* A depth-first branch-and-bound search function for finding a minimum energy
  * conformation.
  */
-Protein depth_first_bnb(Protein protein);
+Protein* depth_first_bnb(Protein* protein);
 
 #endif

@@ -10,6 +10,7 @@ repos:
     rev: v3.2.0
     hooks:
       - id: trailing-whitespace
+        exclude: README.md
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
@@ -22,14 +23,16 @@ repos:
     rev: v0.812
     hooks:
         - id: mypy
+          exclude: ^docs/
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 22.8.0
     hooks:
       - id: black
-        language_version: python3.8
+        language_version: python3.10
   - repo: local
     hooks:
       - id: compress-files
         name: compress-files
+        pass_filenames: false
         entry: ./.githooks/compress_files.sh
         language: script

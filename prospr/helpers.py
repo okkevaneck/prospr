@@ -2,6 +2,9 @@
 """
 File:           helpers.py
 Description:    This file contains helper functions for a Protein instance.
+License:        This file is licensed under the GNU LGPL V3 license by
+                Okke van Eck (2020 - 2022). See the LICENSE file for the
+                specifics.
 """
 
 import numpy as np
@@ -13,7 +16,9 @@ def get_scoring_aminos(protein):
     """
     score_pos = {}
     cur_pos = [0 for _ in range(protein.dim)]
-    idx, next_dir = protein.get_amino(cur_pos)
+    amino_acid = protein.get_amino(cur_pos)
+    idx = amino_acid.index
+    next_dir = amino_acid.next_move
 
     # Store origin if it may score points.
     if protein.is_hydro(idx):
@@ -22,7 +27,9 @@ def get_scoring_aminos(protein):
     while next_dir != 0:
         # Compute position of next amino and get its amino and fold.
         cur_pos[abs(next_dir) - 1] += next_dir // abs(next_dir)
-        idx, fold = protein.get_amino(cur_pos)
+        amino_acid = protein.get_amino(cur_pos)
+        idx = amino_acid.index
+        fold = amino_acid.next_move
 
         # Store previous directions for checking existing connections.
         prev_dir = -next_dir
@@ -30,8 +37,9 @@ def get_scoring_aminos(protein):
 
         # Save amino if it may score points.
         if protein.is_hydro(idx):
-            score_pos[tuple(cur_pos)] = np.array([prev_dir, next_dir],
-                                                 dtype=np.int64)
+            score_pos[tuple(cur_pos)] = np.array(
+                [prev_dir, next_dir], dtype=np.int64
+            )
 
     return score_pos
 
@@ -58,8 +66,9 @@ def get_scoring_pairs(protein):
                 other_pos[move - 1] += 1
 
                 if tuple(other_pos) in score_aminos:
-                    new_pair = np.array([[pos, tuple(other_pos)]],
-                                        dtype=np.int64)
+                    new_pair = np.array(
+                        [[pos, tuple(other_pos)]], dtype=np.int64
+                    )
                     pairs = np.vstack((pairs, new_pair))
 
                 other_pos[move - 1] -= 1
@@ -75,7 +84,7 @@ def get_ordered_positions(protein):
     """
     # Fetch done moves and the aminos used so far.
     moves = protein.hash_fold()
-    aminos = protein.sequence[:len(moves) + 1]
+    aminos = protein.sequence[: len(moves) + 1]
 
     # Setup storage of the amino positions.
     cur_pos = np.array([0 for _ in range(protein.dim)], dtype=np.int64)
