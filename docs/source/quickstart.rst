@@ -15,7 +15,17 @@ be installed.
 
 Creating Proteins
 -----------------
-After installing Prospr, one can simply create a Protein object as
+After installing Prospr, creating Protein objects is quite easy. A Protein
+object can be seen as a space manager for AminoAcid objects. AminoAcid objects
+can simply be created as:
+
+.. code-block:: python
+    from prospr import AminoAcid
+
+
+
+
+one can simply create a Protein object as
 follows:
 
 .. code-block:: python
