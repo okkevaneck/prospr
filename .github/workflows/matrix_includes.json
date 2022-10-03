@@ -2,55 +2,55 @@
     {
         "runOn": "master",
         "os": "ubuntu-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "master",
         "os": "windows-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "master",
         "os": "macos-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "release-",
         "os": "ubuntu-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "release-",
         "os": "windows-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "release-",
         "os": "macos-latest",
-        "cibw_skip": "cp27-* cp35-* *-win32 pp27-*",
-        "cibw_build": ""
+        "cibw_skip": "",
+        "cibw_build": "cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*"
     },
     {
         "runOn": "always",
         "os": "ubuntu-latest",
         "cibw_skip": "",
-        "cibw_build": "cp36-manylinux_x86_64"
+        "cibw_build": "cp39-manylinux_x86_64"
     },
     {
         "runOn": "always",
         "os": "windows-latest",
         "cibw_skip": "",
-        "cibw_build": "cp36-win_amd64"
+        "cibw_build": "cp39-win_amd64"
     },
     {
         "runOn": "always",
         "os": "macos-latest",
         "cibw_skip": "",
-        "cibw_build": "cp36-macosx_x86_64"
+        "cibw_build": "cp39-macosx_x86_64"
     }
 ]
