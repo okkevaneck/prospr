@@ -13,4 +13,4 @@ build-backend = "setuptools.build_meta"
 line-length = 79
 
 [tool.pytest]
-minversion = 6.2
+minversion = 7.1
