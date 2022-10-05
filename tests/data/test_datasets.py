@@ -42,7 +42,7 @@ class TestDatasets:
 
     def test_vanEck1000(self):
         """
-        Test loading data from vanEck250 works.
+        Test loading data from vanEck1000 works.
         """
         l10 = load_vanEck1000()
         l10_2 = load_vanEck1000(10)
