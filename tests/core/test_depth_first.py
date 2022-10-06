@@ -2,7 +2,10 @@
 """
 File:           test_depth_first.py
 Description:    This file contains the pytest tests for the depth_first search
-                    core code.
+                core code.
+License:        This file is licensed under the GNU LGPL V3 license by
+                Okke van Eck (2020 - 2022). See the LICENSE file for the
+                specifics.
 """
 
 from prospr import Protein, depth_first
@@ -19,7 +22,6 @@ def protein_3d():
     return Protein("HPPHPHPHPH", 3, model="HP")
 
 
-# @pytest.mark.order(after="test_protein.TestProtein")
 @pytest.mark.order(order=2)
 class TestDepthFirst:
     def test_protein_2d_depth_first(self, protein_2d):

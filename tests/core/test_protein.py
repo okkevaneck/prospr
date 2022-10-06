@@ -2,6 +2,9 @@
 """
 File:           test_protein.py
 Description:    This file contains the pytest tests for the Protein core code.
+License:        This file is licensed under the GNU LGPL V3 license by
+                Okke van Eck (2020 - 2022). See the LICENSE file for the
+                specifics.
 """
 
 from prospr import Protein
