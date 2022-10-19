@@ -30,6 +30,8 @@ class TestDepthFirst:
         """
         p = depth_first(protein_2d)
         assert p.score == -3
+        assert p.solutions_checked == 1000
+        assert p.aminos_placed == 1574
 
     def test_protein_3d_depth_first(self, protein_3d):
         """
@@ -37,3 +39,5 @@ class TestDepthFirst:
         """
         p = depth_first(protein_3d)
         assert p.score == -4
+        assert p.solutions_checked == 186455
+        assert p.aminos_placed == 235818

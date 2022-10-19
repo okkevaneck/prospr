@@ -43,6 +43,8 @@ PYBIND11_MODULE(prospr_core, m) {
                 py::arg("bond_symmetry")=true)
         .def_property_readonly("solutions_checked",
             &Protein::get_solutions_checked)
+        .def_property_readonly("aminos_placed",
+            &Protein::get_aminos_placed)
         .def_property_readonly("cur_len", &Protein::get_cur_len)
         .def_property_readonly("dim", &Protein::get_dim)
         .def_property_readonly("bond_values", &Protein::get_bond_values)
