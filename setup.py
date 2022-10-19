@@ -12,7 +12,7 @@ import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-__version__ = "0.2a5"
+__version__ = "0.2a4"
 
 # Define core module extension.
 ext_modules = [
@@ -43,7 +43,7 @@ setup(
     packages=["prospr"],
     package_data={"prospr": ["data/*/*.csv"]},
     platforms=["any"],
-    python_requires=">=3.9",
+    python_requires=">=3.6",
     zip_safe=False,
     install_requires=[
         "matplotlib",
