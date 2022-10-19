@@ -33,6 +33,7 @@ class TestProtein:
         assert protein_2d.last_pos == [0, 0]
         assert protein_2d.score == 0
         assert protein_2d.solutions_checked == 0
+        assert protein_2d.aminos_placed == 1
 
     def test_protein_3d_generation(self, protein_3d):
         """Test if a 3D protein is generated correctly."""
@@ -44,32 +45,37 @@ class TestProtein:
         assert protein_3d.last_pos == [0, 0, 0]
         assert protein_3d.score == 0
         assert protein_3d.solutions_checked == 0
+        assert protein_3d.aminos_placed == 1
 
     def test_protein_2d_place_moves(self, protein_2d):
         """Test if a 2D protein can move in all directions."""
         assert protein_2d.cur_len == 1
         moves = [1, 2, -1, -1, -2]
         scores = [0, 0, -1, -1, -1]
+        track_placed = [1, 0, 1, 0, 1]
 
         for i, m in enumerate(moves):
-            protein_2d.place_amino(m)
+            protein_2d.place_amino(m, track=bool(track_placed[i]))
             assert protein_2d.hash_fold() == moves[: i + 1]
             assert protein_2d.cur_len == len(moves[: i + 1]) + 1
             assert protein_2d.last_move == m
             assert protein_2d.score == scores[i]
+            assert protein_2d.aminos_placed == 1 + sum(track_placed[: i + 1])
 
     def test_protein_3d_place_moves(self, protein_3d):
         """Test if a 3D protein can move in all directions."""
         assert protein_3d.cur_len == 1
         moves = [1, 2, -1, 3, -2, -1, -3]
         scores = [0, 0, -1, -1, -1, -1, -2]
+        track_placed = [1, 0, 1, 0, 1, 0, 1]
 
         for i, m in enumerate(moves):
-            protein_3d.place_amino(m)
+            protein_3d.place_amino(m, track=bool(track_placed[i]))
             assert protein_3d.hash_fold() == moves[: i + 1]
             assert protein_3d.cur_len == len(moves[: i + 1]) + 1
             assert protein_3d.last_move == m
             assert protein_3d.score == scores[i]
+            assert protein_3d.aminos_placed == 1 + sum(track_placed[: i + 1])
 
     def test_protein_2d_undo_moves(self, protein_2d):
         """Test if a 2D protein can remove amino acids in all directions."""

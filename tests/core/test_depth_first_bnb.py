@@ -30,6 +30,8 @@ class TestDepthFirstBnB:
         """
         p = depth_first_bnb(protein_2d)
         assert p.score == -3
+        assert p.solutions_checked == 4
+        assert p.aminos_placed == 53
 
     def test_protein_3d_depth_first_bnb(self, protein_3d):
         """
@@ -37,3 +39,5 @@ class TestDepthFirstBnB:
         """
         p = depth_first_bnb(protein_3d)
         assert p.score == -4
+        assert p.solutions_checked == 5
+        assert p.aminos_placed == 49368

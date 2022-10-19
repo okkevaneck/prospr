@@ -75,6 +75,9 @@ all keep track of exactly.
     p_2d.solutions_checked
     >>> 0
 
+    p_2d.aminos_placed
+    >>> 1
+
     p_2d.bond_values
     >>> {"HH": -1}
 

@@ -17,7 +17,7 @@
 /* Returns true if the branch cannot produce a better score. */
 bool prune_branch(Protein* protein, int max_length, int no_neighbors,
         int move, int best_score) {
-    protein->place_amino(move);
+    protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
     int cur_score = protein->get_score();
