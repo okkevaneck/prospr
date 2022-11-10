@@ -50,7 +50,7 @@ def _plot_aminos_2d_basic(protein, df, ax):
             color="indianred",
             alpha=0.9,
             zorder=1,
-            lw=1.5,
+            lw=2,
         )
 
 
@@ -75,6 +75,7 @@ def _plot_aminos_2d_paper(protein, df, ax):
         s=80,
         zorder=2,
         ax=ax,
+        label="H"
     )
     sns.scatterplot(
         x="x",
@@ -87,6 +88,7 @@ def _plot_aminos_2d_paper(protein, df, ax):
         s=80,
         zorder=2,
         ax=ax,
+        label="P"
     )
 
     # Plot dotted lines between the aminos that increase the stability.
@@ -100,52 +102,11 @@ def _plot_aminos_2d_paper(protein, df, ax):
             color="indianred",
             alpha=0.9,
             zorder=1,
-            lw=1.5,
+            lw=2,
         )
 
-    ax.axis('off')
-
-
-def _plot_protein_2d(protein, style, ax):
-    """
-    :param Protein      protein:    Protein object to plot the hash of.
-    :param [str]        style:      What style to plot the proteins in.
-    :param Axes         ax:         Axis to plot Protein on.
-
-    """
-    # Setup dataframe containing the data and set types for the coordinates.
-    df = pd.DataFrame(
-        get_ordered_positions(protein), columns=["x", "y", "Type"]
-    )
-    df = df.astype({"x": "int32", "y": "int32"})
-
-    # Plot amino acids in the selected style.
-    if style == "paper":
-        _plot_aminos_2d_paper(protein, df, ax)
-    else:
-        ax.set_title(f"2D conformation with {protein.score} energy")
-        _plot_aminos_2d_basic(protein, df, ax)
-
-    # Set axis labels.
-    ax.set_xlabel("x-axis", fontsize=13)
-    ax.set_ylabel("y-axis", fontsize=13)
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-
-    # Remove title from legend and add item for bonds.
-    handles, labels = ax.get_legend_handles_labels()
-    score_patch = Line2D(
-        [],
-        [],
-        color="indianred",
-        linestyle=":",
-        alpha=0.9,
-        label="Bond",
-        lw=1.5,
-    )
-    handles.append(score_patch)
-    labels.append(score_patch.get_label())
-    ax.legend(handles=handles, labels=labels)
+    # Remove axis, and position legend in the upper right with created space.
+    ax.axis("off")
 
 
 def _plot_aminos_3d_basic(protein, df, ax):
@@ -194,7 +155,7 @@ def _plot_aminos_3d_basic(protein, df, ax):
             color="indianred",
             alpha=0.9,
             zorder=1,
-            lw=1.5,
+            lw=2,
         )
 
 
@@ -244,36 +205,70 @@ def _plot_aminos_3d_paper(protein, df, ax):
             color="indianred",
             alpha=0.9,
             zorder=1,
-            lw=1.5,
+            lw=2,
         )
 
 
-def _plot_protein_3d(protein, style, ax):
+def plot_protein(protein, style="basic", ax=None, show=True):
     """
+    Plot conformation of a protein.
     :param Protein      protein:    Protein object to plot the hash of.
     :param [str]        style:      What style to plot the proteins in.
     :param Axes         ax:         Axis to plot Protein on.
     """
-    # Setup dataframe containing the data and set types for the coordinates.
-    df = pd.DataFrame(
-        get_ordered_positions(protein), columns=["x", "y", "z", "Type"]
-    )
-    df = df.astype({"x": "int32", "y": "int32", "z": "int32"})
+    # Catch unplottable dimensions.
+    if protein.dim != 2 and protein.dim != 3:
+        raise RuntimeError(
+            f"Cannot plot the structure of a protein with "
+            f"dimension '{protein.dim}'"
+        )
 
-    # Plot amino acids in the selected style.
-    if style == "paper":
-        _plot_aminos_3d_paper(protein, df, ax)
+    # Create axis to plot onto if not given.
+    if ax is None:
+        if style == "paper":
+            fig = plt.figure(figsize=(4, 2.5))
+        else:
+            fig = plt.figure(figsize=(5, 6))
+            sns.set_style("whitegrid")
+
+        if protein.dim == 2:
+            ax = fig.gca()
+        else:
+            ax = fig.gca(projection="3d")
+
+    # Fetch data in right dimension.
+    if protein.dim == 2:
+        df = pd.DataFrame(
+            get_ordered_positions(protein), columns=["x", "y", "Type"]
+        )
+        df = df.astype({"x": "int32", "y": "int32"})
     else:
-        _plot_aminos_3d_basic(protein, df, ax)
+        df = pd.DataFrame(
+            get_ordered_positions(protein), columns=["x", "y", "z", "Type"]
+        )
+        df = df.astype({"x": "int32", "y": "int32", "z": "int32"})
 
-    # Set axis labels and tics.
-    ax.set_title(f"3D conformation with {protein.score} energy")
-    ax.set_xlabel("x-axis", fontsize=13)
-    ax.set_ylabel("y-axis", fontsize=13)
-    ax.set_zlabel("z-axis", fontsize=13)
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.zaxis.set_major_locator(MaxNLocator(integer=True))
+    # Plot the selected style.
+    if style == "paper":
+        if protein.dim == 2:
+            _plot_aminos_2d_paper(protein, df, ax)
+        else:
+            _plot_aminos_3d_paper(protein, df, ax)
+    elif style == "basic":
+        ax.set_xlabel("x-axis", fontsize=13)
+        ax.set_ylabel("y-axis", fontsize=13)
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # Plot dimension specific.
+        if protein.dim == 2:
+            ax.set_title(f"2D conformation with {protein.score} energy")
+            _plot_aminos_2d_basic(protein, df, ax)
+        else:
+            ax.set_title(f"3D conformation with {protein.score} energy")
+            ax.set_zlabel("z-axis", fontsize=13)
+            ax.zaxis.set_major_locator(MaxNLocator(integer=True))
+            _plot_aminos_3d_basic(protein, df, ax)
 
     # Remove title from legend and add item for bonds.
     handles, labels = ax.get_legend_handles_labels()
@@ -284,40 +279,20 @@ def _plot_protein_3d(protein, style, ax):
         linestyle=":",
         alpha=0.9,
         label="Bond",
-        lw=1.5,
+        lw=2,
     )
     handles.append(score_patch)
     labels.append(score_patch.get_label())
-    ax.legend(handles=handles, labels=labels)
 
-
-def plot_protein(protein, style="basic", ax=None):
-    """
-    Plot conformation of a protein.
-    :param Protein      protein:    Protein object to plot the hash of.
-    :param [str]        style:      What style to plot the proteins in.
-    :param Axes         ax:         Axis to plot Protein on.
-    """
-    if ax is None:
-        if style == "paper":
-            fig = plt.figure(figsize=(2,2))
-        else:
-            fig = plt.figure(figsize=(5,6))
-            sns.set_style("whitegrid")
-
-    # Plot data according to used dimension.
-    if protein.dim == 2:
-        if ax is None:
-            ax = fig.gca()
-        _plot_protein_2d(protein, style, ax)
-    elif protein.dim == 3:
-        if ax is None:
-            ax = fig.gca(projection="3d")
-        _plot_protein_3d(protein, style, ax)
+    # Style legend according to plotting style.
+    if style == "paper":
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
+        ax.legend(handles=handles, labels=labels, loc="upper left",
+                  bbox_to_anchor=(1, 1))
     else:
-        raise RuntimeError(
-            f"Cannot plot the structure of a protein with "
-            f"dimension '{protein.dim}'"
-        )
+        ax.legend(handles=handles, labels=labels)
 
-    plt.show()
+    # Show plot if specified.
+    if show:
+        plt.show()
