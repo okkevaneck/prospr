@@ -85,7 +85,7 @@ def get_ordered_positions(protein):
     """
     # Fetch done moves and the aminos used so far.
     moves = protein.hash_fold()
-    aminos = protein.sequence[:len(moves) + 1]
+    aminos = protein.sequence[: len(moves) + 1]
 
     # Setup storage of the amino positions.
     cur_pos = np.array([0 for _ in range(protein.dim)], dtype=np.int64)

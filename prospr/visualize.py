@@ -75,20 +75,20 @@ def _plot_aminos_2d_paper(protein, df, ax):
         s=80,
         zorder=2,
         ax=ax,
-        label="H"
+        label="H",
     )
     sns.scatterplot(
         x="x",
         y="y",
         data=df_P,
         marker="o",
-        facecolor='white',
+        facecolor="white",
         edgecolor="orange",
         linewidth=2,
         s=80,
         zorder=2,
         ax=ax,
-        label="P"
+        label="P",
     )
 
     # Plot dotted lines between the aminos that increase the stability.
@@ -182,7 +182,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
         s=60,
         zorder=2,
         ax=ax,
-        label="H"
+        label="H",
     )
     sns.scatterplot(
         df_P["x"],
@@ -190,13 +190,13 @@ def _plot_aminos_3d_paper(protein, df, ax):
         df_P["z"],
         data=df_P,
         marker="o",
-        facecolor='white',
+        facecolor="white",
         edgecolor="orange",
         linewidth=2,
         s=60,
         zorder=2,
         ax=ax,
-        label="P"
+        label="P",
     )
 
     # Plot dotted lines between the aminos that increase the stability.
@@ -297,8 +297,12 @@ def plot_protein(protein, style="basic", ax=None, show=True):
     if style == "paper":
         box = ax.get_position()
         ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
-        ax.legend(handles=handles, labels=labels, loc="upper left",
-                  bbox_to_anchor=(1, 1))
+        ax.legend(
+            handles=handles,
+            labels=labels,
+            loc="upper left",
+            bbox_to_anchor=(1, 1),
+        )
     else:
         ax.legend(handles=handles, labels=labels)
 
