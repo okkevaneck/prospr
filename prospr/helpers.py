@@ -19,9 +19,10 @@ def get_scoring_aminos(protein):
     amino_acid = protein.get_amino(cur_pos)
     idx = amino_acid.index
     next_dir = amino_acid.next_move
+    max_weights = protein.max_weights
 
     # Store origin if it may score points.
-    if protein.is_hydro(idx):
+    if max_weights[idx] < 0:
         score_pos[tuple(cur_pos)] = np.array([0, next_dir], dtype=np.int64)
 
     while next_dir != 0:
@@ -36,7 +37,7 @@ def get_scoring_aminos(protein):
         next_dir = fold
 
         # Save amino if it may score points.
-        if protein.is_hydro(idx):
+        if max_weights[idx] < 0:
             score_pos[tuple(cur_pos)] = np.array(
                 [prev_dir, next_dir], dtype=np.int64
             )
@@ -52,7 +53,7 @@ def get_scoring_pairs(protein):
     # Get dictionary with the amino's that can possibly score points.
     score_aminos = get_scoring_aminos(protein)
 
-    # Sort positions from bottom-left to upper-rigth.
+    # Sort positions from bottom-left to upper-right.
     moves = np.array([m for m in range(1, protein.dim + 1)])
     pairs = np.empty((1, 2, protein.dim), dtype=np.int64)
 

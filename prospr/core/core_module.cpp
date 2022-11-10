@@ -39,7 +39,7 @@ PYBIND11_MODULE(prospr_core, m) {
         .def(py::init<const std::string, int, const std::string,
                 std::map<std::string, int>, bool &>(),
                 "Protein constructor", py::arg("sequence"), py::arg("dim")=2,
-                py::arg("model")="", py::arg("bond_values")=bond_values,
+                py::arg("model")="HP", py::arg("bond_values")=bond_values,
                 py::arg("bond_symmetry")=true)
         .def_property_readonly("solutions_checked",
             &Protein::get_solutions_checked)
@@ -52,6 +52,7 @@ PYBIND11_MODULE(prospr_core, m) {
         .def_property_readonly("last_pos", &Protein::get_last_pos)
         .def_property_readonly("score", &Protein::get_score)
         .def_property_readonly("sequence", &Protein::get_sequence)
+        .def_property_readonly("max_weights", &Protein::get_max_weights)
 
         .def("get_amino", &Protein::get_amino,
             "Get amino index and next direction from amino at given position",
