@@ -56,7 +56,7 @@ def _plot_aminos_2d_basic(protein, df, ax):
 
 def _plot_aminos_2d_paper(protein, df, ax):
     """
-    Plot amino acids in basic style in a 2D figure.
+    Plot amino acids in paper style in a 2D figure.
     :param Protein      protein:    Protein object to plot the hash of.
     :param DataFrame    df:         DataFrame with all ordered positions.
     :param Axes         ax:         Axis to plot on.
@@ -161,7 +161,7 @@ def _plot_aminos_3d_basic(protein, df, ax):
 
 def _plot_aminos_3d_paper(protein, df, ax):
     """
-    Plot amino acids in basic style in a 3D figure.
+    Plot amino acids in paper style in a 3D figure.
     :param Protein      protein:    Protein object to plot the hash of.
     :param DataFrame    df:         DataFrame with all ordered positions.
     :param Axes         ax:         Axis to plot on.
@@ -170,28 +170,34 @@ def _plot_aminos_3d_paper(protein, df, ax):
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
-    # Plot the aminos connected with an opaque line.
-    ax.scatter(
+    ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
+
+    sns.scatterplot(
         df_H["x"],
         df_H["y"],
         df_H["z"],
-        c="royalblue",
+        data=df_H,
         marker="o",
-        depthshade=False,
+        edgecolor="royalblue",
         s=60,
-        label="H",
+        zorder=2,
+        ax=ax,
+        label="H"
     )
-    ax.scatter(
+    sns.scatterplot(
         df_P["x"],
         df_P["y"],
         df_P["z"],
-        c="orange",
-        marker="s",
-        depthshade=False,
+        data=df_P,
+        marker="o",
+        facecolor='white',
+        edgecolor="orange",
+        linewidth=2,
         s=60,
-        label="P",
+        zorder=2,
+        ax=ax,
+        label="P"
     )
-    ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -207,6 +213,9 @@ def _plot_aminos_3d_paper(protein, df, ax):
             zorder=1,
             lw=2,
         )
+
+    # Remove axis, and position legend in the upper right with created space.
+    ax.axis("off")
 
 
 def plot_protein(protein, style="basic", ax=None, show=True):

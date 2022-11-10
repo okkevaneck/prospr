@@ -75,6 +75,18 @@ case "$1" in
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2"
         ;;
+    # Test visualizations without building the Python interfaces.
+    "test_visualize")
+        echo "~ Running visualize tests.."
+        echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Installing new prospr.."
+        pip install -q .
+        python tests/visualize/test_visualization.py
+        echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Done running tests!"
+        ;;
     # Test core without building the Python interfaces.
     "debug_core")
         echo "~ Running core tests.."
