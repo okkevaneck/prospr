@@ -22,6 +22,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
     last_pos.assign(dim, 0);
     score = 0;
     solutions_checked = 0;
+    aminos_placed = 0;
 
     /* Deduct what model to use, or apply custom one. */
     if (model == "HP") {
@@ -94,6 +95,7 @@ Protein::Protein(std::string sequence, int dim, std::string model,
     if (sequence.size() != 0) {
         space[last_pos] = amino_acids[0];
         cur_len++;
+        aminos_placed++;
     }
 }
 
@@ -147,6 +149,11 @@ int Protein::get_solutions_checked() {
     return solutions_checked;
 }
 
+/* Returns the number of amino acids placed. */
+int Protein::get_aminos_placed() {
+    return aminos_placed;
+}
+
 /* Returns if the amino acid at the given index is weighted. */
 bool Protein::is_weighted(int index) {
     return weighted_amino_acids.find(sequence[index]) != std::string::npos;
@@ -176,6 +183,7 @@ void Protein::reset() {
     last_move = 0;
     score = 0;
     solutions_checked = 0;
+    aminos_placed = 0;
 
     space[last_pos] = amino_acids[0];
 }
@@ -227,9 +235,13 @@ void Protein::place_amino(int move, bool track) {
 
     cur_len++;
 
-    /* Update number of found solutions. */
-    if (track && cur_len == (int)sequence.size()) {
-        solutions_checked++;
+    /* Update number of found solutions and amino acids placed. */
+    if (track) {
+        aminos_placed++;
+
+        if (cur_len == (int)sequence.size()) {
+            solutions_checked++;
+        }
     }
 }
 

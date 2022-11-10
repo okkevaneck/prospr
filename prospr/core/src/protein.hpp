@@ -50,6 +50,9 @@ class Protein {
         /* Returns the number of performed changes. */
         int get_solutions_checked();
 
+        /* Returns the number of amino acids placed. */
+        int get_aminos_placed();
+
         /* Returns if the amino acid at the given index is weighted. */
         bool is_weighted(int index);
 
@@ -91,6 +94,7 @@ class Protein {
         int last_move;
         std::vector<int> last_pos;
         int score;
+        int aminos_placed;
         int solutions_checked;
         std::vector<AminoAcid*> amino_acids;
 
