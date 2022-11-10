@@ -17,18 +17,13 @@ import seaborn as sns
 import pandas as pd
 
 
-def _plot_protein_2d(protein, ax):
+def _plot_aminos_2d_basic(protein, df, ax):
     """
-
-    :param protein:
-    :param ax:
+    Plot amino acids in basic style in a 2D figure.
+    :param Protein      protein:    Protein object to plot the hash of.
+    :param DataFrame    df:         DataFrame with all ordered positions.
+=    :param Axes         ax:         Axis to plot on.
     """
-    # Setup dataframe containing the data and set types for the coordinates.
-    df = pd.DataFrame(
-        get_ordered_positions(protein), columns=["x", "y", "Type"]
-    )
-    df = df.astype({"x": "int32", "y": "int32"})
-
     ax.plot(df["x"], df["y"], color="black", alpha=0.65, zorder=1)
     sns.scatterplot(
         x="x",
@@ -58,6 +53,23 @@ def _plot_protein_2d(protein, ax):
             lw=1.5,
         )
 
+
+def _plot_protein_2d(protein, style, ax):
+    """
+    :param Protein      protein:    Protein object to plot the hash of.
+    :param [str]        style:      What style to plot the proteins in.
+    :param Axes         ax:         Axis to plot Protein on.
+
+    """
+    # Setup dataframe containing the data and set types for the coordinates.
+    df = pd.DataFrame(
+        get_ordered_positions(protein), columns=["x", "y", "Type"]
+    )
+    df = df.astype({"x": "int32", "y": "int32"})
+
+    # Plot amino acids in basic style.
+    _plot_aminos_2d_basic(protein, df, ax)
+
     # Set axis labels.
     ax.set_title(f"2D conformation with {protein.score} energy")
     ax.set_xlabel("x-axis", fontsize=13)
@@ -81,18 +93,13 @@ def _plot_protein_2d(protein, ax):
     ax.legend(handles=handles, labels=labels)
 
 
-def _plot_protein_3d(protein, ax):
+def _plot_aminos_3d_basic(protein, df, ax):
     """
-
-    :param protein:
-    :param ax:
+    Plot amino acids in basic style in a 3D figure.
+    :param Protein      protein:    Protein object to plot the hash of.
+    :param DataFrame    df:         DataFrame with all ordered positions.
+    :param Axes         ax:         Axis to plot on.
     """
-    # Setup dataframe containing the data and set types for the coordinates.
-    df = pd.DataFrame(
-        get_ordered_positions(protein), columns=["x", "y", "z", "Type"]
-    )
-    df = df.astype({"x": "int32", "y": "int32", "z": "int32"})
-
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
@@ -135,6 +142,22 @@ def _plot_protein_3d(protein, ax):
             lw=1.5,
         )
 
+
+def _plot_protein_3d(protein, style, ax):
+    """
+    :param Protein      protein:    Protein object to plot the hash of.
+    :param [str]        style:      What style to plot the proteins in.
+    :param Axes         ax:         Axis to plot Protein on.
+    """
+    # Setup dataframe containing the data and set types for the coordinates.
+    df = pd.DataFrame(
+        get_ordered_positions(protein), columns=["x", "y", "z", "Type"]
+    )
+    df = df.astype({"x": "int32", "y": "int32", "z": "int32"})
+
+    # Plot amino acids in basic style.
+    _plot_aminos_3d_basic(protein, df, ax)
+
     # Set axis labels and tics.
     ax.set_title(f"3D conformation with {protein.score} energy")
     ax.set_xlabel("x-axis", fontsize=13)
@@ -160,21 +183,26 @@ def _plot_protein_3d(protein, ax):
     ax.legend(handles=handles, labels=labels)
 
 
-def plot_protein(protein):
+def plot_protein(protein, style="basic", ax=None):
     """
     Plot conformation of a protein.
-    :param Protein      protein:        Protein object to plot the hash of.
+    :param Protein      protein:    Protein object to plot the hash of.
+    :param [str]        style:      What style to plot the proteins in.
+    :param Axes         ax:         Axis to plot Protein on.
     """
-    fig = plt.figure(figsize=(6, 5))
-    sns.set_style("whitegrid")
+    if ax is None:
+        fig = plt.figure(figsize=(6, 5))
+        sns.set_style("whitegrid")
 
     # Plot data according to used dimension.
     if protein.dim == 2:
-        ax = fig.gca()
-        _plot_protein_2d(protein, ax)
+        if ax is None:
+            ax = fig.gca()
+        _plot_protein_2d(protein, style, ax)
     elif protein.dim == 3:
-        ax = fig.gca(projection="3d")
-        _plot_protein_3d(protein, ax)
+        if ax is None:
+            ax = fig.gca(projection="3d")
+        _plot_protein_3d(protein, style, ax)
     else:
         raise RuntimeError(
             f"Cannot plot the structure of a protein with "
