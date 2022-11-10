@@ -22,7 +22,7 @@ def get_scoring_aminos(protein):
     max_weights = protein.max_weights
 
     # Store origin if it may score points.
-    if max_weights[idx] > 0:
+    if max_weights[idx] < 0:
         score_pos[tuple(cur_pos)] = np.array([0, next_dir], dtype=np.int64)
 
     while next_dir != 0:
@@ -37,7 +37,7 @@ def get_scoring_aminos(protein):
         next_dir = fold
 
         # Save amino if it may score points.
-        if max_weights[idx] > 0:
+        if max_weights[idx] < 0:
             score_pos[tuple(cur_pos)] = np.array(
                 [prev_dir, next_dir], dtype=np.int64
             )
