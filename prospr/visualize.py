@@ -91,6 +91,30 @@ def _plot_aminos_2d_paper(protein, df, ax):
         label="P",
     )
 
+    # Plot first point with a different color.
+    if df.iloc[0]["Type"] == "H":
+        ax.scatter(
+            df.iloc[0]["x"],
+            df.iloc[0]["y"],
+            marker="o",
+            fc="royalblue",
+            ec="#00ce00",
+            lw=2.5,
+            s=80,
+            zorder=2,
+        )
+    else:
+        ax.scatter(
+            df.iloc[0]["x"],
+            df.iloc[0]["y"],
+            marker="o",
+            fc="white",
+            ec="#00ce00",
+            lw=2.5,
+            s=80,
+            zorder=2,
+        )
+
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
 
@@ -120,6 +144,8 @@ def _plot_aminos_3d_basic(protein, df, ax):
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
+    ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
+
     # Plot the aminos connected with an opaque line.
     ax.scatter(
         df_H["x"],
@@ -141,7 +167,6 @@ def _plot_aminos_3d_basic(protein, df, ax):
         s=60,
         label="P",
     )
-    ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -198,6 +223,30 @@ def _plot_aminos_3d_paper(protein, df, ax):
         ax=ax,
         label="P",
     )
+
+    # Plot first point with a different color.
+    if df.iloc[0]["Type"] == "H":
+        ax.scatter(
+            df.iloc[0]["x"],
+            df.iloc[0]["y"],
+            marker="o",
+            fc="royalblue",
+            ec="#00ce00",
+            lw=2.5,
+            s=80,
+            zorder=2,
+        )
+    else:
+        ax.scatter(
+            df.iloc[0]["x"],
+            df.iloc[0]["y"],
+            marker="o",
+            fc="white",
+            ec="#00ce00",
+            lw=2.5,
+            s=80,
+            zorder=2,
+        )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
