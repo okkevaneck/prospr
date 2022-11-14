@@ -12,7 +12,7 @@ import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-__version__ = "0.2a7"
+__version__ = "0.2a8"
 
 # Define core module extension.
 ext_modules = [

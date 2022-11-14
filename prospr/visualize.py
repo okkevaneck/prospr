@@ -267,12 +267,14 @@ def _plot_aminos_3d_paper(protein, df, ax):
     ax.axis("off")
 
 
-def plot_protein(protein, style="basic", ax=None, show=True):
+def plot_protein(protein, style="basic", ax=None, legend=True, show=True):
     """
     Plot conformation of a protein.
-    :param Protein      protein:    Protein object to plot the hash of.
-    :param [str]        style:      What style to plot the proteins in.
-    :param Axes         ax:         Axis to plot Protein on.
+    :param Protein  protein:    Protein object to plot the hash of.
+    :param [str]    style:      What style to plot the proteins in.
+    :param Axes     ax:         Axis to plot Protein on.
+    :param bool     legend:     True if a legend needs to be added.
+    :param bool     show:       True if plot.show() needs to be called.
     """
     # Catch unplottable dimensions.
     if protein.dim != 2 and protein.dim != 3:
@@ -328,32 +330,35 @@ def plot_protein(protein, style="basic", ax=None, show=True):
             ax.zaxis.set_major_locator(MaxNLocator(integer=True))
             _plot_aminos_3d_basic(protein, df, ax)
 
-    # Remove title from legend and add item for bonds.
-    handles, labels = ax.get_legend_handles_labels()
-    score_patch = Line2D(
-        [],
-        [],
-        color="indianred",
-        linestyle=":",
-        alpha=0.9,
-        label="Bond",
-        lw=2,
-    )
-    handles.append(score_patch)
-    labels.append(score_patch.get_label())
-
-    # Style legend according to plotting style.
-    if style == "paper":
-        box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
-        ax.legend(
-            handles=handles,
-            labels=labels,
-            loc="upper left",
-            bbox_to_anchor=(1, 1),
+    # If adding legend, remove title from legend and add item for bonds.
+    if legend:
+        handles, labels = ax.get_legend_handles_labels()
+        score_patch = Line2D(
+            [],
+            [],
+            color="indianred",
+            linestyle=":",
+            alpha=0.9,
+            label="Bond",
+            lw=2,
         )
+        handles.append(score_patch)
+        labels.append(score_patch.get_label())
+
+        # Style legend according to plotting style.
+        if style == "paper":
+            box = ax.get_position()
+            ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
+            ax.legend(
+                handles=handles,
+                labels=labels,
+                loc="upper left",
+                bbox_to_anchor=(1, 1),
+            )
+        else:
+            ax.legend(handles=handles, labels=labels)
     else:
-        ax.legend(handles=handles, labels=labels)
+        ax.get_legend().remove()
 
     # Show plot if specified.
     if show:
