@@ -267,14 +267,22 @@ def _plot_aminos_3d_paper(protein, df, ax):
     ax.axis("off")
 
 
-def plot_protein(protein, style="basic", ax=None, legend=True, show=True):
+def plot_protein(
+    protein,
+    style="basic",
+    ax=None,
+    legend=True,
+    legend_style="inner",
+    show=True,
+):
     """
     Plot conformation of a protein.
-    :param Protein  protein:    Protein object to plot the hash of.
-    :param [str]    style:      What style to plot the proteins in.
-    :param Axes     ax:         Axis to plot Protein on.
-    :param bool     legend:     True if a legend needs to be added.
-    :param bool     show:       True if plot.show() needs to be called.
+    :param Protein  protein:        Protein object to plot the hash of.
+    :param [str]    style:          What style to plot the proteins in.
+    :param Axes     ax:             Axis to plot Protein on.
+    :param bool     legend:         True if a legend needs to be added.
+    :param str      legend_style:   Either 'inner' or 'outer'.
+    :param bool     show:           True if plot.show() needs to be called.
     """
     # Catch unplottable dimensions.
     if protein.dim != 2 and protein.dim != 3:
@@ -346,7 +354,9 @@ def plot_protein(protein, style="basic", ax=None, legend=True, show=True):
         labels.append(score_patch.get_label())
 
         # Style legend according to plotting style.
-        if style == "paper":
+        if (
+            style == "paper" and legend_style == "outer"
+        ) or legend_style == "outer":
             box = ax.get_position()
             ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
             ax.legend(

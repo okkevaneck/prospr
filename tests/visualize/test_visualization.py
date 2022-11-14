@@ -14,6 +14,10 @@ if __name__ == "__main__":
     p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
     plot_protein(p, style="basic", legend=False, show=False)
 
+    p = Protein("PHPHHPPPHHPHPHH", model="HP")
+    p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
+    plot_protein(p, style="paper", legend_style="inner", show=False)
+
     p = Protein("HHPHPHPPPHPHHHPPPPPPHPPPH", model="HP")
     p.set_hash(
         [
