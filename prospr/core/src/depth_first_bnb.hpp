@@ -1,4 +1,4 @@
-/* File:            depth_first_bnb.h
+/* File:            depth_first_bnb.hpp
  * Description:     Header file for a depth-first branch-and-bound search
  *                  function.
  * License:         This file is licensed under the GNU LGPL V3 license by

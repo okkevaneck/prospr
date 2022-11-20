@@ -1,4 +1,4 @@
-/* File:            amino_acid.h
+/* File:            amino_acid.hpp
  * Description:     Header file for an amino acid object within the HP-model.
  * License:         This file is licensed under the GNU LGPL V3 license by
  *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
