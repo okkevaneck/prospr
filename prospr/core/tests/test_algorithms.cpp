@@ -13,6 +13,7 @@
 #include "../src/protein.hpp"
 #include "../src/depth_first.hpp"
 #include "../src/depth_first_bnb.hpp"
+#include "../src/breadth_first.hpp"
 
 
 /* Test functionality of depth_first. */
@@ -45,10 +46,26 @@ void test_depth_first_bnb() {
     std::cout << "\t3D Protein solution scores matches.\n";
 }
 
+/* Test functionality of depth_first_bnb. */
+void test_breadth_first() {
+    /* Check if 2D solutions are found correctly. */
+    Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
+    protein = breadth_first(protein);
+    assert (protein->get_score() == -3);
+    std::cout << "\t2D Protein solution scores matches.\n";
+
+    /* Check if 3D solutions are found correctly. */
+    protein = new Protein("HPPHPHPHPH", 3, "HP");
+    protein = breadth_first(protein);
+    assert (protein->get_score() == -4);
+    std::cout << "\t3D Protein solution scores matches.\n";
+}
+
 /* Test functionality of all algorithms. */
 void run_all() {
     test_depth_first();
     test_depth_first_bnb();
+    test_breadth_first();
 }
 
 int main(int argc, char* argv[]) {
@@ -61,6 +78,8 @@ int main(int argc, char* argv[]) {
         test_depth_first();
     } else if (strcmp(argv[1], "depth_first_bnb") == 0) {
         test_depth_first_bnb();
+    } else if (strcmp(argv[1], "breadth_first") == 0) {
+        test_breadth_first();
     } else {
         std::cout << "\tSpecific algorithm not detected..\n";
     }
