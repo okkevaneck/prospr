@@ -5,7 +5,7 @@
  *                  specifics.
  */
 
-#include "breadth_first.hpp"
+#include "dijkstra.hpp"
 #include <queue>
 #include <iostream>
 
@@ -22,6 +22,27 @@ struct Conformation {
         this->length = length;
         this->hash = hash;
     }
+
+    /* Create and return vector of children Conformations. */
+    std::vector<Conformation> create_children(Protein* protein) {
+        std::vector<Conformation> children;
+        std::vector<int> moves = {-2, -1, 1, 2};
+        protein->set_hash(this->hash);
+
+        for (int m : moves) {
+            /* Only add valid conformations to list of children. */
+            if (protein->is_valid(m)) {
+                protein->place_amino(m);
+
+                Conformation conf = Conformation(protein->get_score(), protein->get_cur_len(), protein->hash_fold());
+                children.push_back(conf);
+
+                protein->remove_amino();
+            }
+        }
+
+        return children;
+    }
 };
 
 
@@ -37,8 +58,9 @@ bool operator>(const struct Conformation& conf1, const struct Conformation& conf
 std::ostream &operator<<(std::ostream &os, const Conformation& conf) {
     std::cout << "<" << conf.score << ", " << conf.length << ", [";
 
-    for (int i: conf.hash)
+    for (int i: conf.hash) {
         std::cout << i << ", ";
+    }
 
     std::cout << "]>";
     return os;
@@ -47,18 +69,35 @@ std::ostream &operator<<(std::ostream &os, const Conformation& conf) {
 
 /* A breadth-first search function for finding a minimum energy conformation. */
 Protein* dijkstra(Protein* protein) {
+    /* Make priority queue and set initial conformation as only node. */
     std::priority_queue<Conformation, std::vector<Conformation>, std::greater<Conformation>> prioq;
+    Conformation conf = Conformation(0, 1, std::vector<int>{});
+    prioq.push(conf);
 
-    prioq.push(Conformation(-1, 2, std::vector<int>{1,1,2,2,2}));
-    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
-    prioq.push(Conformation(-1, 1, std::vector<int>{1,2,2,2,2}));
-    prioq.push(Conformation(-2, 2, std::vector<int>{1,-1,2,2,2}));
-    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
-
-    while (! prioq.empty() ) {
-        std::cout << prioq.top() << "\n";
+    /* Fetch shortest path while the queue is not empty. */
+    while (!prioq.empty()) {
+        conf = prioq.top();
         prioq.pop();
+
+        /* Create children of current conformation and add to queue. */
+        std::vector<Conformation> children = conf.create_children(protein);
+        for (Conformation c : children) {
+            std::cout << c << "\n";
+        }
     }
+
+
+
+//    prioq.push(Conformation(-1, 2, std::vector<int>{1,1,2,2,2}));
+//    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
+//    prioq.push(Conformation(-1, 1, std::vector<int>{1,2,2,2,2}));
+//    prioq.push(Conformation(-2, 2, std::vector<int>{1,-1,2,2,2}));
+//    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
+
+//    while (! prioq.empty() ) {
+//        std::cout << prioq.top() << "\n";
+//        prioq.pop();
+//    }
 
     return protein;
 }

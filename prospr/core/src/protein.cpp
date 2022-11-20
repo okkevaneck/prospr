@@ -183,7 +183,7 @@ void Protein::reset() {
     last_move = 0;
     score = 0;
     solutions_checked = 0;
-    aminos_placed = 0;
+    aminos_placed = 1;
 
     space[last_pos] = amino_acids[0];
 }
