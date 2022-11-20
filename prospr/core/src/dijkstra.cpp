@@ -1,5 +1,5 @@
-/* File:            breadth_first.cpp
- * Description:     Source file for a breadth-first search function.
+/* File:            dijkstra.cpp
+ * Description:     Source file for Dijkstra's search function.
  * License:         This file is licensed under the GNU LGPL V3 license by
  *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
  *                  specifics.
@@ -25,9 +25,11 @@ struct Conformation {
 };
 
 
-/* Overload > operator for Conformation in the priority queue. */
+/* Overload > operator for Conformation in the priority queue.
+ * Bigger indicates more potential for leading towards the minimum energy conformation.
+ */
 bool operator>(const struct Conformation& conf1, const struct Conformation& conf2) {
-    return conf1.score > conf2.score || (conf1.score == conf2.score && conf1.length < conf2.length);
+    return conf1.score > conf2.score || (conf1.score == conf2.score && conf1.length > conf2.length);
 }
 
 
@@ -44,14 +46,14 @@ std::ostream &operator<<(std::ostream &os, const Conformation& conf) {
 
 
 /* A breadth-first search function for finding a minimum energy conformation. */
-Protein* breadth_first(Protein* protein) {
+Protein* dijkstra(Protein* protein) {
     std::priority_queue<Conformation, std::vector<Conformation>, std::greater<Conformation>> prioq;
 
-    prioq.push(Conformation(1, 2, std::vector<int>{1,1,2,2,2}));
-    prioq.push(Conformation(1, 3, std::vector<int>{1,1,-1,2,2}));
-    prioq.push(Conformation(1, 1, std::vector<int>{1,2,2,2,2}));
-    prioq.push(Conformation(2, 2, std::vector<int>{1,-1,2,2,2}));
-    prioq.push(Conformation(1, 3, std::vector<int>{1,1,-1,2,2}));
+    prioq.push(Conformation(-1, 2, std::vector<int>{1,1,2,2,2}));
+    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
+    prioq.push(Conformation(-1, 1, std::vector<int>{1,2,2,2,2}));
+    prioq.push(Conformation(-2, 2, std::vector<int>{1,-1,2,2,2}));
+    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
 
     while (! prioq.empty() ) {
         std::cout << prioq.top() << "\n";

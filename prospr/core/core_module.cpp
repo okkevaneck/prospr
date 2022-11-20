@@ -14,7 +14,7 @@ namespace py = pybind11;
 #include "src/protein.cpp"
 #include "src/depth_first.cpp"
 #include "src/depth_first_bnb.cpp"
-#include "src/breadth_first.cpp"
+#include "src/dijkstra.cpp"
 
 
 PYBIND11_MODULE(prospr_core, m) {
@@ -88,7 +88,7 @@ PYBIND11_MODULE(prospr_core, m) {
         py::arg("protein"));
 
     /* Breadth-first search function definition. */
-    m.def("breadth_first", breadth_first,
-        "Finds the optimal conformation via breadth-first branch-and-bound search",
+    m.def("dijkstra", dijkstra,
+        "Finds the optimal conformation via Dijkstra's search",
         py::arg("protein"));
 }

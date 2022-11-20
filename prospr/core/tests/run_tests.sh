@@ -41,7 +41,7 @@ test_protein() {
 test_depth_first() {
     echo -e "\n~ Testing depth_first.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/breadth_first.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first
@@ -54,7 +54,7 @@ test_depth_first() {
 test_depth_first_bnb() {
     echo -e "\n~ Testing depth_first_bnb.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/breadth_first.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first_bnb
@@ -64,13 +64,13 @@ test_depth_first_bnb() {
 }
 
 # Test depth_first functionality.
-test_breadth_first() {
-    echo -e "\n~ Testing breadth_first.."
+test_dijkstra() {
+    echo -e "\n~ Testing dijkstra.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/breadth_first.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_algorithms breadth_first
+    $DEBUG ./test_algorithms dijkstra
 
     rm test_algorithms
     echo -e "~ Done"
@@ -82,7 +82,7 @@ test_all() {
     test_protein
     test_depth_first
     test_depth_first_bnb
-    test_breadth_first
+    test_dijkstra
 }
 
 # Main entry point of the script.
@@ -122,9 +122,9 @@ main() {
                 test_depth_first_bnb
                 ;;
             # Only test breadth_first.
-            "breadth_first")
-                echo "~ Module:  breadth_first"
-                test_breadth_first
+            "dijkstra")
+                echo "~ Module:  dijkstra"
+                test_dijkstra
                 ;;
             # Default to test all.
             *)
