@@ -41,7 +41,7 @@ test_protein() {
 test_depth_first() {
     echo -e "\n~ Testing depth_first.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra_bnb.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first
@@ -54,7 +54,7 @@ test_depth_first() {
 test_depth_first_bnb() {
     echo -e "\n~ Testing depth_first_bnb.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra_bnb.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first_bnb
@@ -63,14 +63,27 @@ test_depth_first_bnb() {
     echo -e "~ Done"
 }
 
-# Test depth_first functionality.
+# Test Dijkstra's functionality.
 test_dijkstra() {
     echo -e "\n~ Testing dijkstra.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra_bnb.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms dijkstra
+
+    rm test_algorithms
+    echo -e "~ Done"
+}
+
+# Test Dijkstra's with branch-and-bound functionality.
+test_dijkstra_bnb() {
+    echo -e "\n~ Testing dijkstra_bnb.."
+    # shellcheck disable=SC2086
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/dijkstra_bnb.cpp ../src/dijkstra.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+
+    echo "~ Compilation successful, running the tests.."
+    $DEBUG ./test_algorithms dijkstra_bnb
 
     rm test_algorithms
     echo -e "~ Done"
@@ -83,6 +96,7 @@ test_all() {
     test_depth_first
     test_depth_first_bnb
     test_dijkstra
+    test_dijkstra_bnb
 }
 
 # Main entry point of the script.
@@ -121,10 +135,15 @@ main() {
                 echo "~ Module:  depth_first_bnb"
                 test_depth_first_bnb
                 ;;
-            # Only test breadth_first.
+            # Only test Dijkstra's.
             "dijkstra")
                 echo "~ Module:  dijkstra"
                 test_dijkstra
+                ;;
+            # Only test Dijkstra's with branch-and-bound.
+            "dijkstra_bnb")
+                echo "~ Module:  dijkstra_bnb"
+                test_dijkstra_bnb
                 ;;
             # Default to test all.
             *)

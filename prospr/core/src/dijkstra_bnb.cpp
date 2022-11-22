@@ -1,11 +1,12 @@
-/* File:            dijkstra.cpp
- * Description:     Source file for Dijkstra's search function.
+/* File:            dijkstra_bnb.cpp
+ * Description:     Source file for Dijkstra's search function with
+ *                  branch-and-bound.
  * License:         This file is licensed under the GNU LGPL V3 license by
  *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
  *                  specifics.
  */
 
-#include "dijkstra.hpp"
+#include "dijkstra_bnb.hpp"
 #include <queue>
 #include <iostream>
 #include <numeric>
@@ -95,8 +96,10 @@ std::ostream &operator<<(std::ostream &os, const Conformation& conf) {
     return os;
 }
 
-/* Dijkstra's search function for finding a minimum energy conformation. */
-Protein* dijkstra(Protein* protein) {
+/* Dijkstra's search function with branch-and-bound for finding a minimum
+ * energy conformation.
+ */
+ Protein* dijkstra_bnb(Protein* protein) {
     size_t max_length = protein->get_sequence().length();
 
     /* A Protein with 3 or less amino acids cannot make a bond, so return. */

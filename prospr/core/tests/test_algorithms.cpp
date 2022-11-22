@@ -14,6 +14,7 @@
 #include "../src/depth_first.hpp"
 #include "../src/depth_first_bnb.hpp"
 #include "../src/dijkstra.hpp"
+#include "../src/dijkstra_bnb.hpp"
 
 
 /* Test functionality of depth_first. */
@@ -46,7 +47,7 @@ void test_depth_first_bnb() {
     std::cout << "\t3D Protein solution scores matches.\n";
 }
 
-/* Test functionality of depth_first_bnb. */
+/* Test functionality of Dijkstra's. */
 void test_dijkstra() {
     /* Check if 2D solutions are found correctly. */
     Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
@@ -55,10 +56,25 @@ void test_dijkstra() {
     std::cout << "\t2D Protein solution scores matches.\n";
 
     /* Check if 3D solutions are found correctly. */
-//    protein = new Protein("HPPHPHPHPH", 3, "HP");
-//    protein = dijkstra(protein);
-//    assert (protein->get_score() == -4);
-//    std::cout << "\t3D Protein solution scores matches.\n";
+    protein = new Protein("HPPHPPH", 3, "HP");
+    protein = dijkstra(protein);
+    assert (protein->get_score() == -2);
+    std::cout << "\t3D Protein solution scores matches.\n";
+}
+
+/* Test functionality of Dijkstra's with branch-and-bound. */
+void test_dijkstra_bnb() {
+    /* Check if 2D solutions are found correctly. */
+    Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
+    protein = dijkstra_bnb(protein);
+    assert (protein->get_score() == -3);
+    std::cout << "\t2D Protein solution scores matches.\n";
+
+    /* Check if 3D solutions are found correctly. */
+    protein = new Protein("HPPHPHPHPH", 3, "HP");
+    protein = dijkstra_bnb(protein);
+    assert (protein->get_score() == -4);
+    std::cout << "\t3D Protein solution scores matches.\n";
 }
 
 /* Test functionality of all algorithms. */
@@ -66,6 +82,7 @@ void run_all() {
     test_depth_first();
     test_depth_first_bnb();
     test_dijkstra();
+    test_dijkstra_bnb();
 }
 
 int main(int argc, char* argv[]) {
@@ -80,6 +97,8 @@ int main(int argc, char* argv[]) {
         test_depth_first_bnb();
     } else if (strcmp(argv[1], "dijkstra") == 0) {
         test_dijkstra();
+    }} else if (strcmp(argv[1], "dijkstra_bnb") == 0) {
+        test_dijkstra_bnb();
     } else {
         std::cout << "\tSpecific algorithm not detected..\n";
     }
