@@ -31,7 +31,8 @@ struct Conformation {
         std::vector<int> one_dim (this->hash.size(), -1);
 
         /* Limit directions to -1 and -2 until a bend at -2 has been made. */
-        if (this->hash == one_dim || std::find(this->hash.begin(), this->hash.end(), -2) == this->hash.end()) {
+        auto goes_down = std::find(this->hash.begin(), this->hash.end(), -2);
+        if (this->hash == one_dim || goes_down == this->hash.end()) {
             std::vector<int> neg_moves(dim);
             std::iota(neg_moves.begin(), neg_moves.end(), -dim);
             return neg_moves;
@@ -76,8 +77,10 @@ struct Conformation {
 /* Overload > operator for Conformation in the priority queue.
  * Bigger indicates more potential for leading towards the minimum energy conformation.
  */
-bool operator>(const struct Conformation& conf1, const struct Conformation& conf2) {
-    return conf1.score > conf2.score || (conf1.score == conf2.score && conf1.length > conf2.length);
+bool operator>(const struct Conformation& conf1,
+               const struct Conformation& conf2) {
+    return conf1.score > conf2.score ||
+        (conf1.score == conf2.score && conf1.length > conf2.length);
 }
 
 /* Overload << operator for printing Conformations. */
@@ -103,8 +106,10 @@ Protein* dijkstra(Protein* protein) {
         return protein;
     }
 
-    /* Make priority queue sorting first on lowest energy, then on smallest length. */
-    std::priority_queue<Conformation, std::vector<Conformation>, std::greater<Conformation>> prioq;
+    /* Make priority queue, sorting on lowest energy, then on length. */
+    std::priority_queue<Conformation,
+                        std::vector<Conformation>,
+                        std::greater<Conformation>> prioq;
     std::vector<Conformation> children;
 
     /* Add initial partial conformation as only node in priority queue. */
@@ -122,15 +127,11 @@ Protein* dijkstra(Protein* protein) {
         conf = prioq.top();
         prioq.pop();
 
-        std::cout << "\nCur pop: " << conf << "\n";
-
         /* Create children of current conformation and loop over them. */
         children = conf.create_children(protein);
 
         for (Conformation conf : children) {
-            std::cout << "\t" << conf << "\n";
-
-            /* If child is complete conformation, check stability for new best. */
+            /* If child is complete conformation, check for new best. */
             if (conf.hash.size() == max_length - 1) {
                 protein->set_hash(conf.hash);
 
@@ -145,7 +146,6 @@ Protein* dijkstra(Protein* protein) {
         }
     }
 
-    std::cout << "\n\nBest found conformation:\n" << best_conf << "\n";
     protein->set_hash(best_conf.hash);
 
     return protein;
