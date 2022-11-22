@@ -27,18 +27,11 @@ struct Conformation {
 
     /* Create set of moves depending on current hash. */
     std::vector<int> _create_move_set(int dim) {
-        /* Construct list of only positive moves. */
-        std::vector<int> pos_moves(dim);
-        std::iota(pos_moves.begin(), pos_moves.end(), 1);
+        /* Construct list of moves, limit first moves to one quadrant. */
+        std::vector<int> one_dim (this->hash.size(), -1);
 
-        /* Check if there are any positive moves in current hash. */
-        const auto result = std::find_first_of(this->hash.begin(),
-                                       this->hash.end(),
-                                       pos_moves.begin(),
-                                       pos_moves.end());
-
-        /* Use only negative moves if protein has not left quadrant axes. */
-        if (result == this->hash.end()) {
+        /* Limit directions to -1 and -2 until a bend at -2 has been made. */
+        if (this->hash == one_dim || std::find(this->hash.begin(), this->hash.end(), -2) == this->hash.end()) {
             std::vector<int> neg_moves(dim);
             std::iota(neg_moves.begin(), neg_moves.end(), -dim);
             return neg_moves;
@@ -62,8 +55,8 @@ struct Conformation {
          */
         std::vector<int> moves = this->_create_move_set(protein->get_dim());
 
+        /* Only add valid conformations to list of children. */
         for (int m : moves) {
-            /* Only add valid conformations to list of children. */
             if (protein->is_valid(m)) {
                 protein->place_amino(m);
 
@@ -104,9 +97,9 @@ Protein* dijkstra(Protein* protein) {
     size_t max_length = protein->get_sequence().length();
 
     /* A Protein with 3 or less amino acids cannot make a bond, so return. */
-    if (max_length <= 3) {
-        protein->place_amino(2);
-        protein->place_amino(2);
+    if (max_length <= 3) { // TODO: Extend with sub cases.
+        protein->place_amino(-1);
+        protein->place_amino(-1);
         return protein;
     }
 
@@ -115,26 +108,30 @@ Protein* dijkstra(Protein* protein) {
     std::vector<Conformation> children;
 
     /* Add initial partial conformation as only node in priority queue. */
-    Conformation conf = Conformation(0, 1, std::vector<int>{});
+    protein->place_amino(-1);
+    Conformation conf = Conformation(0, 2, std::vector<int>{-1});
     prioq.push(conf);
 
-    /* Init best score on impossible value. */
+    /* Init best solution on impossible scenario. */
+    Conformation best_conf = Conformation(1, max_length,
+            std::vector<int>(max_length, -protein->get_dim()));
     int best_score = 1;
-    Conformation best_conf = Conformation(1, max_length, std::vector<int>(max_length, -protein->get_dim()));
 
     /* Fetch shortest path while the queue is not empty. */
     while (!prioq.empty()) {
         conf = prioq.top();
         prioq.pop();
 
+        std::cout << "\nCur pop: " << conf << "\n";
+
         /* Create children of current conformation and loop over them. */
         children = conf.create_children(protein);
 
         for (Conformation conf : children) {
-            std::cout << conf << "\n";
+            std::cout << "\t" << conf << "\n";
 
             /* If child is complete conformation, check stability for new best. */
-            if (conf.hash.size() == max_length) {
+            if (conf.hash.size() == max_length - 1) {
                 protein->set_hash(conf.hash);
 
                 if (protein->get_score() < best_score) {
