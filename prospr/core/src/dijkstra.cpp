@@ -41,14 +41,12 @@ struct Conformation {
         if (result == this->hash.end()) {
             std::vector<int> neg_moves(dim);
             std::iota(neg_moves.begin(), neg_moves.end(), -dim);
-            std::cout << "Neg moves.\n";
             return neg_moves;
         } else {
             /* Else, create list of all possible moves. */
             std::vector<int> all_moves(dim * 2 + 1);
             std::iota(all_moves.begin(), all_moves.end(), -dim);
             all_moves.erase(all_moves.begin() + dim);
-            std::cout << "All moves.\n";
             return all_moves;
         }
     }
@@ -103,8 +101,10 @@ std::ostream &operator<<(std::ostream &os, const Conformation& conf) {
 
 /* A breadth-first search function for finding a minimum energy conformation. */
 Protein* dijkstra(Protein* protein) {
+    size_t max_length = protein->get_sequence().length();
+
     /* A Protein with 3 or less amino acids cannot make a bond, so return. */
-    if (protein->get_sequence().length() <= 3) {
+    if (max_length <= 3) {
         protein->place_amino(2);
         protein->place_amino(2);
         return protein;
@@ -112,35 +112,44 @@ Protein* dijkstra(Protein* protein) {
 
     /* Make priority queue sorting first on lowest energy, then on smallest length. */
     std::priority_queue<Conformation, std::vector<Conformation>, std::greater<Conformation>> prioq;
+    std::vector<Conformation> children;
 
     /* Add initial partial conformation as only node in priority queue. */
     Conformation conf = Conformation(0, 1, std::vector<int>{});
     prioq.push(conf);
+
+    /* Init best score on impossible value. */
+    int best_score = 1;
+    Conformation best_conf = Conformation(1, max_length, std::vector<int>(max_length, -protein->get_dim()));
 
     /* Fetch shortest path while the queue is not empty. */
     while (!prioq.empty()) {
         conf = prioq.top();
         prioq.pop();
 
-        /* Create children of current conformation and add to queue. */
-        std::vector<Conformation> children = conf.create_children(protein);
-        for (Conformation c : children) {
-            std::cout << c << "\n";
+        /* Create children of current conformation and loop over them. */
+        children = conf.create_children(protein);
+
+        for (Conformation conf : children) {
+            std::cout << conf << "\n";
+
+            /* If child is complete conformation, check stability for new best. */
+            if (conf.hash.size() == max_length) {
+                protein->set_hash(conf.hash);
+
+                if (protein->get_score() < best_score) {
+                    best_score = protein->get_score();
+                    best_conf = conf;
+                }
+            } else {
+                /* Add child to priority queue if not complete conformation. */
+                prioq.push(conf);
+            }
         }
     }
 
-
-
-//    prioq.push(Conformation(-1, 2, std::vector<int>{1,1,2,2,2}));
-//    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
-//    prioq.push(Conformation(-1, 1, std::vector<int>{1,2,2,2,2}));
-//    prioq.push(Conformation(-2, 2, std::vector<int>{1,-1,2,2,2}));
-//    prioq.push(Conformation(-1, 3, std::vector<int>{1,1,-1,2,2}));
-
-//    while (! prioq.empty() ) {
-//        std::cout << prioq.top() << "\n";
-//        prioq.pop();
-//    }
+    std::cout << "\n\nBest found conformation:\n" << best_conf << "\n";
+    protein->set_hash(best_conf.hash);
 
     return protein;
 }
