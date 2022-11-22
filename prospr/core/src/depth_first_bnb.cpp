@@ -15,11 +15,12 @@
 
 
 /* Returns true if the branch cannot produce a better score. */
-bool prune_branch(Protein* protein, int max_length, int no_neighbors,
+bool dfs_prune_branch(Protein* protein, int max_length, int no_neighbors,
         int move, int best_score) {
     protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
+    int cur_score = protein->get_score();
     std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
@@ -34,7 +35,7 @@ bool prune_branch(Protein* protein, int max_length, int no_neighbors,
 
     protein->remove_amino();
 
-    return protein->get_score() + branch_score >= best_score;
+    return cur_score + branch_score >= best_score;
 }
 
 /* A depth-first branch-and-bound search function for finding a minimum
@@ -73,7 +74,7 @@ Protein* depth_first_bnb(Protein* protein) {
 
         /* Try to place the current amino acid. */
         while (!placed_amino && move != -dim - 1) {
-            if (protein->is_valid(move) && !prune_branch(protein, max_length,
+            if (protein->is_valid(move) && !dfs_prune_branch(protein, max_length,
                     no_neighbors, move, best_score)) {
                 protein->place_amino(move);
                 placed_amino = true;

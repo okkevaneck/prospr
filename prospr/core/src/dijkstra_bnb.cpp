@@ -16,8 +16,8 @@
 
 
 /* Returns true if the branch cannot produce a better score. */
-bool prune_branch(Protein* protein, std::vector<int> hash, int max_length,
-                  int no_neighbors, int best_score) {
+bool dijkstra_prune_branch(Protein* protein, std::vector<int> hash,
+        int max_length, int no_neighbors, int best_score) {
     int cur_len = hash.size() + 1;
     std::vector<int> max_weights = protein->get_max_weights();
 
@@ -86,8 +86,8 @@ Protein* dijkstra_bnb(Protein* protein) {
                 /* Add child to priority queue if not complete conformation,
                  * and it has the potential of being the new best.
                  */
-                if (!prune_branch(protein, conf.hash, max_length, no_neighbors,
-                                  best_score)) {
+                if (!dijkstra_prune_branch(protein, conf.hash, max_length,
+                                           no_neighbors, best_score)) {
                     prioq.push(conf);
                 }
             }
