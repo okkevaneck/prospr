@@ -12,6 +12,27 @@
 #include <iostream>
 #include <numeric>
 #include <algorithm>
+#include <math.h>
+
+
+/* Returns true if the branch cannot produce a better score. */
+bool prune_branch(Protein* protein, std::vector<int> hash, int max_length,
+                  int no_neighbors, int best_score) {
+    int cur_len = hash.size() + 1;
+    std::vector<int> max_weights = protein->get_max_weights();
+
+    /* Compute the sum of the remaining possible scoring connections. */
+    int branch_score = no_neighbors * \
+        std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
+
+    /* End of amino has 1 more possible way of connecting, update
+     * branch_score accordingly.
+     */
+    if (cur_len != max_length && max_weights.back() != 0)
+        branch_score += max_weights.back();
+
+    return protein->get_score() + branch_score >= best_score;
+}
 
 
 /* Dijkstra's search function with branch-and-bound for finding a minimum
@@ -19,6 +40,7 @@
  */
 Protein* dijkstra_bnb(Protein* protein) {
     size_t max_length = protein->get_sequence().length();
+    size_t no_neighbors = (int)pow(2, (protein->get_dim() - 1));
 
     /* A Protein with 3 or less amino acids cannot make a bond, so return. */
     if (max_length <= 3) { // TODO: Extend with sub cases.
@@ -61,8 +83,13 @@ Protein* dijkstra_bnb(Protein* protein) {
                     best_conf = conf;
                 }
             } else {
-                /* Add child to priority queue if not complete conformation. */
-                prioq.push(conf);
+                /* Add child to priority queue if not complete conformation,
+                 * and it has the potential of being the new best.
+                 */
+                if (!prune_branch(protein, conf.hash, max_length, no_neighbors,
+                                  best_score)) {
+                    prioq.push(conf);
+                }
             }
         }
     }

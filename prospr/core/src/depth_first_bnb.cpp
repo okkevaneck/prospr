@@ -20,7 +20,6 @@ bool prune_branch(Protein* protein, int max_length, int no_neighbors,
     protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
-    int cur_score = protein->get_score();
     std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
@@ -35,7 +34,7 @@ bool prune_branch(Protein* protein, int max_length, int no_neighbors,
 
     protein->remove_amino();
 
-    return cur_score + branch_score >= best_score;
+    return protein->get_score() + branch_score >= best_score;
 }
 
 /* A depth-first branch-and-bound search function for finding a minimum
