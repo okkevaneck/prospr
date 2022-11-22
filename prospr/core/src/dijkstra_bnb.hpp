@@ -1,4 +1,4 @@
-/* File:            dijsktra_bnb.hpp
+/* File:            dijkstra_bnb.hpp
  * Description:     Header file for Dijkstra's search function with
  *                  branch-and-bound.
  * License:         This file is licensed under the GNU LGPL V3 license by

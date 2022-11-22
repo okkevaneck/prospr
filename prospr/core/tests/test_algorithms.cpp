@@ -56,9 +56,9 @@ void test_dijkstra() {
     std::cout << "\t2D Protein solution scores matches.\n";
 
     /* Check if 3D solutions are found correctly. */
-    protein = new Protein("HPPHPPH", 3, "HP");
+    protein = new Protein("HPPH", 3, "HP");
     protein = dijkstra(protein);
-    assert (protein->get_score() == -2);
+    assert (protein->get_score() == -1);
     std::cout << "\t3D Protein solution scores matches.\n";
 }
 
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
         test_depth_first_bnb();
     } else if (strcmp(argv[1], "dijkstra") == 0) {
         test_dijkstra();
-    }} else if (strcmp(argv[1], "dijkstra_bnb") == 0) {
+    } else if (strcmp(argv[1], "dijkstra_bnb") == 0) {
         test_dijkstra_bnb();
     } else {
         std::cout << "\tSpecific algorithm not detected..\n";
