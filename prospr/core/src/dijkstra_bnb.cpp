@@ -18,7 +18,8 @@
 /* Returns true if the branch cannot produce a better score. */
 bool dijkstra_prune_branch(Protein* protein, std::vector<int> hash,
         int max_length, int no_neighbors, int best_score) {
-    int cur_len = hash.size() + 1;
+    protein->set_hash(hash, false);
+    int cur_len = protein->get_cur_len();
     std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
