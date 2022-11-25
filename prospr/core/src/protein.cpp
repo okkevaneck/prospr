@@ -339,6 +339,7 @@ std::vector<std::pair<int,int>> Protein::_append_bond_pairs(
     char cur_type = cur_amino->get_type();
     std::pair<int,int> cur_bond;
     std::vector<int> other_pos;
+    std::string bond;
 
     /* Check if amino acid at pos cannot create bonds. */
     if (weighted_amino_acids.find(cur_type) != std::string::npos) {
@@ -347,8 +348,16 @@ std::vector<std::pair<int,int>> Protein::_append_bond_pairs(
             other_pos = pos;
             other_pos[abs(m) - 1] += m / abs(m);
 
-            std::string bond{cur_type, space[other_pos]->get_type()};
-            std::cout << bond << "\n";
+            /* Check if there is an amino on the other_pos location. */
+            if (space.count(other_pos) != 0) {
+                bond = {cur_type, space[other_pos]->get_type()};
+
+                /* Add pair if it creates a bond. */
+                if (bond_values[bond] < 0) {
+                    pairs.push_back(std::make_pair (cur_amino->get_index(),
+                                                    space[other_pos]->get_index()));
+                }
+            }
         }
     }
 
@@ -357,7 +366,6 @@ std::vector<std::pair<int,int>> Protein::_append_bond_pairs(
 
 /* Get the pairs of amino acids indexes forming bonds. */
 std::vector<std::pair<int,int>> Protein::get_bonds() {
-    std::cout << "I'M ALIVE\n";
     std::vector<int> pos(dim, 0);
     std::vector<std::pair<int,int>> pairs;
 
