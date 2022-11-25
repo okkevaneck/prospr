@@ -8,7 +8,11 @@
 #include "protein.hpp"
 #include <stdlib.h>
 #include <algorithm>
+#include <numeric>
+#include <string>
 #include <stdexcept>
+
+#include <iostream>
 
 
 /* Construct a new Protein. */
@@ -324,4 +328,80 @@ void Protein::_change_score(int move, bool placed) {
             }
         }
     }
+}
+
+/* Return a vector with int pairs that represent the aminos making a bond. */
+std::vector<std::pair<int,int>> Protein::_append_bond_pairs(
+        std::vector<std::pair<int,int>> pairs,
+        std::vector<int> pos,
+        std::vector<int> moves) {
+    AminoAcid* cur_amino = space[pos];
+    char cur_type = cur_amino->get_type();
+    std::pair<int,int> cur_bond;
+    std::vector<int> other_pos;
+    std::string bond;
+
+    /* Check if amino acid at pos cannot create bonds. */
+    if (weighted_amino_acids.find(cur_type) != std::string::npos) {
+        /* For each surrounding non-connected space, check for bonds. */
+        for (int m : moves) {
+            other_pos = pos;
+            other_pos[abs(m) - 1] += m / abs(m);
+
+            /* Check if there is an amino on the other_pos location. */
+            if (space.count(other_pos) != 0) {
+                bond = {cur_type, space[other_pos]->get_type()};
+
+                /* Add pair if it creates a bond. */
+                if (bond_values[bond] < 0) {
+                    pairs.push_back(std::make_pair (cur_amino->get_index(),
+                                                    space[other_pos]->get_index()));
+                }
+            }
+        }
+    }
+
+    return pairs;
+}
+
+/* Get the pairs of amino acids indexes forming bonds. */
+std::vector<std::pair<int,int>> Protein::get_bonds() {
+    std::vector<int> pos(dim, 0);
+    std::vector<std::pair<int,int>> pairs;
+
+    /* Create set of all possible moves. */
+    std::vector<int> moves(dim * 2 + 1);
+    std::iota(moves.begin(), moves.end(), -dim);
+    moves.erase(moves.begin() + dim);
+
+    /* Make list with possible bond creating moves from origin.  */
+    std::vector<int> cur_moves = moves;
+    cur_moves.erase(std::remove(cur_moves.begin(), cur_moves.end(),
+                                space[pos]->get_next_move()),
+                    cur_moves.end());
+
+    /* Check if the origin has formed any bonds. */
+    pairs = this->_append_bond_pairs(pairs, pos, cur_moves);
+
+    /* Check if any of the non-origin amino acids has formed a bond. */
+    for (int m : this->hash_fold()) {
+        /* Update position. */
+        pos[abs(m) - 1] += m / abs(m);
+
+        /* Update move set with options from new position. */
+        cur_moves = moves;
+        cur_moves.erase(std::remove(cur_moves.begin(), cur_moves.end(),
+                                    space[pos]->get_prev_move()),
+                        cur_moves.end());
+
+        if (space[pos]->get_next_move() != 0)
+            cur_moves.erase(std::remove(cur_moves.begin(), cur_moves.end(),
+                                        space[pos]->get_next_move()),
+                            cur_moves.end());
+
+        /* Append pairs with bonds from new position. */
+        pairs = this->_append_bond_pairs(pairs, pos, cur_moves);
+    }
+
+    return pairs;
 }

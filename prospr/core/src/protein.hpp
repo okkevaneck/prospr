@@ -83,6 +83,9 @@ class Protein {
         /* Set the conformation to the given hash. */
         void set_hash(std::vector<int> fold_hash, bool track=false);
 
+        /* Get the pairs of amino acids indexes forming bonds. */
+        std::vector<std::pair<int,int>> get_bonds();
+
     private:
         std::string sequence;
         std::map<std::vector<int>, AminoAcid*> space;
@@ -102,6 +105,12 @@ class Protein {
          * given move.
          */
         void _change_score(int move, bool placed);
+
+        /* Return a vector with int pairs that represent the aminos making a bond. */
+        std::vector<std::pair<int,int>> _append_bond_pairs(
+            std::vector<std::pair<int,int>> pairs,
+            std::vector<int> pos,
+            std::vector<int> moves);
 };
 
 #endif

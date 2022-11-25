@@ -79,7 +79,6 @@ class TestProtein:
 
     def test_protein_2d_undo_moves(self, protein_2d):
         """Test if a 2D protein can remove amino acids in all directions."""
-        print(protein_2d.hash_fold())
         moves = [1, 2, -1, -1, -2]
 
         for m in moves:
@@ -97,3 +96,12 @@ class TestProtein:
 
         for _ in range(len(moves)):
             protein_3d.remove_amino()
+
+    def test_protein_2d_get_bond_indexes(self, protein_2d):
+        """Test if a 2D protein correctly computes indexes of formed bonds."""
+        moves = [1, 2, -1, -1, -2]
+
+        for m in moves:
+            protein_2d.place_amino(m)
+
+        assert protein_2d.get_bonds() == [(0, 3), (3, 0)]

@@ -74,6 +74,8 @@ PYBIND11_MODULE(prospr_core, m) {
         .def("set_hash", &Protein::set_hash,
             "Set the conformation to the given sequence of moves",
             py::arg("fold_hash"), py::arg("track")=false)
+        .def("get_bonds", &Protein::get_bonds, py::return_value_policy::copy,
+             "Return list of amino acid indexes forming bonds")
     ;
 
     /* Depth-first search function definition. */
