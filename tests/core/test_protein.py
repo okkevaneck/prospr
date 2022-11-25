@@ -104,4 +104,4 @@ class TestProtein:
         for m in moves:
             protein_2d.place_amino(m)
 
-        print(protein_2d.get_bonds())
+        assert protein_2d.get_bonds() == [(0, 3), (3, 0)]
