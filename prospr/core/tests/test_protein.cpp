@@ -165,6 +165,22 @@ void test_3d_protein() {
     std::cout << "\t3D Protein movements work.\n";
 }
 
+/* Test if a 2D protein correctly computes indexes of formed bonds. */
+void test_get_bonds() {
+    Protein* protein = new Protein("HPPHPPHH", 2, "HP");
+    std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -2};
+
+    for (int m : moves) {
+        protein->place_amino(m);
+    }
+
+    std::vector<std::pair<int, int>> bonds = protein->get_bonds();
+
+    for (std::pair<int,int> p : bonds) {
+        std::cout << "<" << p.first << "," << p.second << ">\n";
+    }
+}
+
 int main(int argc, char* argv[]) {
     /* Test different Protein generation options. */
     test_protein_generation();
@@ -174,6 +190,9 @@ int main(int argc, char* argv[]) {
 
     /* Test Protein in a 3D space. */
     test_3d_protein();
+
+    /* Test get_bonds() function. */
+    test_get_bonds();
 
     return 0;
 }
