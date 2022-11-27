@@ -341,17 +341,20 @@ def plot_protein(
     # If adding legend, remove title from legend and add item for bonds.
     if legend:
         handles, labels = ax.get_legend_handles_labels()
-        score_patch = Line2D(
-            [],
-            [],
-            color="indianred",
-            linestyle=":",
-            alpha=0.9,
-            label="Bond",
-            lw=2,
-        )
-        handles.append(score_patch)
-        labels.append(score_patch.get_label())
+
+        # Only add bond label if actually in plot.
+        if protein.score != 0:
+            score_patch = Line2D(
+                [],
+                [],
+                color="indianred",
+                linestyle=":",
+                alpha=0.9,
+                label="Bond",
+                lw=2,
+            )
+            handles.append(score_patch)
+            labels.append(score_patch.get_label())
 
         # Style legend according to plotting style.
         if (

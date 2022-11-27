@@ -12,7 +12,7 @@ import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-__version__ = "0.2a10"
+__version__ = "0.2a11"
 
 # Define core module extension.
 ext_modules = [
@@ -62,7 +62,7 @@ setup(
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
     keywords=[
-        "prospr protein structure prediction toolbox python c++ swig cmake "
-        + "extension heuristics pypi package"
+        "prospr protein structure prediction toolbox python c++ extension "
+        + "pypi package"
     ],
 )
