@@ -54,25 +54,34 @@ def _plot_aminos_2d_basic(protein, df, ax):
         )
 
 
-def _plot_aminos_2d_paper(protein, df, ax):
+def _plot_aminos_2d_paper(protein, df, ax, linewidth, markersize):
     """
     Plot amino acids in paper style in a 2D figure.
     :param Protein      protein:    Protein object to plot the hash of.
     :param DataFrame    df:         DataFrame with all ordered positions.
     :param Axes         ax:         Axis to plot on.
+    :param float        linewidth:      Width of the lines.
+    :param float        markersize:     Size of the markers.
     """
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
-    ax.plot(df["x"], df["y"], color="black", alpha=0.65, zorder=1)
+    ax.plot(
+        df["x"],
+        df["y"],
+        color="black",
+        alpha=0.65,
+        linewidth=linewidth,
+        zorder=1,
+    )
     sns.scatterplot(
         x="x",
         y="y",
         data=df_H,
         marker="o",
         edgecolor="royalblue",
-        s=80,
+        s=markersize,
         zorder=2,
         ax=ax,
         label="H",
@@ -85,34 +94,36 @@ def _plot_aminos_2d_paper(protein, df, ax):
         facecolor="white",
         edgecolor="orange",
         linewidth=2,
-        s=80,
+        s=markersize,
         zorder=2,
         ax=ax,
         label="P",
     )
 
     # Plot first point with a different color.
-    if df.iloc[0]["Type"] == "H":
-        ax.scatter(
-            df.iloc[0]["x"],
-            df.iloc[0]["y"],
-            marker="o",
-            fc="royalblue",
-            ec="#00ce00",
-            lw=2.5,
-            s=80,
-            zorder=2,
+    if protein.cur_len <= 12:
+        ax.text(
+            df.iloc[0]["x"] + 0.06,
+            df.iloc[0]["y"] - 0.13,
+            "1",
+            fontsize=8,
+            fontweight="demibold",
         )
-    else:
-        ax.scatter(
-            df.iloc[0]["x"],
-            df.iloc[0]["y"],
-            marker="o",
-            fc="white",
-            ec="#00ce00",
-            lw=2.5,
-            s=80,
-            zorder=2,
+    if 12 < protein.cur_len <= 17:
+        ax.text(
+            df.iloc[0]["x"] + 0.07,
+            df.iloc[0]["y"] - 0.24,
+            "1",
+            fontsize=8,
+            fontweight="demibold",
+        )
+    if protein.cur_len > 17:
+        ax.text(
+            df.iloc[0]["x"] + 0.10,
+            df.iloc[0]["y"] - 0.36,
+            "1",
+            fontsize=8,
+            fontweight="demibold",
         )
 
     # Plot dotted lines between the aminos that increase the stability.
@@ -125,8 +136,8 @@ def _plot_aminos_2d_paper(protein, df, ax):
             linestyle=":",
             color="indianred",
             alpha=0.9,
+            linewidth=linewidth,
             zorder=1,
-            lw=2,
         )
 
     # Remove axis, and position legend in the upper right with created space.
@@ -274,6 +285,8 @@ def plot_protein(
     legend=True,
     legend_style="inner",
     show=True,
+    linewidth=2,
+    markersize=210,
 ):
     """
     Plot conformation of a protein.
@@ -283,6 +296,8 @@ def plot_protein(
     :param bool     legend:         True if a legend needs to be added.
     :param str      legend_style:   Either 'inner' or 'outer'.
     :param bool     show:           True if plot.show() needs to be called.
+    :param float    linewidth:      Width of the lines.
+    :param float    markersize:     Size of the markers.
     """
     # Catch unplottable dimensions.
     if protein.dim != 2 and protein.dim != 3:
@@ -294,7 +309,7 @@ def plot_protein(
     # Create axis to plot onto if not given.
     if ax is None:
         if style == "paper":
-            fig = plt.figure(figsize=(4, 2.5))
+            fig = plt.figure(figsize=(5, 3.125))
         else:
             fig = plt.figure(figsize=(5, 6))
             sns.set_style("whitegrid")
@@ -319,7 +334,7 @@ def plot_protein(
     # Plot the selected style.
     if style == "paper":
         if protein.dim == 2:
-            _plot_aminos_2d_paper(protein, df, ax)
+            _plot_aminos_2d_paper(protein, df, ax, linewidth, markersize)
         else:
             _plot_aminos_3d_paper(protein, df, ax)
     elif style == "basic":
@@ -349,9 +364,9 @@ def plot_protein(
                 [],
                 color="indianred",
                 linestyle=":",
+                linewidth=linewidth,
                 alpha=0.9,
                 label="Bond",
-                lw=2,
             )
             handles.append(score_patch)
             labels.append(score_patch.get_label())
@@ -369,9 +384,11 @@ def plot_protein(
                 bbox_to_anchor=(1, 1),
             )
         else:
-            ax.legend(handles=handles, labels=labels)
+            ax.legend(handles=handles, labels=labels, prop={"size": 11})
     else:
         ax.get_legend().remove()
+
+    plt.tight_layout()
 
     # Show plot if specified.
     if show:
