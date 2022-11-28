@@ -104,29 +104,28 @@ def _plot_aminos_2d_paper(
 
     # Plot first point with a subscript 1.
     if annotate_first:
-        if protein.cur_len <= 12:
-            ax.text(
-                df.iloc[0]["x"] + 0.06,
-                df.iloc[0]["y"] - 0.13,
-                "1",
-                fontsize=8,
-                fontweight="demibold",
+        # Plot first point with a different color.
+        if df.iloc[0]["Type"] == "H":
+            ax.scatter(
+                df.iloc[0]["x"],
+                df.iloc[0]["y"],
+                marker="o",
+                fc="royalblue",
+                ec="#00ce00",
+                lw=2.5,
+                s=markersize,
+                zorder=2,
             )
-        if 12 < protein.cur_len <= 17:
-            ax.text(
-                df.iloc[0]["x"] + 0.07,
-                df.iloc[0]["y"] - 0.24,
-                "1",
-                fontsize=8,
-                fontweight="demibold",
-            )
-        if protein.cur_len > 17:
-            ax.text(
-                df.iloc[0]["x"] + 0.10,
-                df.iloc[0]["y"] - 0.36,
-                "1",
-                fontsize=8,
-                fontweight="demibold",
+        else:
+            ax.scatter(
+                df.iloc[0]["x"],
+                df.iloc[0]["y"],
+                marker="o",
+                fc="white",
+                ec="#00ce00",
+                lw=2.5,
+                s=markersize,
+                zorder=2,
             )
 
     # Plot dotted lines between the aminos that increase the stability.
@@ -288,7 +287,7 @@ def plot_protein(
     legend=True,
     legend_style="inner",
     show=True,
-    linewidth=2,
+    linewidth=2.5,
     markersize=210,
     annotate_first=False,
 ):
@@ -391,7 +390,7 @@ def plot_protein(
                 bbox_to_anchor=(1, 1),
             )
         else:
-            ax.legend(handles=handles, labels=labels, prop={"size": 11})
+            ax.legend(handles=handles, labels=labels, prop={"size": 12})
     else:
         ax.get_legend().remove()
 
