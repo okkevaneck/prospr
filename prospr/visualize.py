@@ -54,7 +54,9 @@ def _plot_aminos_2d_basic(protein, df, ax):
         )
 
 
-def _plot_aminos_2d_paper(protein, df, ax, linewidth, markersize):
+def _plot_aminos_2d_paper(
+    protein, df, ax, linewidth, markersize, annotate_first=False
+):
     """
     Plot amino acids in paper style in a 2D figure.
     :param Protein      protein:    Protein object to plot the hash of.
@@ -93,38 +95,39 @@ def _plot_aminos_2d_paper(protein, df, ax, linewidth, markersize):
         marker="o",
         facecolor="white",
         edgecolor="orange",
-        linewidth=2,
+        linewidth=2.5,
         s=markersize,
         zorder=2,
         ax=ax,
         label="P",
     )
 
-    # Plot first point with a different color.
-    if protein.cur_len <= 12:
-        ax.text(
-            df.iloc[0]["x"] + 0.06,
-            df.iloc[0]["y"] - 0.13,
-            "1",
-            fontsize=8,
-            fontweight="demibold",
-        )
-    if 12 < protein.cur_len <= 17:
-        ax.text(
-            df.iloc[0]["x"] + 0.07,
-            df.iloc[0]["y"] - 0.24,
-            "1",
-            fontsize=8,
-            fontweight="demibold",
-        )
-    if protein.cur_len > 17:
-        ax.text(
-            df.iloc[0]["x"] + 0.10,
-            df.iloc[0]["y"] - 0.36,
-            "1",
-            fontsize=8,
-            fontweight="demibold",
-        )
+    # Plot first point with a subscript 1.
+    if annotate_first:
+        if protein.cur_len <= 12:
+            ax.text(
+                df.iloc[0]["x"] + 0.06,
+                df.iloc[0]["y"] - 0.13,
+                "1",
+                fontsize=8,
+                fontweight="demibold",
+            )
+        if 12 < protein.cur_len <= 17:
+            ax.text(
+                df.iloc[0]["x"] + 0.07,
+                df.iloc[0]["y"] - 0.24,
+                "1",
+                fontsize=8,
+                fontweight="demibold",
+            )
+        if protein.cur_len > 17:
+            ax.text(
+                df.iloc[0]["x"] + 0.10,
+                df.iloc[0]["y"] - 0.36,
+                "1",
+                fontsize=8,
+                fontweight="demibold",
+            )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -287,6 +290,7 @@ def plot_protein(
     show=True,
     linewidth=2,
     markersize=210,
+    annotate_first=False,
 ):
     """
     Plot conformation of a protein.
@@ -298,6 +302,7 @@ def plot_protein(
     :param bool     show:           True if plot.show() needs to be called.
     :param float    linewidth:      Width of the lines.
     :param float    markersize:     Size of the markers.
+    :param bool     annotate_first: True if first amino acids needs annotation.
     """
     # Catch unplottable dimensions.
     if protein.dim != 2 and protein.dim != 3:
@@ -334,7 +339,9 @@ def plot_protein(
     # Plot the selected style.
     if style == "paper":
         if protein.dim == 2:
-            _plot_aminos_2d_paper(protein, df, ax, linewidth, markersize)
+            _plot_aminos_2d_paper(
+                protein, df, ax, linewidth, markersize, annotate_first
+            )
         else:
             _plot_aminos_3d_paper(protein, df, ax)
     elif style == "basic":
@@ -387,8 +394,6 @@ def plot_protein(
             ax.legend(handles=handles, labels=labels, prop={"size": 11})
     else:
         ax.get_legend().remove()
-
-    plt.tight_layout()
 
     # Show plot if specified.
     if show:
