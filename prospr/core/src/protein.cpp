@@ -337,7 +337,6 @@ std::vector<std::pair<int,int>> Protein::_append_bond_pairs(
         std::vector<int> moves) {
     AminoAcid* cur_amino = space[pos];
     char cur_type = cur_amino->get_type();
-    std::pair<int,int> cur_bond;
     std::vector<int> other_pos;
     std::string bond;
 
