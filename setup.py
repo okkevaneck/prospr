@@ -39,6 +39,7 @@ setup(
     url="https://github.com/okkevaneck/prospr",
     license="LGPLv3",
     ext_modules=ext_modules,
+    extras_require={"test": "pytest"},
     cmdclass={"build_ext": build_ext},
     packages=["prospr"],
     package_data={"prospr": ["data/*/*.csv"]},
