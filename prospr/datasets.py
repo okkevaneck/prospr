@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-File:           vanEck.py
+File:           datasets.py
 Description:    This file contains functions for loading datasets.
 License:        This file is licensed under the GNU LGPL V3 license by
                 Okke van Eck (2020 - 2022). See the LICENSE file for the

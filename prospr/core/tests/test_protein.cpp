@@ -175,10 +175,10 @@ void test_get_bonds() {
     }
 
     std::vector<std::pair<int, int>> bonds = protein->get_bonds();
-
-    for (std::pair<int,int> p : bonds) {
-        std::cout << "<" << p.first << "," << p.second << ">\n";
-    }
+    std::vector<std::pair<int, int>> check_bonds = {std::pair<int,int>{0,3},
+                                                    std::pair<int,int>{3,0}};
+    assert (bonds == check_bonds);
+    std::cout << "\t2D get_bonds() work.\n";
 }
 
 int main(int argc, char* argv[]) {
