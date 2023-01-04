@@ -62,7 +62,7 @@ jobs:
           python -m pip install --verbose .
 
       - name: Test with pytest
-        run: pytest
+        run: python -m pytest tests/
 
   build_wheels:
     name: Build wheels
