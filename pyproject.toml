@@ -14,3 +14,8 @@ line-length = 79
 
 [tool.pytest]
 minversion = 7.1
+
+[tool.pytest.ini_options]
+pythonpath = [
+  ".",
+]
