@@ -14,11 +14,18 @@
 #include <numeric>
 
 
+/* All possible variables required by custom pruning. */
+struct prune_vars {
+    int max_length;
+    int no_neighbors;
+    std::vector<int> odd_score_idxs;
+    std::vector<int> even_score_idxs;
+};
+
 /* Returns true if the branch cannot produce a better score. Possible bonds are
  * at all places surrounding the to be placed H-aminos.
  */
-bool naive_prune(Protein* protein, int max_length, int no_neighbors,
-        int move, int best_score) {
+bool naive_prune(Protein* protein, int move, int best_score, struct prune_vars* p_vars) {
     protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
@@ -26,13 +33,13 @@ bool naive_prune(Protein* protein, int max_length, int no_neighbors,
     std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
-    int branch_score = no_neighbors * \
+    int branch_score = p_vars->no_neighbors * \
         std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
 
     /* End of amino has 1 more possible way of connecting, update
      * branch_score accordingly.
      */
-    if (cur_len != max_length && max_weights.back() != 0)
+    if (cur_len != p_vars->max_length && max_weights.back() != 0)
         branch_score += max_weights.back();
 
     protein->remove_amino();
@@ -43,8 +50,7 @@ bool naive_prune(Protein* protein, int max_length, int no_neighbors,
 /* Returns true if the branch cannot produce a better score. Possible bonds are
  * all reachable H-aminos within the to be placed sequence.
  */
-bool reach_prune(Protein* protein, int max_length, int no_neighbors,
-        int move, int best_score) {
+bool reach_prune(Protein* protein, int move, int best_score, struct prune_vars* p_vars) {
     protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
@@ -52,13 +58,13 @@ bool reach_prune(Protein* protein, int max_length, int no_neighbors,
     std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
-    int branch_score = no_neighbors * \
+    int branch_score = p_vars->no_neighbors * \
         std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
 
     /* End of amino has 1 more possible way of connecting, update
      * branch_score accordingly.
      */
-    if (cur_len != max_length && max_weights.back() != 0)
+    if (cur_len != p_vars->max_length && max_weights.back() != 0)
         branch_score += max_weights.back();
 
     protein->remove_amino();
@@ -69,7 +75,7 @@ bool reach_prune(Protein* protein, int max_length, int no_neighbors,
 /* A depth-first branch-and-bound search function for finding a minimum
  * energy conformation.
  */
-Protein* depth_first_bnb(Protein* protein, std::string prune_func="") {
+Protein* depth_first_bnb(Protein* protein, std::string prune_func) {
     int max_length = protein->get_sequence().length();
     int dim = protein->get_dim();
     int no_neighbors = (int)pow(2, (dim - 1));
@@ -80,10 +86,27 @@ Protein* depth_first_bnb(Protein* protein, std::string prune_func="") {
     if (max_length <= 2)
         return protein;
 
-    /* Determine what prune criteria to use. */
+    /* Init default prune functions and arguments. */
     auto prune_branch = naive_prune;
+    struct prune_vars p_vars = {};
+    p_vars.max_length = max_length;
+    p_vars.no_neighbors = no_neighbors;
+
+    /* Determine if to use another prune criteria, and extend prune vars. */
     if (prune_func == "reach_prune") {
         prune_branch = reach_prune;
+        std::vector<int> max_weights = protein->get_max_weights();
+
+        /* Create vectors with odd and even indexes that can create bonds. */
+        for (int i = 0; i < max_length; i++) {
+            if (max_weights[i] != 0) {
+                if (i % 2 == 0) {
+                    p_vars.even_score_idxs.push_back(i);
+                } else {
+                    p_vars.odd_score_idxs.push_back(i);
+                }
+            }
+        }
     }
 
     /* Create a stack that tracks possible next moves, and a move variable
@@ -108,8 +131,8 @@ Protein* depth_first_bnb(Protein* protein, std::string prune_func="") {
 
         /* Try to place the current amino acid. */
         while (!placed_amino && move != -dim - 1) {
-            if (protein->is_valid(move) && !prune_branch(protein, max_length,
-                    no_neighbors, move, best_score)) {
+            if (protein->is_valid(move)
+                && !prune_branch(protein, move, best_score, &p_vars)) {
                 protein->place_amino(move);
                 placed_amino = true;
 

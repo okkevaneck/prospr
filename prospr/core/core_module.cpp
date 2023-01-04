@@ -86,5 +86,5 @@ PYBIND11_MODULE(prospr_core, m) {
     /* Depth-first branch-and-bound search function definition. */
     m.def("depth_first_bnb", depth_first_bnb,
         "Finds the optimal conformation via depth-first branch-and-bound search",
-        py::arg("protein"));
+        py::arg("protein"), py::arg("prune_func")="");
 }
