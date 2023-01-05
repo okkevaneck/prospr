@@ -36,7 +36,13 @@ void test_depth_first_bnb() {
     Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
     protein = depth_first_bnb(protein);
     assert (protein->get_score() == -3);
-    std::cout << "\t2D Protein solution scores matches.\n";
+    std::cout << "\t2D Protein solution scores matches with naive_prune.\n";
+
+    /* Check if 2D solutions are found with reach_prune criteria. */
+    protein = new Protein("PHPHPHPPH", 2, "HP");
+    protein = depth_first_bnb(protein, "reach_prune");
+    assert (protein->get_score() == -3);
+    std::cout << "\t2D Protein solution scores matches with reach_prune.\n";
 
     /* Check if 3D solutions are found correctly. */
     protein = new Protein("HPPHPHPHPH", 3, "HP");
