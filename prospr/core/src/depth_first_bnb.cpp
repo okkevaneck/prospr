@@ -18,8 +18,9 @@
 struct prune_vars {
     int max_length;
     int no_neighbors;
-    std::vector<int> odd_score_idxs;
-    std::vector<int> even_score_idxs;
+    int num_idxs;
+    std::vector<int> h_idxs;
+    std::vector<std::vector<int>> bond_dists;
 };
 
 /* Returns true if the branch cannot produce a better score. Possible bonds are
@@ -57,15 +58,32 @@ bool reach_prune(Protein* protein, int move, int best_score, struct prune_vars* 
     int cur_score = protein->get_score();
     std::vector<int> max_weights = protein->get_max_weights();
 
-    /* Compute the sum of the remaining possible scoring connections. */
-    int branch_score = p_vars->no_neighbors * \
-        std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
+    /* Compute to be placed aminos possibly making bonds. */
+    int future_aminos = 0;
+    for (auto h_idx : p_vars->h_idxs) {
+        if (h_idx >= cur_len) {
+            future_aminos++;
+        }
+    }
 
-    /* End of amino has 1 more possible way of connecting, update
-     * branch_score accordingly.
-     */
-    if (cur_len != p_vars->max_length && max_weights.back() != 0)
-        branch_score += max_weights.back();
+    /* Check score improvement if branch cannot add any bonds. */
+    if (future_aminos == 0) {
+        return cur_score >= best_score;
+    }
+
+    /* Compute branch score with the to be placed amino acids. */
+    int branch_score = 0;
+    for (int i = p_vars->num_idxs - future_aminos; i < p_vars->num_idxs; i++) {
+        /* Check if bondable amino is last of protein. */
+        if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
+            /* The last amino being bondable can create an additional bond. */
+            branch_score += max_weights[p_vars->h_idxs[i]] *
+                std::min(p_vars->no_neighbors + 1, p_vars->bond_dists[i].size());
+        } else {
+            branch_score += max_weights[p_vars->h_idxs[i]] *
+                std::min(p_vars->no_neighbors, p_vars->bond_dists[i].size());
+        }
+    }
 
     protein->remove_amino();
 
@@ -96,17 +114,30 @@ Protein* depth_first_bnb(Protein* protein, std::string prune_func) {
     if (prune_func == "reach_prune") {
         prune_branch = reach_prune;
         std::vector<int> max_weights = protein->get_max_weights();
+        std::vector<int> cur_dists = {};
 
-        /* Create vectors with odd and even indexes that can create bonds. */
+        /* Create vector with distances between aminos that can create bonds. */
         for (int i = 0; i < max_length; i++) {
+            /* Only include indexes that can create bonds. */
             if (max_weights[i] != 0) {
-                if (i % 2 == 0) {
-                    p_vars.even_score_idxs.push_back(i);
-                } else {
-                    p_vars.odd_score_idxs.push_back(i);
+                /* Create vector with distances to previous bondable aminos. */
+                for (int idx : p_vars.h_idxs) {
+                    if (i - idx >= 3 && (i - idx) % 2 == 1) {
+                        cur_dists.push_back(i - idx);
+                    }
                 }
+
+                /* Add distance vector to set and clear for next iterations.  */
+                p_vars.bond_dists.push_back(cur_dists);
+                cur_dists.clear();
+
+                /* Add current index for next iterations. */
+                p_vars.h_idxs.push_back(i);
             }
         }
+
+        /* Store number of bondable idxs. */
+        p_vars.num_idxs = p_vars.h_idxs.size();
     }
 
     /* Create a stack that tracks possible next moves, and a move variable
