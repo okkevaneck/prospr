@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: nelonoel/branch-name@v1.0.1
-
       - id: set-matrix
         uses: JoshuaTheMiller/conditional-build-matrix@main
+        env:
+          BRANCH_NAME: ${GITHUB_REF#refs/heads/}
         with:
           inputFile: '.github/workflows/matrix_includes.json'
           filter: '[?starts_with(`${{ env.BRANCH_NAME }}`, runOn)] || [?runOn == `always`]'
