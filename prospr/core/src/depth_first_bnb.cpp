@@ -18,6 +18,7 @@
 struct prune_vars {
     int max_length;
     int no_neighbors;
+    std::vector<int> max_weights;
     int num_idxs;
     std::vector<int> h_idxs;
     std::vector<std::vector<int>> bond_dists;
@@ -26,22 +27,23 @@ struct prune_vars {
 /* Returns true if the branch cannot produce a better score. Possible bonds are
  * at all places surrounding the to be placed H-aminos.
  */
-bool naive_prune(Protein* protein, int move, int best_score, struct prune_vars* p_vars) {
+bool naive_prune(Protein* protein, int move, int best_score,
+                 struct prune_vars* p_vars) {
     protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
     int cur_score = protein->get_score();
-    std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute the sum of the remaining possible scoring connections. */
     int branch_score = p_vars->no_neighbors * \
-        std::accumulate(max_weights.begin() + cur_len, max_weights.end(), 0);
+        std::accumulate(p_vars->max_weights.begin() + cur_len,
+                        p_vars->max_weights.end(), 0);
 
     /* End of amino has 1 more possible way of connecting, update
      * branch_score accordingly.
      */
-    if (cur_len != p_vars->max_length && max_weights.back() != 0)
-        branch_score += max_weights.back();
+    if (cur_len != p_vars->max_length && p_vars->max_weights.back() != 0)
+        branch_score += p_vars->max_weights.back();
 
     protein->remove_amino();
 
@@ -51,12 +53,12 @@ bool naive_prune(Protein* protein, int move, int best_score, struct prune_vars* 
 /* Returns true if the branch cannot produce a better score. Possible bonds are
  * all reachable H-aminos within the to be placed sequence.
  */
-bool reach_prune(Protein* protein, int move, int best_score, struct prune_vars* p_vars) {
+bool reach_prune(Protein* protein, int move, int best_score,
+                 struct prune_vars* p_vars) {
     protein->place_amino(move, false);
 
     int cur_len = protein->get_cur_len();
     int cur_score = protein->get_score();
-    std::vector<int> max_weights = protein->get_max_weights();
 
     /* Compute to be placed aminos possibly making bonds. */
     int future_aminos = 0;
@@ -77,10 +79,10 @@ bool reach_prune(Protein* protein, int move, int best_score, struct prune_vars* 
         /* Check if bondable amino is last of protein. */
         if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
             /* The last amino being bondable can create an additional bond. */
-            branch_score += max_weights[p_vars->h_idxs[i]] *
+            branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
                 std::min(p_vars->no_neighbors + 1, p_vars->bond_dists[i].size());
         } else {
-            branch_score += max_weights[p_vars->h_idxs[i]] *
+            branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
                 std::min(p_vars->no_neighbors, p_vars->bond_dists[i].size());
         }
     }
@@ -109,17 +111,17 @@ Protein* depth_first_bnb(Protein* protein, std::string prune_func) {
     struct prune_vars p_vars = {};
     p_vars.max_length = max_length;
     p_vars.no_neighbors = no_neighbors;
+    p_vars.max_weights = protein->get_max_weights();
 
     /* Determine if to use another prune criteria, and extend prune vars. */
     if (prune_func == "reach_prune") {
         prune_branch = reach_prune;
-        std::vector<int> max_weights = protein->get_max_weights();
         std::vector<int> cur_dists = {};
 
         /* Create vector with distances between aminos that can create bonds. */
         for (int i = 0; i < max_length; i++) {
             /* Only include indexes that can create bonds. */
-            if (max_weights[i] != 0) {
+            if (p_vars.max_weights[i] != 0) {
                 /* Create vector with distances to previous bondable aminos. */
                 for (int idx : p_vars.h_idxs) {
                     if (i - idx >= 3 && (i - idx) % 2 == 1) {
