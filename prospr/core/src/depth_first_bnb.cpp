@@ -140,7 +140,7 @@ Protein* depth_first_bnb(Protein* protein, std::string prune_func) {
         }
 
         /* Store number of bondable idxs. */
-        p_vars.num_idxs = p_vars.h_idxs.size();
+        p_vars.num_idxs = p_vars.h_idxs.siz();
     }
 
     /* Create a stack that tracks possible next moves, and a move variable
