@@ -70,6 +70,7 @@ bool reach_prune(Protein* protein, int move, int best_score,
 
     /* Check score improvement if branch cannot add any bonds. */
     if (future_aminos == 0) {
+        protein->remove_amino();
         return cur_score >= best_score;
     }
 
@@ -80,10 +81,10 @@ bool reach_prune(Protein* protein, int move, int best_score,
         if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
             /* The last amino being bondable can create an additional bond. */
             branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
-                std::min(p_vars->no_neighbors + 1, p_vars->bond_dists[i].size());
+                std::min((size_t)p_vars->no_neighbors + 1, p_vars->bond_dists[i].size());
         } else {
             branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
-                std::min(p_vars->no_neighbors, p_vars->bond_dists[i].size());
+                std::min((size_t)p_vars->no_neighbors, p_vars->bond_dists[i].size());
         }
     }
 
