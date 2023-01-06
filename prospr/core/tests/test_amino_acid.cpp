@@ -1,7 +1,7 @@
 /* File:            test_amino_acid.cpp
  * Description:     Source file for testing the functionality of amino_acid.
  * License:         This file is licensed under the GNU LGPL V3 license by
- *                  Okke van Eck (2020 - 2022). See the LICENSE file for the
+ *                  Okke van Eck (2020 - 2023). See the LICENSE file for the
  *                  specifics.
  */
 
