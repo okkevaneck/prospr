@@ -59,7 +59,7 @@ def generate_hratio(p_len=25, size=300):
         print(f"Cannot produce {size} unique proteins of length {p_len}.")
         exit(-1)
 
-    for h_ratio_low, h_ratio_high in h_ratio_space:
+    for h_ratio_low, h_ratio_high in h_ratio_range:
         cur_fname = f"{''.join(aminos)}{p_len}_r{h_ratio_high}.csv"
 
         # Only generate dataset if it doesn't exist already.
