@@ -10,6 +10,7 @@ License:        This file is licensed under the GNU LGPL V3 license by
 import os
 import numpy as np
 import random
+import math
 
 
 def new_folder(folder_name):
@@ -19,11 +20,11 @@ def new_folder(folder_name):
     root = "data/"
     dirs = [x[0] for x in os.walk(root)]
 
-    if f"{root}/{folder_name}" in dirs:
-        raise ValueError(f"Dataset {folder_name} already exists.")
+    if f"{root}{folder_name}" in dirs:
+        raise ValueError(f"Dataset '{folder_name}' already exists.")
 
-    os.mkdir(f"{root}/{folder_name}")
-    return f"{root}/{folder_name}"
+    os.mkdir(f"{root}{folder_name}")
+    return f"{root}{folder_name}"
 
 
 def generate_hratio(
@@ -50,6 +51,7 @@ def generate_hratio(
         exit(-1)
 
     for h_ratio in h_ratio_space:
+        h_ratio = round(h_ratio, 1)
         with open(f"{ds_path}/{''.join(aminos)}_r{h_ratio}", "w") as fp:
             cur_set = set()
 
@@ -57,10 +59,21 @@ def generate_hratio(
             while len(cur_set) != size:
                 new_proteins = set(
                     [
-                        "".join(random.choices(aminos, k=p_len))
+                        "".join(
+                            random.choices(
+                                aminos, weights=[h_ratio, 1 - h_ratio], k=p_len
+                            )
+                        )
                         for _ in range(size)
                     ]
                 )
+                new_proteins = [
+                    p
+                    for p in new_proteins
+                    if math.floor(h_ratio)
+                    <= p.count("H") / p.count("P")
+                    <= math.ceil(h_ratio)
+                ]
                 cur_set = cur_set.union(new_proteins)
 
             # Write newly generated set to file.
@@ -81,8 +94,8 @@ if __name__ == "__main__":
     h_ratio_begin_str = input("H-ratio begin (default=0.1): ").strip()
     h_ratio_begin = float(h_ratio_begin_str) if h_ratio_begin_str else 0.1
 
-    h_ratio_end_str = input("H-ratio end (default=0.9): ").strip()
-    h_ratio_end = float(h_ratio_end_str) if h_ratio_end_str else 0.9
+    h_ratio_end_str = input("H-ratio end (default=1.0): ").strip()
+    h_ratio_end = float(h_ratio_end_str) if h_ratio_end_str else 1.0
 
     h_ratio_step_str = input("H-ratio step (default=0.1): ").strip()
     h_ratio_step = float(h_ratio_step_str) if h_ratio_step_str else 0.1
