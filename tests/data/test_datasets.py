@@ -8,7 +8,7 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
-from prospr import load_vanEck250, load_vanEck1000
+from prospr import load_vanEck250, load_vanEck1000, load_vanEck_hratio
 
 
 class TestDatasets:
@@ -67,3 +67,31 @@ class TestDatasets:
         assert not l80.empty
         assert not l90.empty
         assert not l100.empty
+
+    def test_vanEck_hratio(self):
+        """
+        Test loading data from vanEck1000 works.
+        """
+        l25_r01 = load_vanEck_hratio()
+        l25_r01_2 = load_vanEck_hratio(25, 0.1)
+        l25_r02 = load_vanEck_hratio(25, 0.2)
+        l25_r03 = load_vanEck_hratio(25, 0.3)
+        l25_r04 = load_vanEck_hratio(25, 0.4)
+        l25_r05 = load_vanEck_hratio(25, 0.5)
+        l25_r06 = load_vanEck_hratio(25, 0.6)
+        l25_r07 = load_vanEck_hratio(25, 0.7)
+        l25_r08 = load_vanEck_hratio(25, 0.8)
+        l25_r09 = load_vanEck_hratio(25, 0.9)
+        l25_r10 = load_vanEck_hratio(25, 1.0)
+
+        assert not l25_r01.empty
+        assert not l25_r01_2.empty
+        assert not l25_r02.empty
+        assert not l25_r03.empty
+        assert not l25_r04.empty
+        assert not l25_r05.empty
+        assert not l25_r06.empty
+        assert not l25_r07.empty
+        assert not l25_r08.empty
+        assert not l25_r09.empty
+        assert not l25_r10.empty
