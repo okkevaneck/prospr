@@ -27,9 +27,7 @@ def new_folder(folder_name):
     return f"{root}{folder_name}"
 
 
-def generate_hratio(
-    p_len=25, h_ratio_begin=0.1, h_ratio_end=1.0, h_ratio_step=0.1, size=300
-):
+def generate_hratio(p_len=25, size=300):
     """
     Generates the H-ratio dataset given the provided arguments. The provided
     H-ratio range is including h_ratio_begin, and excluding h_ratio_end.
@@ -46,21 +44,23 @@ def generate_hratio(
     if not os.path.isdir(ds_path):
         os.makedirs(ds_path, exist_ok=True)
 
-    h_ratio_space = np.arange(
-        h_ratio_begin, h_ratio_end + h_ratio_step, h_ratio_step
-    )
+    # Construct a list with lower and upper bounds for the h-ratio.
+    h_ratio_space = np.arange(0.3, 1.0, 0.1)
+    h_ratio_range = [(0.0, 0.2)]
+    for h_ratio in h_ratio_space[:-1]:
+        h_ratio_range.append((round(h_ratio - 0.1, 1), round(h_ratio, 1)))
+    h_ratio_range.append((0.8, 1.0))
 
     # Check if unique dataset of given size is possible given protein length.
     if (
         len(aminos) ** p_len < size
-        or math.comb(p_len, math.floor(h_ratio_begin * p_len)) < size
+        or math.comb(p_len, math.floor(0.8 * p_len)) < size
     ):
         print(f"Cannot produce {size} unique proteins of length {p_len}.")
         exit(-1)
 
-    for h_ratio in h_ratio_space:
-        h_ratio = round(h_ratio, 1)
-        cur_fname = f"{''.join(aminos)}{p_len}_r{h_ratio}.csv"
+    for h_ratio_low, h_ratio_high in h_ratio_space:
+        cur_fname = f"{''.join(aminos)}{p_len}_r{h_ratio_high}.csv"
 
         # Only generate dataset if it doesn't exist already.
         if os.path.isfile(f"{ds_path}/{cur_fname}"):
@@ -69,7 +69,7 @@ def generate_hratio(
 
         with open(f"{ds_path}/{cur_fname}", "w") as fp:
             cur_set = set()
-            print(f"Generating set with h-ratio of {h_ratio}..")
+            print(f"\nGenerating set with h-ratio of {h_ratio_high}..")
 
             # Print debug length every 10 iterations.
             i = 0
@@ -82,8 +82,8 @@ def generate_hratio(
                             random.choices(
                                 aminos,
                                 weights=[
-                                    min(h_ratio, 0.9),
-                                    max(round(1 - h_ratio, 1), 0.1),
+                                    min(h_ratio_high, 0.9),
+                                    max(round(1 - h_ratio_high, 1), 0.1),
                                 ],
                                 k=p_len,
                             )
@@ -98,23 +98,18 @@ def generate_hratio(
                         p
                         for p in new_proteins
                         if p.count("P") != 0
-                        and round(h_ratio - h_ratio_step, 1)
-                        < p.count("H") / p_len
-                        <= h_ratio
+                        and h_ratio_low < p.count("H") / p_len <= h_ratio_high
                     ]
                 )
                 cur_set = cur_set.union(new_proteins)
 
                 # Print debug if needed, update tracker.
                 if i % 150 == 0:
-                    print(f"{h_ratio} - cur_size:  {len(cur_set)}")
+                    print(f"    {h_ratio_high} - cur_size:  {len(cur_set)}")
+                    print("\tFilter:   " f"({h_ratio_low}, {h_ratio_high}]")
                     print(
-                        "\tFilter:   "
-                        f"({round(h_ratio - h_ratio_step, 1)}, {h_ratio}]"
-                    )
-                    print(
-                        f"\tWeights:  [{min(h_ratio, 0.9)}, ["
-                        f"{max(round(1 - h_ratio, 1), 0.1)}]"
+                        f"\tWeights:  [{min(h_ratio_high, 0.9)}, "
+                        f"{max(round(1 - h_ratio_high, 1), 0.1)}]"
                     )
                 i += 1
 
@@ -133,17 +128,8 @@ if __name__ == "__main__":
     p_len_str = input("Protein length (default=25): ").strip()
     p_len = int(p_len_str) if p_len_str else 25
 
-    h_ratio_begin_str = input("H-ratio begin (default=0.1): ").strip()
-    h_ratio_begin = float(h_ratio_begin_str) if h_ratio_begin_str else 0.1
-
-    h_ratio_end_str = input("H-ratio end (default=1.0): ").strip()
-    h_ratio_end = float(h_ratio_end_str) if h_ratio_end_str else 1.0
-
-    h_ratio_step_str = input("H-ratio step (default=0.1): ").strip()
-    h_ratio_step = float(h_ratio_step_str) if h_ratio_step_str else 0.1
-
     size_str = input("Number of proteins per set (default=300): ").strip()
     size = int(size_str) if size_str else 300
 
     # Generate the data using the provided arguments.
-    generate_hratio(p_len, h_ratio_begin, h_ratio_end, h_ratio_step, size)
+    generate_hratio(p_len, size)

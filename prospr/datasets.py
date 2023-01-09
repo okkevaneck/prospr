@@ -25,10 +25,10 @@ def load_vanEck250(length=10):
 
 
 def load_vanEck1000(length=10):
-    """Returns a vanEck250 dataset as a pandas dataframe."""
+    """Returns a vanEck1000 dataset as a pandas dataframe."""
     return _load_dataset("vanEck1000", f"HP{length}.csv")
 
 
-def load_vanEck_hratio(length=10):
-    """Returns a vanEck250 dataset as a pandas dataframe."""
-    return _load_dataset("vanEck_hratio", f"HP{length}.csv")
+def load_vanEck_hratio(length=25, hratio=0.1):
+    """Returns a vanEck_hratio dataset as a pandas dataframe."""
+    return _load_dataset("vanEck_hratio", f"HP{length}_r{hratio}.csv")
