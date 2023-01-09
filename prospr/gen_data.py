@@ -52,7 +52,7 @@ def generate_hratio(
 
     # Check if unique dataset of given size is possible given protein length.
     if (
-        size <= len(aminos) ** p_len
+        len(aminos) ** p_len < size
         or math.comb(p_len, math.floor(h_ratio_begin * p_len)) < size
     ):
         print(f"Cannot produce {size} unique proteins of length {p_len}.")
@@ -63,7 +63,7 @@ def generate_hratio(
         cur_fname = f"{''.join(aminos)}{p_len}_r{h_ratio}.csv"
 
         # Only generate dataset if it doesn't exist already.
-        if os.path.isfile(cur_fname):
+        if os.path.isfile(f"{ds_path}/{cur_fname}"):
             print(f"Dataset '{cur_fname}' already exists.")
             continue
 
@@ -81,31 +81,41 @@ def generate_hratio(
                         "".join(
                             random.choices(
                                 aminos,
-                                weights=[h_ratio, round(1 - h_ratio, 1)],
+                                weights=[
+                                    min(h_ratio, 0.9),
+                                    max(round(1 - h_ratio, 1), 0.1),
+                                ],
                                 k=p_len,
                             )
                         )
                         for _ in range(size)
                     ]
                 )
-                if i != 0 and i % 100 == 0:
-                    print(new_proteins)
 
+                # Filter newly generated proteins on the H-ratio requirements.
                 new_proteins = set(
                     [
                         p
                         for p in new_proteins
                         if p.count("P") != 0
                         and round(h_ratio - h_ratio_step, 1)
-                        < p.count("H") / p.count("P")
+                        < p.count("H") / p_len
                         <= h_ratio
                     ]
                 )
                 cur_set = cur_set.union(new_proteins)
 
                 # Print debug if needed, update tracker.
-                if i % 50 == 0:
-                    print(f"{h_ratio}:  {len(cur_set)}")
+                if i % 150 == 0:
+                    print(f"{h_ratio} - cur_size:  {len(cur_set)}")
+                    print(
+                        "\tFilter:   "
+                        f"({round(h_ratio - h_ratio_step, 1)}, {h_ratio}]"
+                    )
+                    print(
+                        f"\tWeights:  [{min(h_ratio, 0.9)}, ["
+                        f"{max(round(1 - h_ratio, 1), 0.1)}]"
+                    )
                 i += 1
 
             # Write newly generated set to file.
