@@ -28,7 +28,7 @@ def new_folder(folder_name):
 
 
 def generate_hratio(
-    p_len=25, h_ratio_begin=0.1, h_ratio_end=1.0, h_ratio_step=0.1, size=1000
+    p_len=25, h_ratio_begin=0.1, h_ratio_end=1.0, h_ratio_step=0.1, size=300
 ):
     """
     Generates the H-ratio dataset given the provided arguments. The provided
@@ -40,41 +40,73 @@ def generate_hratio(
     :param int      size:           Number of proteins per H-ratio.
     """
     aminos = ["H", "P"]
+    ds_path = "data/vanEck_hratio"
 
     # Create dataset folder. Throws ValueError if dataset already exists.
-    ds_path = new_folder("vanEck_hratio")
-    h_ratio_space = np.arange(h_ratio_begin, h_ratio_end, h_ratio_step)
+    if not os.path.isdir(ds_path):
+        os.makedirs(ds_path, exist_ok=True)
+
+    h_ratio_space = np.arange(
+        h_ratio_begin, h_ratio_end + h_ratio_step, h_ratio_step
+    )
 
     # Check if unique dataset of given size is possible given protein length.
-    if len(aminos) ** p_len < size:
-        print("Cannot produce {size} unique proteins of length {p_len}.")
+    if (
+        size <= len(aminos) ** p_len
+        or math.comb(p_len, math.floor(h_ratio_begin * p_len)) < size
+    ):
+        print(f"Cannot produce {size} unique proteins of length {p_len}.")
         exit(-1)
 
     for h_ratio in h_ratio_space:
         h_ratio = round(h_ratio, 1)
-        with open(f"{ds_path}/{''.join(aminos)}_r{h_ratio}", "w") as fp:
+        cur_fname = f"{''.join(aminos)}{p_len}_r{h_ratio}.csv"
+
+        # Only generate dataset if it doesn't exist already.
+        if os.path.isfile(cur_fname):
+            print(f"Dataset '{cur_fname}' already exists.")
+            continue
+
+        with open(f"{ds_path}/{cur_fname}", "w") as fp:
             cur_set = set()
+            print(f"Generating set with h-ratio of {h_ratio}..")
+
+            # Print debug length every 10 iterations.
+            i = 0
 
             # Generate only unique proteins for this set.
-            while len(cur_set) != size:
+            while len(cur_set) < size:
                 new_proteins = set(
                     [
                         "".join(
                             random.choices(
-                                aminos, weights=[h_ratio, 1 - h_ratio], k=p_len
+                                aminos,
+                                weights=[h_ratio, round(1 - h_ratio, 1)],
+                                k=p_len,
                             )
                         )
                         for _ in range(size)
                     ]
                 )
-                new_proteins = [
-                    p
-                    for p in new_proteins
-                    if math.floor(h_ratio)
-                    <= p.count("H") / p.count("P")
-                    <= math.ceil(h_ratio)
-                ]
+                if i != 0 and i % 100 == 0:
+                    print(new_proteins)
+
+                new_proteins = set(
+                    [
+                        p
+                        for p in new_proteins
+                        if p.count("P") != 0
+                        and round(h_ratio - h_ratio_step, 1)
+                        < p.count("H") / p.count("P")
+                        <= h_ratio
+                    ]
+                )
                 cur_set = cur_set.union(new_proteins)
+
+                # Print debug if needed, update tracker.
+                if i % 50 == 0:
+                    print(f"{h_ratio}:  {len(cur_set)}")
+                i += 1
 
             # Write newly generated set to file.
             for p in cur_set:
@@ -100,8 +132,8 @@ if __name__ == "__main__":
     h_ratio_step_str = input("H-ratio step (default=0.1): ").strip()
     h_ratio_step = float(h_ratio_step_str) if h_ratio_step_str else 0.1
 
-    size_str = input("Number of proteins per set (default=1000): ").strip()
-    size = int(size_str) if size_str else 1000
+    size_str = input("Number of proteins per set (default=300): ").strip()
+    size = int(size_str) if size_str else 300
 
     # Generate the data using the provided arguments.
     generate_hratio(p_len, h_ratio_begin, h_ratio_end, h_ratio_step, size)
