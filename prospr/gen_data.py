@@ -70,6 +70,7 @@ def generate_hratio(p_len=25, size=300):
         with open(f"{ds_path}/{cur_fname}", "w") as fp:
             cur_set = set()
             print(f"\nGenerating set with h-ratio of {h_ratio_high}..")
+            fp.write("id,sequence\n")
 
             # Print debug length every 10 iterations.
             i = 0
@@ -114,8 +115,8 @@ def generate_hratio(p_len=25, size=300):
                 i += 1
 
             # Write newly generated set to file.
-            for p in cur_set:
-                fp.write(f"{p}\n")
+            for i, p in enumerate(cur_set):
+                fp.write(f"{i},{p}\n")
 
 
 if __name__ == "__main__":
