@@ -9,20 +9,16 @@ License:        This file is licensed under the GNU LGPL V3 license by
 """
 
 import os
-from glob import glob
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 __version__ = "0.2a16"
 
 # Define core module extension.
-src_files = glob("prospr/core/src/*.cpp")
-src_files.append("prospr/core/core_module.cpp")
 ext_modules = [
     Pybind11Extension(
         "prospr_core",
-        sorted(src_files),
-        # ["prospr/core/core_module.cpp"],
+        ["prospr/core/core_module.cpp"],
         define_macros=[("VERSION_INFO", __version__)],
         optional=os.environ.get("CIBUILDWHEEL", "0") != "1",
         language="c++",
