@@ -41,7 +41,7 @@ setup(
     ext_modules=ext_modules,
     extras_require={"test": "pytest"},
     cmdclass={"build_ext": build_ext},
-    packages=["prospr", "prospr_core"],
+    packages=["prospr", "prospr.prospr_core"],
     package_data={"prospr": ["data/*/*.csv"]},
     platforms=["any"],
     python_requires=">=3.9",
