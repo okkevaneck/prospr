@@ -12,7 +12,7 @@ import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-__version__ = "0.2a18"
+__version__ = "0.2a19"
 
 # Define core module extension.
 ext_modules = [
@@ -41,7 +41,7 @@ setup(
     ext_modules=ext_modules,
     extras_require={"test": "pytest"},
     cmdclass={"build_ext": build_ext},
-    packages=["prospr"],
+    packages=["prospr", "prospr_core"],
     package_data={"prospr": ["data/*/*.csv"]},
     platforms=["any"],
     python_requires=">=3.9",
