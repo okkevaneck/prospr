@@ -149,12 +149,12 @@ int Protein::get_score() {
 }
 
 /* Returns the number of checked solutions. */
-unsigned long long Protein::get_solutions_checked() {
+std::uint64_t Protein::get_solutions_checked() {
     return solutions_checked;
 }
 
 /* Returns the number of amino acids placed. */
-unsigned long long Protein::get_aminos_placed() {
+std::uint64_t Protein::get_aminos_placed() {
     return aminos_placed;
 }
 
