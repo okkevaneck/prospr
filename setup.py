@@ -25,45 +25,7 @@ ext_modules = [
     ),
 ]
 
-# Load README for PyPI description.
-with open("README.md", "r") as f:
-    long_description = f.read()
-
 setup(
-    name="prospr",
-    version=__version__,
-    author="okkevaneck",
-    description="A toolbox for protein folding with Python.",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/okkevaneck/prospr",
-    license="LGPLv3",
     ext_modules=ext_modules,
-    extras_require={"test": "pytest"},
     cmdclass={"build_ext": build_ext},
-    packages=["prospr"],
-    package_data={"prospr": ["data/*/*.csv", "*.so"]},
-    platforms=["any"],
-    python_requires=">=3.9",
-    zip_safe=False,
-    install_requires=[
-        "matplotlib",
-        "seaborn",
-        "numpy",
-        "pandas",
-    ],
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "Development Status :: 2 - Pre-Alpha",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 "
-        + "(LGPLv3)",
-        "Operating System :: OS Independent",
-        "Topic :: Education",
-        "Topic :: Scientific/Engineering",
-        "Topic :: Scientific/Engineering :: Bio-Informatics",
-    ],
-    keywords=[
-        "prospr protein structure prediction toolbox python c++ extension "
-        + "pypi package"
-    ],
 )
