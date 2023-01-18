@@ -8,12 +8,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "prospr"
-author = "okkevaneck"
+authors = [
+    {author = "okkevaneck", email = "okke.van.eck@gmail.com"}
+]
 dynamic = ["version", "readme"]
 description = "A toolbox for protein folding with Python."
 readme = "README.md"
 license = {file = "LICENSE"}
-python_requires = ">=3.9"
+python-requires = ">=3.9"
 keywords = [
     "prospr",
     "protein",
