@@ -6,6 +6,56 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "prospr"
+author = "okkevaneck"
+dynamic = ["version", "readme"]
+description = "A toolbox for protein folding with Python."
+readme = "README.md"
+license = "LGPL-3.0-or-later"
+python_requires = ">=3.9"
+keywords = [
+    "prospr",
+    "protein",
+    "structure",
+    "prediction",
+    "toolbox",
+    "python",
+    "c++",
+    "extension",
+    "pypi",
+    "package",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Development Status :: 2 - Pre-Alpha",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Operating System :: OS Independent",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+homepage = "https://github.com/okkevaneck/prospr"
+repository = "https://github.com/okkevaneck/prospr"
+documentation = "https://prospr.readthedocs.io"
+
+[tool.setuptools]
+platforms = "any"
+license_files = "LICENSE"
+package_dir = "prospr"
+data-files = ["data/*/*.csv"]
+zip-safe = False
+
+[tool.setuptools.packages.find]
+where = ["prospr"]
+
+[tool.setuptools.package-data]
+prospr.data = ["*.csv"]
+
+[tool.setuptools.dynamic]
+version = {attr = "prospr.__version__"}
+readme = {file = "README.rst"}
+
 [tool.black]
 line-length = 79
 
