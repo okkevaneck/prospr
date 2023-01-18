@@ -44,7 +44,7 @@ platforms = "any"
 license_files = "LICENSE"
 package_dir = "prospr"
 data-files = ["data/*/*.csv"]
-zip-safe = False
+zip-safe = false
 
 [tool.setuptools.packages.find]
 where = ["prospr"]
