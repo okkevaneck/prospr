@@ -11,7 +11,7 @@ name = "prospr"
 authors = [
     {author = "okkevaneck", email = "okke.van.eck@gmail.com"}
 ]
-dynamic = ["version", "readme"]
+dynamic = ["version"]
 description = "A toolbox for protein folding with Python."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -55,7 +55,6 @@ prospr = ["data/*/*.csv"]
 
 [tool.setuptools.dynamic]
 version = {attr = "prospr.__version__"}
-#readme = {file = "README.md"}
 
 [tool.black]
 line-length = 79
