@@ -12,7 +12,7 @@ author = "okkevaneck"
 dynamic = ["version", "readme"]
 description = "A toolbox for protein folding with Python."
 readme = "README.md"
-license = "LGPL-3.0-or-later"
+license = {file = "LICENSE"}
 python_requires = ">=3.9"
 keywords = [
     "prospr",
