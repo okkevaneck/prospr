@@ -44,7 +44,7 @@ repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
 python_requires = ">=3.9"
-platforms = "any"
+platforms = ["Linux", "macOS", "Windows"]
 license_files = "LICENSE"
 package_dir = "prospr"
 data-files = ["data/*/*.csv"]
