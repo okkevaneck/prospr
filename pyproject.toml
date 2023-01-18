@@ -35,9 +35,11 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
+
+[project.urls]
 homepage = "https://github.com/okkevaneck/prospr"
-repository = "https://github.com/okkevaneck/prospr"
 documentation = "https://prospr.readthedocs.io"
+repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
 platforms = "any"
