@@ -15,7 +15,6 @@ dynamic = ["version", "readme"]
 description = "A toolbox for protein folding with Python."
 readme = "README.md"
 license = {file = "LICENSE"}
-python-requires = ">=3.9"
 keywords = [
     "prospr",
     "protein",
@@ -44,6 +43,7 @@ documentation = "https://prospr.readthedocs.io"
 repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
+python_requires = ">=3.9"
 platforms = "any"
 license_files = "LICENSE"
 package_dir = "prospr"

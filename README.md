@@ -5,7 +5,7 @@
 
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/OkkeVanEck/prospr/.github/workflows/build_deploy.yml?branch=master)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/OkkeVanEck/prospr/.github/workflows/build_deploy.yml?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/prospr/badge/?version=latest)](https://prospr.readthedocs.io/en/latest/?badge=latest)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)  
 **Creator:** Okke van Eck
