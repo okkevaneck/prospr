@@ -11,8 +11,8 @@ License:        This file is licensed under the GNU LGPL V3 license by
 import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
+from prospr.__init__ import __version__
 
-__version__ = "0.2a20"
 
 # Define core module extension.
 ext_modules = [
