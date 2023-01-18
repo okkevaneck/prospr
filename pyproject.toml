@@ -44,11 +44,9 @@ documentation = "https://prospr.readthedocs.io"
 repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
-platforms = ["Linux", "macOS", "Windows"]
+packages = "prospr"
 zip-safe = false
-
-[tool.setuptools.packages.find]
-where = ["prospr"]
+platforms = ["Linux", "macOS", "Windows"]
 
 [tool.setuptools.package-data]
 prospr = ["data/*/*.csv"]
