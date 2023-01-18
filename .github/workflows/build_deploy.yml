@@ -61,8 +61,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build and install
-        run: |
-          pip install --verbose -e .
+        run: pip install --verbose -e .
 
       - name: Test with pytest
         run: pytest
@@ -87,7 +86,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.cibw_build }}
           CIBW_SKIP: ${{ matrix.cibw_skip }}
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
-          CIBW_BEFORE_BUILD: bash ./manage.sh build
+          CIBW_BEFORE_BUILD: ./manage.sh build
 
       - uses: actions/upload-artifact@v3
         with:
