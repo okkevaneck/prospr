@@ -55,7 +55,7 @@ prospr = ["data/*/*.csv"]
 
 [tool.setuptools.dynamic]
 version = {attr = "prospr.__version__"}
-readme = {file = "README.rst"}
+readme = {file = "README.md"}
 
 [tool.black]
 line-length = 79
