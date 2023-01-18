@@ -8,7 +8,6 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
-import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
@@ -18,7 +17,6 @@ ext_modules = [
     Pybind11Extension(
         "prospr_core",
         ["prospr/core/core_module.cpp"],
-        optional=os.environ.get("CIBUILDWHEEL", "0") != "1",
         language="c++",
     ),
 ]
