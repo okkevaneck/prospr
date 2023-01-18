@@ -47,14 +47,13 @@ python_requires = ">=3.9"
 platforms = ["Linux", "macOS", "Windows"]
 license_files = "LICENSE"
 package_dir = "prospr"
-data-files = ["data/*/*.csv"]
 zip-safe = false
 
 [tool.setuptools.packages.find]
 where = ["prospr"]
 
 [tool.setuptools.package-data]
-prospr.data = ["*.csv"]
+prospr = ["data/*/*.csv"]
 
 [tool.setuptools.dynamic]
 version = {attr = "prospr.__version__"}
