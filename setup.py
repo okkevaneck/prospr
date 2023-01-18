@@ -42,7 +42,7 @@ setup(
     extras_require={"test": "pytest"},
     cmdclass={"build_ext": build_ext},
     packages=["prospr"],
-    package_data={"prospr": ["data/*/*.csv"]},
+    package_data={"prospr": ["data/*/*.csv", "*.so"]},
     platforms=["any"],
     python_requires=">=3.9",
     zip_safe=False,
