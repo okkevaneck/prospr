@@ -6,10 +6,6 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-#[[build-system.extensions]]
-#build-backend = ""
-#src = ""
-
 [project]
 name = "prospr"
 authors = [
