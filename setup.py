@@ -12,16 +12,13 @@ from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 
-# Define core module extension.
-ext_modules = [
-    Pybind11Extension(
-        "prospr_core",
-        ["prospr/core/core_module.cpp"],
-        language="c++",
-    ),
-]
-
 setup(
-    ext_modules=ext_modules,
+    ext_modules=[
+        Pybind11Extension(
+            name="prospr_core",
+            sources=["prospr/core/core_module.cpp"],
+            language="c++",
+        ),
+    ],
     cmdclass={"build_ext": build_ext},
 )

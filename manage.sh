@@ -51,6 +51,7 @@ case "$1" in
     "clean")
         echo "~ Removing all built .cxx, .so and .py files.."
         rm -f ${CXX_FILES} ${SO_FILES} ${PY_FILES}
+        rm *.so
         echo -e "~ Removing all __pycache__ directories.."
         rm -rf ${PYCACHES}
         echo -e "~ Removing build directories.."
