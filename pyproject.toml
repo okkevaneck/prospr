@@ -50,7 +50,7 @@ zip-safe = false
 platforms = ["Linux", "macOS", "Windows"]
 
 [tool.setuptools.package-data]
-prospr = ["prospr/data/*/*.csv"]
+prospr = ["prospr/data/*/*.csv", "prospr/core/src/*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "prospr.__version__"}
