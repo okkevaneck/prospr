@@ -93,13 +93,6 @@ case "$1" in
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2" "debug"
         ;;
-    # Run scripts before CIBUILDWHEEL is executed.
-    "prepare_for_build")
-        echo "~ Running scripts before building Wheels.."
-        pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install --verbose -e .
-        ;;
     *)
         echo "No command detected from first argument.."
         ;;

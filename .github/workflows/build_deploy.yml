@@ -86,7 +86,6 @@ jobs:
           CIBW_BUILD: ${{ matrix.cibw_build }}
           CIBW_SKIP: ${{ matrix.cibw_skip }}
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
-          CIBW_BEFORE_BUILD: ./manage.sh prepare_for_build
 
       - uses: actions/upload-artifact@v3
         with:
