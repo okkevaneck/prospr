@@ -61,7 +61,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build and install
-        run: pip install --verbose -e .
+        run: pip install --verbose .
 
       - name: Test with pytest
         run: pytest
