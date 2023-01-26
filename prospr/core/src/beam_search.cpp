@@ -10,6 +10,7 @@
 #include <iostream>
 #include <queue>
 #include <vector>
+#include <numeric>
 
 
 /* Type for ordering proteins in a priority queue.  */
@@ -57,7 +58,6 @@ Protein* beam_search(Protein* protein, int beam_width) {
 
     /* Create vector for current proteins, and a priority queue to filter. */
     std::vector<PrioProtein> beam;
-    beam.push_back(protein);
     std::priority_queue<PrioProtein,
                         std::vector<PrioProtein>,
                         std::less<PrioProtein>> cur_proteins;
@@ -68,22 +68,22 @@ Protein* beam_search(Protein* protein, int beam_width) {
     all_moves.erase(all_moves.begin() + dim);
 
     /* Loop over proteins in beam until proteins are fully folded. */
-    bool finished = false;
     int num_elements = beam_width;
-    PrioProtein cur_prioprot;
+    PrioProtein cur_prioprot = {protein, comp_score(protein)};
+    beam.push_back(cur_prioprot);
     Protein cur_expansion;
 
-    while (beam[0].protein->get_length() != max_length) {
+    while (beam[0].protein->get_cur_len() != max_length) {
         /* Expand all proteins in the beam and add to priority queue. */
         for (PrioProtein prio_prot : beam) {
             protein = prio_prot.protein;
 
-            for (int m : moves) {
+            for (int m : all_moves) {
                 if (protein->is_valid(m)) {
                     cur_expansion = *protein;
-                    cur_expansion->place_amino(m);
+                    cur_expansion.place_amino(m);
                     cur_prioprot = {&cur_expansion, comp_score(&cur_expansion)};
-                    priority_queue.push(cur_prioprot);
+                    cur_proteins.push(cur_prioprot);
                 }
             }
         }
@@ -96,10 +96,13 @@ Protein* beam_search(Protein* protein, int beam_width) {
         /* Update beam with highest ranked proteins and clear priority queue. */
         beam.clear();
         for (int i = 0; i < num_elements; i++) {
-            beam.push_back(cur_proteins.pop());
+            beam.push_back(cur_proteins.top());
+            cur_proteins.pop();
         }
         cur_proteins.empty();
     }
+
+    std::cout << "Best score: " << beam[0].protein->get_score() << "\n";
 
     /* First protein in priority queue will have highest score. */
     return beam[0].protein;

@@ -54,11 +54,11 @@ void test_depth_first_bnb() {
 
 /* Test functionality of depth_first_bnb. */
 void test_beam_search() {
-    /* Check if 2D solutions are found correctly. */
+    /* Check if 2D solutions are found correctly with a beam width of -1. */
     Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
-    protein = beam_search(protein);
+    protein = beam_search(protein, -1);
     assert (protein->get_score() == -3);
-    std::cout << "\t2D Protein solution scores matches.\n";
+    std::cout << "\t2D Protein solution scores matches with beam_width=-1.\n";
 
 //    /* Check if 3D solutions are found correctly. */
 //    protein = new Protein("HPPHPHPHPH", 3, "HP");

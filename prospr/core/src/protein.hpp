@@ -17,6 +17,8 @@
 
 class Protein {
     public:
+        Protein();
+
         /* Construct a new Protein. */
         Protein(std::string sequence, int dim=2, std::string model="HP",
                 std::map<std::string, int> bond_values={},

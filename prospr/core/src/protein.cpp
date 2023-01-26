@@ -15,6 +15,8 @@
 #include <iostream>
 
 
+Protein::Protein() {};
+
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,
         std::map<std::string, int> bond_values, bool bond_symmetry) {
