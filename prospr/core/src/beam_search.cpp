@@ -11,11 +11,12 @@
 #include <queue>
 #include <vector>
 #include <numeric>
+#include <cstring>
 
 
 /* Type for ordering proteins in a priority queue.  */
 struct PrioProtein {
-    Protein* protein;
+    Protein protein;
     int score;
 };
 
@@ -29,10 +30,10 @@ bool operator<(const struct PrioProtein& prot1,
 }
 
 /* Overload << operator for printing PrioProteins. */
-std::ostream &operator<<(std::ostream &os, const struct PrioProtein& prot) {
+std::ostream &operator<<(std::ostream &os, struct PrioProtein& prot) {
     std::cout << "<" << prot.score << ", [";
 
-    for (int i: prot.protein->hash_fold()) {
+    for (int i: prot.protein.hash_fold()) {
         std::cout << i << " ";
     }
 
@@ -69,20 +70,21 @@ Protein* beam_search(Protein* protein, int beam_width) {
 
     /* Loop over proteins in beam until proteins are fully folded. */
     int num_elements = beam_width;
-    PrioProtein cur_prioprot = {protein, comp_score(protein)};
+    PrioProtein cur_prioprot = {*protein, comp_score(protein)};
     beam.push_back(cur_prioprot);
-    Protein cur_expansion;
+    Protein cur_protein, cur_expansion;
 
-    while (beam[0].protein->get_cur_len() != max_length) {
+    while (beam[0].protein.get_cur_len() != max_length) {
         /* Expand all proteins in the beam and add to priority queue. */
         for (PrioProtein prio_prot : beam) {
-            protein = prio_prot.protein;
+            cur_protein = prio_prot.protein;
 
             for (int m : all_moves) {
-                if (protein->is_valid(m)) {
+                if (cur_protein.is_valid(m)) {
                     cur_expansion = *protein;
+//                    std::memcpy(&cur_expansion, protein, sizeof(Protein));
                     cur_expansion.place_amino(m);
-                    cur_prioprot = {&cur_expansion, comp_score(&cur_expansion)};
+                    cur_prioprot = {cur_expansion, comp_score(&cur_expansion)};
                     cur_proteins.push(cur_prioprot);
                 }
             }
@@ -91,6 +93,7 @@ Protein* beam_search(Protein* protein, int beam_width) {
         /* Interpret beam_width of -1 as all elements. */
         if (beam_width == -1) {
             num_elements = cur_proteins.size();
+            std::cout << "Num elements " << num_elements << "\n";
         }
 
         /* Update beam with highest ranked proteins and clear priority queue. */
@@ -102,8 +105,9 @@ Protein* beam_search(Protein* protein, int beam_width) {
         cur_proteins.empty();
     }
 
-    std::cout << "Best score: " << beam[0].protein->get_score() << "\n";
+    std::memcpy(protein, &beam[0].protein, sizeof(Protein));
+    std::cout << "Best score: " << protein->get_score() << "\n";
 
     /* First protein in priority queue will have highest score. */
-    return beam[0].protein;
+    return protein;
 }

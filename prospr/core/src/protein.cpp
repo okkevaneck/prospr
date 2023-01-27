@@ -15,6 +15,7 @@
 #include <iostream>
 
 
+/* Zero argument constructor. */
 Protein::Protein() {};
 
 /* Construct a new Protein. */
@@ -103,6 +104,28 @@ Protein::Protein(std::string sequence, int dim, std::string model,
         cur_len++;
         aminos_placed++;
     }
+}
+
+/* Overload assignment operator for copy-assignments. */
+Protein &operator=(const Protein& protein) {
+    /* Set model essentials. */
+    protein.sequence = this->sequence;
+    protein.dim = this->dim;
+    protein.bond_values = this->bond_values;
+    protein.weighted_amino_acids = this->weighted_amino_acids;
+    protein.max_weights = this->max_weights;
+
+    /* Copy state of protein. */
+    protein.space = this->space;
+    protein.amino_acids = this->amino_acids;
+    protein.cur_len = this->cur_len;
+    protein.last_move = this->last_move;
+    protein.last_pos = this->last_pos;
+    protein.score = this->score;
+    protein.aminos_placed = this->aminos_placed;
+    protein.solutions_checked = this->solutions_checked;
+
+    return *this;
 }
 
 /* Returns the Protein's sequence. */

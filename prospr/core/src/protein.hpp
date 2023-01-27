@@ -17,12 +17,16 @@
 
 class Protein {
     public:
+        /* Zero argument constructor. */
         Protein();
 
         /* Construct a new Protein. */
         Protein(std::string sequence, int dim=2, std::string model="HP",
                 std::map<std::string, int> bond_values={},
                 bool bond_symmetry=true);
+
+        /* Overload assignment operator for copy-assignments. */
+        Protein &operator=(Protein &protein);
 
         /* Returns the Protein's sequence. */
         std::string get_sequence();
@@ -104,12 +108,14 @@ class Protein {
         std::uint64_t solutions_checked;
         std::vector<AminoAcid*> amino_acids;
 
-        /* Change score according to the already performed addition or removal of the
-         * given move.
+        /* Change score according to the already performed addition or removal
+         * of the given move.
          */
         void _change_score(int move, bool placed);
 
-        /* Return a vector with int pairs that represent the aminos making a bond. */
+        /* Return a vector with int pairs that represent the amino acids making
+         * a bond.
+         */
         std::vector<std::pair<int,int>> _append_bond_pairs(
             std::vector<std::pair<int,int>> pairs,
             std::vector<int> pos,
