@@ -26,7 +26,7 @@ class Protein {
                 bool bond_symmetry=true);
 
         /* Overload assignment operator for copy-assignments. */
-        Protein &operator=(Protein &protein);
+        Protein& Protein::operator=(Protein &protein);
 
         /* Returns the Protein's sequence. */
         std::string get_sequence();
