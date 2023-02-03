@@ -138,7 +138,6 @@ Protein::Protein(std::string sequence, int dim, std::string model,
 
 ///* Overload assignment operator for copy-assignments. */
 //Protein &Protein::operator=(const Protein& protein) {
-//    /* Set model essentials. */
 //    protein.sequence = this->sequence;
 //    protein.dim = this->dim;
 //    protein.bond_values = this->bond_values;
