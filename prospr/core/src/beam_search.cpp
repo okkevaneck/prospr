@@ -24,13 +24,13 @@ struct PrioProtein {
  * Bigger indicates more potential for leading towards the minimum energy
  * conformation.
  */
-bool operator<(const struct PrioProtein& prot1,
-               const struct PrioProtein& prot2) {
-    return prot1.score < prot2.score;
+bool operator<(const PrioProtein& lhs,
+               const PrioProtein& rhs) {
+    return lhs.score < rhs.score;
 }
 
 /* Overload << operator for printing PrioProteins. */
-std::ostream &operator<<(std::ostream &os, struct PrioProtein& prot) {
+std::ostream &operator<<(std::ostream &os, PrioProtein& prot) {
     std::cout << "<" << prot.score << ", [";
 
     for (int i: prot.protein.hash_fold()) {
@@ -70,6 +70,7 @@ Protein* beam_search(Protein* protein, int beam_width) {
 
     /* Loop over proteins in beam until proteins are fully folded. */
     int num_elements = beam_width;
+    std::cout << "protein init: " << *protein << "\n";
     PrioProtein cur_prioprot = {*protein, comp_score(protein)};
     beam.push_back(cur_prioprot);
     Protein cur_protein, cur_expansion;
@@ -80,14 +81,24 @@ Protein* beam_search(Protein* protein, int beam_width) {
             cur_protein = prio_prot.protein;
 
             for (int m : all_moves) {
+                std::cout << "Trying move " << m << "..\n";
                 if (cur_protein.is_valid(m)) {
+                    std::cout << "Valid!\n";
+                    std::cout << "cur_protein before: " << cur_protein << "\n";
+                    std::cout << "cur_expansion before: " << cur_expansion << "\n";
+
                     cur_expansion = *protein;
 //                    std::memcpy(&cur_expansion, protein, sizeof(Protein));
                     cur_expansion.place_amino(m);
+
+                    std::cout << "cur_protein after: " << cur_protein << "\n";
+                    std::cout << "cur_expansion after: " << cur_expansion << "\n";
+
                     cur_prioprot = {cur_expansion, comp_score(&cur_expansion)};
                     cur_proteins.push(cur_prioprot);
                 }
             }
+            std::cout << "Finished all moves\n\n" << std::flush;
         }
 
         /* Interpret beam_width of -1 as all elements. */

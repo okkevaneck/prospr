@@ -11,12 +11,42 @@
 #include <numeric>
 #include <string>
 #include <stdexcept>
-
 #include <iostream>
 
 
 /* Zero argument constructor. */
 Protein::Protein() {};
+
+/* Copy constructor. */
+Protein::Protein(const Protein &other) {
+    /* Set model essentials. */
+    this->sequence = other.sequence;
+    this->dim = other.dim;
+    this->bond_values = other.bond_values;
+    this->weighted_amino_acids = other.weighted_amino_acids;
+    this->max_weights = other.max_weights;
+
+    /* Create new AminoAcid objects for all amino acids. */
+    for (AminoAcid* other_aa : other.amino_acids) {
+        AminoAcid* new_aa = new AminoAcid(*other_aa);
+        this->amino_acids.push_back(new_aa);
+    }
+
+    /* Copy placement of other protein and map to new AminoAcids. */
+    // TODO: Implement below as zip is not an existing function!
+//    for (auto&& items : zip(other.space, this->amino_acids)) {
+//        /* Get position from other's space and bind to own amino acid. */
+//        this->space[std::get<0>(items).first] = std::get<1>(items);
+//    }
+
+    /* Copy state of protein's values. */
+    this->cur_len = other.cur_len;
+    this->last_move = other.last_move;
+    this->last_pos = other.last_pos;
+    this->score = other.score;
+    this->aminos_placed = other.aminos_placed;
+    this->solutions_checked = other.solutions_checked;
+};
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,
@@ -106,27 +136,27 @@ Protein::Protein(std::string sequence, int dim, std::string model,
     }
 }
 
-/* Overload assignment operator for copy-assignments. */
-Protein &operator=(const Protein& protein) {
-    /* Set model essentials. */
-    protein.sequence = this->sequence;
-    protein.dim = this->dim;
-    protein.bond_values = this->bond_values;
-    protein.weighted_amino_acids = this->weighted_amino_acids;
-    protein.max_weights = this->max_weights;
-
-    /* Copy state of protein. */
-    protein.space = this->space;
-    protein.amino_acids = this->amino_acids;
-    protein.cur_len = this->cur_len;
-    protein.last_move = this->last_move;
-    protein.last_pos = this->last_pos;
-    protein.score = this->score;
-    protein.aminos_placed = this->aminos_placed;
-    protein.solutions_checked = this->solutions_checked;
-
-    return *this;
-}
+///* Overload assignment operator for copy-assignments. */
+//Protein &Protein::operator=(const Protein& protein) {
+//    /* Set model essentials. */
+//    protein.sequence = this->sequence;
+//    protein.dim = this->dim;
+//    protein.bond_values = this->bond_values;
+//    protein.weighted_amino_acids = this->weighted_amino_acids;
+//    protein.max_weights = this->max_weights;
+//
+//    /* Copy state of protein. */
+//    protein.space = this->space;
+//    protein.amino_acids = this->amino_acids;
+//    protein.cur_len = this->cur_len;
+//    protein.last_move = this->last_move;
+//    protein.last_pos = this->last_pos;
+//    protein.score = this->score;
+//    protein.aminos_placed = this->aminos_placed;
+//    protein.solutions_checked = this->solutions_checked;
+//
+//    return *this;
+//}
 
 /* Returns the Protein's sequence. */
 std::string Protein::get_sequence() {
@@ -428,4 +458,15 @@ std::vector<std::pair<int,int>> Protein::get_bonds() {
     }
 
     return pairs;
+}
+
+/* Overload << operator for printing Proteins. */
+std::ostream &operator<<(std::ostream &os, Protein& protein) {
+    std::cout << "<Protein s=" << protein.get_score() << ", [ ";
+    for (int i: protein.hash_fold()) {
+        std::cout << i << " ";
+    }
+
+    std::cout << "]>" << std::flush;
+    return os;
 }

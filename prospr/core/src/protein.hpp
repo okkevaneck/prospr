@@ -20,13 +20,16 @@ class Protein {
         /* Zero argument constructor. */
         Protein();
 
+        /* Copy constructor. */
+        Protein(const Protein &other);
+
         /* Construct a new Protein. */
         Protein(std::string sequence, int dim=2, std::string model="HP",
                 std::map<std::string, int> bond_values={},
                 bool bond_symmetry=true);
 
-        /* Overload assignment operator for copy-assignments. */
-        Protein &operator=(Protein &protein);
+//        /* Overload assignment operator for copy-assignments. */
+//        Protein &Protein::operator=(const Protein &protein);
 
         /* Returns the Protein's sequence. */
         std::string get_sequence();
@@ -121,5 +124,8 @@ class Protein {
             std::vector<int> pos,
             std::vector<int> moves);
 };
+
+/* Overload << operator for printing Proteins. */
+std::ostream &operator<<(std::ostream &os, Protein& protein);
 
 #endif

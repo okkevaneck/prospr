@@ -8,6 +8,14 @@
 #include "amino_acid.hpp"
 
 
+/* Copy constructor. */
+AminoAcid::AminoAcid(const AminoAcid &other) {
+    this->type = other.type;
+    this->index = other.index;
+    this->prev_move = other.prev_move;
+    this->next_move = other.next_move;
+}
+
 /* Construct a new AminoAcid. */
 AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move) {
     this->type = type;

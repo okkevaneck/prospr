@@ -11,6 +11,9 @@
 
 class AminoAcid {
     public:
+        /* Copy constructor. */
+        AminoAcid(const AminoAcid &other);
+
         /* Construct a new AminoAcid. */
         AminoAcid(char type, int index, int prev_move=0, int next_move=0);
 
