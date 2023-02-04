@@ -33,11 +33,9 @@ Protein::Protein(const Protein &other) {
     }
 
     /* Copy placement of other protein and map to new AminoAcids. */
-    // TODO: Implement below as zip is not an existing function!
-//    for (auto&& items : zip(other.space, this->amino_acids)) {
-//        /* Get position from other's space and bind to own amino acid. */
-//        this->space[std::get<0>(items).first] = std::get<1>(items);
-//    }
+    for (auto &item : other.space) {
+        this->space[item.first] = this->amino_acids[item.second->get_index()];
+    }
 
     /* Copy state of protein's values. */
     this->cur_len = other.cur_len;
