@@ -24,9 +24,9 @@ struct PrioProtein {
  * Bigger indicates more potential for leading towards the minimum energy
  * conformation.
  */
-bool operator<(const PrioProtein& lhs,
+bool operator>(const PrioProtein& lhs,
                const PrioProtein& rhs) {
-    return lhs.score < rhs.score;
+    return lhs.score > rhs.score;
 }
 
 /* Overload << operator for printing PrioProteins. */
@@ -43,7 +43,7 @@ std::ostream &operator<<(std::ostream &os, PrioProtein& prot) {
 
 /* Compute heuristic score for protein to use in priority queue. */
 int comp_score(Protein* protein) {
-    return 0;
+    return protein->get_score();
 }
 
 /* A beam search function for finding a minimum energy conformation. */
@@ -61,7 +61,7 @@ Protein* beam_search(Protein* protein, int beam_width) {
     std::vector<PrioProtein> beam;
     std::priority_queue<PrioProtein,
                         std::vector<PrioProtein>,
-                        std::less<PrioProtein>> cur_proteins;
+                        std::greater<PrioProtein>> cur_proteins;
 
     /* Create vector with all moves. */
     std::vector<int> all_moves(dim * 2 + 1);
@@ -70,7 +70,6 @@ Protein* beam_search(Protein* protein, int beam_width) {
 
     /* Loop over proteins in beam until proteins are fully folded. */
     int num_elements = beam_width;
-    std::cout << "protein init: " << *protein << "\n";
     PrioProtein cur_prioprot = {*protein, comp_score(protein)};
     beam.push_back(cur_prioprot);
     Protein cur_protein, cur_expansion;
@@ -81,30 +80,18 @@ Protein* beam_search(Protein* protein, int beam_width) {
             cur_protein = prio_prot.protein;
 
             for (int m : all_moves) {
-                std::cout << "Trying move " << m << "..\n";
                 if (cur_protein.is_valid(m)) {
-                    std::cout << "Valid!\n";
-                    std::cout << "cur_protein before: " << cur_protein << "\n";
-                    std::cout << "cur_expansion before: " << cur_expansion << "\n";
-
                     cur_expansion = cur_protein;
-                    std::cout << "cur_expansion mid: " << cur_expansion << "\n";
                     cur_expansion.place_amino(m);
-
-                    std::cout << "cur_expansion after: " << cur_expansion << "\n";
-                    std::cout << "cur_protein after: " << cur_protein << "\n";
-
                     cur_prioprot = {cur_expansion, comp_score(&cur_expansion)};
                     cur_proteins.push(cur_prioprot);
                 }
             }
-            std::cout << "Finished all moves\n\n" << std::flush;
         }
 
         /* Interpret beam_width of -1 as all elements. */
         if (beam_width == -1) {
             num_elements = cur_proteins.size();
-            std::cout << "Num elements " << num_elements << "\n";
         }
 
         /* Update beam with highest ranked proteins and clear priority queue. */
