@@ -475,7 +475,8 @@ std::vector<std::pair<int,int>> Protein::get_bonds() {
 
 /* Overload << operator for printing Proteins. */
 std::ostream &operator<<(std::ostream &os, Protein& protein) {
-    std::cout << "<Protein s=" << protein.get_score() << ", [ ";
+    std::cout << "<Protein s=" << protein.get_score() << " l=" \
+        << protein.get_cur_len() <<  ", [ ";
     for (int i: protein.hash_fold()) {
         std::cout << i << " ";
     }

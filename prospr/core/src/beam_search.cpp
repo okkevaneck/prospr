@@ -130,10 +130,10 @@ Protein* beam_search(Protein* protein, int beam_width) {
         return protein;
 
     /* Create vector for current proteins, and a priority queue to filter. */
-    std::vector<PrioProtein> beam;
+    std::vector<PrioProtein> beam = {};
     std::priority_queue<PrioProtein,
                         std::vector<PrioProtein>,
-                        std::greater<PrioProtein>> cur_proteins;
+                        std::greater<PrioProtein>> cur_proteins = {};
 
     /* Create vector with all moves. */
     std::vector<int> all_moves(dim * 2 + 1);
@@ -144,10 +144,10 @@ Protein* beam_search(Protein* protein, int beam_width) {
     BondInfo binfo = _comp_bondable_aminos(protein);
 
     /* Loop over proteins in beam until proteins are fully folded. */
-    int num_elements = beam_width;
     PrioProtein cur_prioprot = {*protein, comp_score(protein, &binfo)};
     beam.push_back(cur_prioprot);
     Protein cur_protein, cur_expansion;
+    int num_elements;
 
     while (beam[0].protein.get_cur_len() != max_length) {
         /* Expand all proteins in the beam and add to priority queue. */
@@ -168,6 +168,8 @@ Protein* beam_search(Protein* protein, int beam_width) {
         /* Interpret beam_width of -1 as all elements. */
         if (beam_width == -1) {
             num_elements = cur_proteins.size();
+        } else {
+            num_elements = std::min(cur_proteins.size(), (size_t)beam_width);
         }
 
         /* Update beam with highest ranked proteins and clear priority queue. */
@@ -176,7 +178,9 @@ Protein* beam_search(Protein* protein, int beam_width) {
             beam.push_back(cur_proteins.top());
             cur_proteins.pop();
         }
-        cur_proteins.empty();
+        cur_proteins = std::priority_queue<PrioProtein,
+                                           std::vector<PrioProtein>,
+                                           std::greater<PrioProtein>>();
     }
 
     /* First protein in priority queue will have highest score. */

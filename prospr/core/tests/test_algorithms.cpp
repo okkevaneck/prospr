@@ -60,6 +60,13 @@ void test_beam_search() {
     assert (protein->get_score() == -3);
     std::cout << "\t2D Protein solution scores matches with beam_width = -1.\n";
 
+//    /* Check if 2D solutions are found correctly with a beam width of -1. */
+//    Protein* protein = new Protein("PHPHPHPPH", 2, "HP");
+//    protein = beam_search(protein, 10);
+//    assert (protein->get_score() == -3);
+//    std::cout << "\t2D Protein solution scores matches with beam_width = -1.\n";
+
+
 //    /* Check if 3D solutions are found correctly. */
 //    protein = new Protein("HPPHPHPHPH", 3, "HP");
 //    protein = depth_first_bnb(protein);
