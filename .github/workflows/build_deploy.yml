@@ -64,16 +64,27 @@ jobs:
         run: pip install --verbose .
 
       # Test everything with Ubuntu.
-      - name: Test with pytest (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-latest'}}
-        run: pytest
+      - name: Test with pytest
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+              pytest
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+              pytest -k 'not TestBeamSearch'; \
+              pytest tests/core/beam_search.py::TestBeamSearch -k '_bw99 or _bw_m1'
+          fi
+        shell: bash
 
-      # Skip beam search with small beam_width on MacOS.
-      - name: Test with pytest (MacOS)
-          if: ${{matrix.os == 'macos-latest'}}
-          run: |
-            pytest -k 'not TestBeamSearch'; \
-            pytest tests/core/beam_search.py::TestBeamSearch -k '_bw99 or _bw_m1'
+##        if: ${{ runner.os = 'Linux' }}
+#        - if: runner.os == 'Linux'
+#          run: pytest
+#
+#      # Skip beam search with small beam_width on macOS.
+#      - name: Test with pytest (macOS)
+##          if: ${{ runner.os = 'macOS' }}
+#          - if: runner.os == 'macOS'
+#            run: |
+#              pytest -k 'not TestBeamSearch'; \
+#              pytest tests/core/beam_search.py::TestBeamSearch -k '_bw99 or _bw_m1'
 
   build_wheels:
     name: Build wheels
