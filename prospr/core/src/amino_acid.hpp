@@ -8,6 +8,8 @@
 #ifndef AMINO_ACID_H
 #define AMINO_ACID_H
 
+#include <string>
+
 
 class AminoAcid {
     public:
@@ -16,6 +18,9 @@ class AminoAcid {
 
         /* Construct a new AminoAcid. */
         AminoAcid(char type, int index, int prev_move=0, int next_move=0);
+
+        /* Overload assignment operator for copy-assignments. */
+        AminoAcid& operator=(const AminoAcid &other);
 
         /* Returns the AminoAcid's type. */
         char get_type();
@@ -41,5 +46,8 @@ class AminoAcid {
         int prev_move;
         int next_move;
 };
+
+/* Overload << operator for printing AminoAcids. */
+std::ostream &operator<<(std::ostream &os, AminoAcid& amino_acid);
 
 #endif
