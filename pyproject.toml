@@ -45,7 +45,7 @@ repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
 packages = ["prospr"]
-package-dir = {"prospr" = "prospr/"}
+package-dir = {"prospr" = "prospr"}
 zip-safe = false
 platforms = ["Linux", "macOS", "Windows"]
 
