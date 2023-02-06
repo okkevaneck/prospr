@@ -24,7 +24,7 @@ def protein_3d():
 
 @pytest.mark.order(order=2)
 class TestBeamSearch:
-    def test_protein_2d_beam_search(self, protein_2d):
+    def test_protein_2d_beam_search_no_bw(self, protein_2d):
         """
         Check if 2D solutions are found correctly.
         """
