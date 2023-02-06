@@ -41,7 +41,7 @@ test_protein() {
 test_depth_first() {
     echo -e "\n~ Testing depth_first.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first
@@ -50,14 +50,27 @@ test_depth_first() {
     echo -e "~ Done"
 }
 
-# Test depth_first functionality.
+# Test depth_first_bnb functionality.
 test_depth_first_bnb() {
     echo -e "\n~ Testing depth_first_bnb.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first_bnb
+
+    rm test_algorithms
+    echo -e "~ Done"
+}
+
+# Test beam_search functionality.
+test_beam_search() {
+    echo -e "\n~ Testing beam_search.."
+    # shellcheck disable=SC2086
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+
+    echo "~ Compilation successful, running the tests.."
+    $DEBUG ./test_algorithms beam_search
 
     rm test_algorithms
     echo -e "~ Done"
@@ -69,6 +82,7 @@ test_all() {
     test_protein
     test_depth_first
     test_depth_first_bnb
+    test_beam_search
 }
 
 # Main entry point of the script.
@@ -106,6 +120,11 @@ main() {
             "depth_first_bnb")
                 echo "~ Module:  depth_first_bnb"
                 test_depth_first_bnb
+                ;;
+            # Only test beam_search.
+            "beam_search")
+                echo "~ Module:  beam_search"
+                test_beam_search
                 ;;
             # Default to test all.
             *)

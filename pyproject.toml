@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "prospr"
 authors = [
-    {author = "okkevaneck", email = "okke.van.eck@gmail.com"},
+    {name = "okkevaneck", email = "okke.van.eck@gmail.com"},
 ]
 dynamic = ["version"]
 description = "A toolbox for protein folding with Python."
@@ -45,7 +45,7 @@ repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
 packages = ["prospr"]
-package-dir = {"prospr" = "prospr/"}
+package-dir = {"prospr" = "prospr"}
 zip-safe = false
 platforms = ["Linux", "macOS", "Windows"]
 

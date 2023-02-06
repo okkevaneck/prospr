@@ -6,7 +6,16 @@
  */
 
 #include "amino_acid.hpp"
+#include <iostream>
 
+
+/* Copy constructor. */
+AminoAcid::AminoAcid(const AminoAcid &other) {
+    this->type = other.type;
+    this->index = other.index;
+    this->prev_move = other.prev_move;
+    this->next_move = other.next_move;
+}
 
 /* Construct a new AminoAcid. */
 AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move) {
@@ -14,6 +23,16 @@ AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move) {
     this->index = index;
     this->prev_move = prev_move;
     this->next_move = next_move;
+}
+
+/* Overload assignment operator for copy-assignments. */
+AminoAcid& AminoAcid::operator=(const AminoAcid& other) {
+    this->type = other.type;
+    this->index = other.index;
+    this->prev_move = other.prev_move;
+    this->next_move = other.next_move;
+
+    return *this;
 }
 
 /* Returns the AminoAcid's type. */
@@ -44,4 +63,12 @@ void AminoAcid::set_prev_move(int move) {
 /* Sets the AminoAcid's next move. */
 void AminoAcid::set_next_move(int move) {
     next_move = move;
+}
+
+/* Overload << operator for printing AminoAcids. */
+std::ostream &operator<<(std::ostream &os, AminoAcid& amino_acid) {
+    std::cout << "<AminoAcid '" << amino_acid.get_type() << "' idx=" \
+        << amino_acid.get_index() << " moves=[" << amino_acid.get_prev_move() \
+        << "," << amino_acid.get_next_move() << "]>" << std::flush;
+    return os;
 }

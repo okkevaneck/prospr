@@ -24,7 +24,7 @@ def protein_3d():
 
 @pytest.mark.order(order=2)
 class TestDepthFirstBnB:
-    def test_protein_2d_depth_first_bnb(self, protein_2d):
+    def test_protein_2d_depth_first_bnb_naive(self, protein_2d):
         """
         Test if a 2D protein is folded correctly using depth_first_bnb search.
         """
@@ -32,6 +32,15 @@ class TestDepthFirstBnB:
         assert p.score == -3
         assert p.solutions_checked == 4
         assert p.aminos_placed == 53
+
+    def test_protein_2d_depth_first_bnb_reach(self, protein_2d):
+        """
+        Test if a 2D solutions is folded correctly using reach_prune criteria.
+        """
+        p = depth_first_bnb(protein_2d, "reach_prune")
+        assert p.score == -3
+        assert p.solutions_checked == 4
+        assert p.aminos_placed == 31
 
     def test_protein_3d_depth_first_bnb(self, protein_3d):
         """
