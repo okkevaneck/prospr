@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "prospr"
 authors = [
-    {author = "okkevaneck", email = "okke.van.eck@gmail.com"},
+    {name = "okkevaneck", email = "okke.van.eck@gmail.com"},
 ]
 dynamic = ["version"]
 description = "A toolbox for protein folding with Python."

@@ -14,6 +14,7 @@ namespace py = pybind11;
 #include "src/protein.cpp"
 #include "src/depth_first.cpp"
 #include "src/depth_first_bnb.cpp"
+#include "src/beam_search.cpp"
 
 
 PYBIND11_MODULE(prospr_core, m) {
@@ -87,4 +88,9 @@ PYBIND11_MODULE(prospr_core, m) {
     m.def("depth_first_bnb", depth_first_bnb,
         "Finds the optimal conformation via depth-first branch-and-bound search",
         py::arg("protein"), py::arg("prune_func")="");
+
+    /* Beam search function definition. */
+    m.def("beam_search", beam_search,
+        "Finds the optimal conformation via beam search",
+        py::arg("protein"), py::arg("beam_width")=-1);
 }

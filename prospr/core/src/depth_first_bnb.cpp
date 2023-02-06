@@ -68,12 +68,6 @@ bool reach_prune(Protein* protein, int move, int best_score,
         }
     }
 
-    /* Check score improvement if branch cannot add any bonds. */
-    if (future_aminos == 0) {
-        protein->remove_amino();
-        return cur_score >= best_score;
-    }
-
     /* Compute branch score with the to be placed amino acids. */
     int branch_score = 0;
     for (int i = p_vars->num_idxs - future_aminos; i < p_vars->num_idxs; i++) {
@@ -81,10 +75,12 @@ bool reach_prune(Protein* protein, int move, int best_score,
         if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
             /* The last amino being bondable can create an additional bond. */
             branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
-                std::min((size_t)p_vars->no_neighbors + 1, p_vars->bond_dists[i].size());
+                std::min((size_t)p_vars->no_neighbors + 1,
+                         p_vars->bond_dists[i].size());
         } else {
             branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
-                std::min((size_t)p_vars->no_neighbors, p_vars->bond_dists[i].size());
+                std::min((size_t)p_vars->no_neighbors,
+                         p_vars->bond_dists[i].size());
         }
     }
 
@@ -130,7 +126,7 @@ Protein* depth_first_bnb(Protein* protein, std::string prune_func) {
                     }
                 }
 
-                /* Add distance vector to set and clear for next iterations.  */
+                /* Add distance vector to set and clear for next iterations. */
                 p_vars.bond_dists.push_back(cur_dists);
                 cur_dists.clear();
 
