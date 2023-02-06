@@ -33,7 +33,7 @@ class TestBeamSearch:
         assert p.solutions_checked == 1
         assert p.aminos_placed == 9
 
-    def test_protein_2d_beam_search_bw1(self, protein_2d):
+    def test_protein_2d_beam_search_bw_m1(self, protein_2d):
         """
         Check if 2D solutions are found correctly with a beam width of -1.
         """

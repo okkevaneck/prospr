@@ -63,8 +63,17 @@ jobs:
       - name: Build and install
         run: pip install --verbose .
 
-      - name: Test with pytest
+      # Test everything with Ubuntu.
+      - name: Test with pytest (Ubuntu)
+        if: ${{ matrix.os == 'ubuntu-latest'}}
         run: pytest
+
+      # Skip beam search with small beam_width on MacOS.
+      - name: Test with pytest (MacOS)
+          if: ${{matrix.os == 'macos-latest'}}
+          run: |
+            pytest -k 'not TestBeamSearch'; \
+            pytest tests/core/beam_search.py::TestBeamSearch -k '_bw99 or _bw_m1'
 
   build_wheels:
     name: Build wheels
