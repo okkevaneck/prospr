@@ -27,12 +27,15 @@ Protein::Protein(const Protein &other) {
     this->max_weights = other.max_weights;
 
     /* Create new AminoAcid objects for all amino acids. */
+    AminoAcid* new_aa;
+    this->amino_acids.clear();
     for (AminoAcid* other_aa : other.amino_acids) {
-        AminoAcid* new_aa = new AminoAcid(*other_aa);
+        new_aa = new AminoAcid(*other_aa);
         this->amino_acids.push_back(new_aa);
     }
 
     /* Copy placement of other protein and map to new AminoAcids. */
+    this->space.clear();
     for (auto &item : other.space) {
         this->space[item.first] = this->amino_acids[item.second->get_index()];
     }
@@ -134,26 +137,39 @@ Protein::Protein(std::string sequence, int dim, std::string model,
     }
 }
 
-///* Overload assignment operator for copy-assignments. */
-//Protein &Protein::operator=(const Protein& protein) {
-//    protein.sequence = this->sequence;
-//    protein.dim = this->dim;
-//    protein.bond_values = this->bond_values;
-//    protein.weighted_amino_acids = this->weighted_amino_acids;
-//    protein.max_weights = this->max_weights;
-//
-//    /* Copy state of protein. */
-//    protein.space = this->space;
-//    protein.amino_acids = this->amino_acids;
-//    protein.cur_len = this->cur_len;
-//    protein.last_move = this->last_move;
-//    protein.last_pos = this->last_pos;
-//    protein.score = this->score;
-//    protein.aminos_placed = this->aminos_placed;
-//    protein.solutions_checked = this->solutions_checked;
-//
-//    return *this;
-//}
+/* Overload assignment operator for copy-assignments. */
+Protein& Protein::operator=(const Protein& other) {
+    /* Set model essentials. */
+    this->sequence = other.sequence;
+    this->dim = other.dim;
+    this->bond_values = other.bond_values;
+    this->weighted_amino_acids = other.weighted_amino_acids;
+    this->max_weights = other.max_weights;
+
+    /* Create new AminoAcid objects for all amino acids. */
+    AminoAcid* new_aa;
+    this->amino_acids.clear();
+    for (AminoAcid* other_aa : other.amino_acids) {
+        new_aa = new AminoAcid(*other_aa);
+        this->amino_acids.push_back(new_aa);
+    }
+
+    /* Copy placement of other protein and map to new AminoAcids. */
+    this->space.clear();
+    for (auto &item : other.space) {
+        this->space[item.first] = this->amino_acids[item.second->get_index()];
+    }
+
+    /* Copy state of protein's values. */
+    this->cur_len = other.cur_len;
+    this->last_move = other.last_move;
+    this->last_pos = other.last_pos;
+    this->score = other.score;
+    this->aminos_placed = other.aminos_placed;
+    this->solutions_checked = other.solutions_checked;
+
+    return *this;
+}
 
 /* Returns the Protein's sequence. */
 std::string Protein::get_sequence() {

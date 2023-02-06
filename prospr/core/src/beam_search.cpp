@@ -87,12 +87,12 @@ Protein* beam_search(Protein* protein, int beam_width) {
                     std::cout << "cur_protein before: " << cur_protein << "\n";
                     std::cout << "cur_expansion before: " << cur_expansion << "\n";
 
-                    cur_expansion = *protein;
-//                    std::memcpy(&cur_expansion, protein, sizeof(Protein));
+                    cur_expansion = cur_protein;
+                    std::cout << "cur_expansion mid: " << cur_expansion << "\n";
                     cur_expansion.place_amino(m);
 
-                    std::cout << "cur_protein after: " << cur_protein << "\n";
                     std::cout << "cur_expansion after: " << cur_expansion << "\n";
+                    std::cout << "cur_protein after: " << cur_protein << "\n";
 
                     cur_prioprot = {cur_expansion, comp_score(&cur_expansion)};
                     cur_proteins.push(cur_prioprot);
@@ -116,7 +116,7 @@ Protein* beam_search(Protein* protein, int beam_width) {
         cur_proteins.empty();
     }
 
-    std::memcpy(protein, &beam[0].protein, sizeof(Protein));
+    *protein = beam[0].protein;
     std::cout << "Best score: " << protein->get_score() << "\n";
 
     /* First protein in priority queue will have highest score. */
