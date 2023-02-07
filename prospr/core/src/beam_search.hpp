@@ -10,8 +10,7 @@
 
 #include "protein.hpp"
 
-
 /* A beam search function for finding a minimum energy conformation. */
-Protein* beam_search(Protein* protein, int beam_width=-1);
+Protein *beam_search(Protein *protein, int beam_width = -1);
 
 #endif

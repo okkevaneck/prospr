@@ -22,6 +22,7 @@ case "$1" in
     # Setup a developing environment.
     "init")
         pip install -r requirements.txt
+        sudo apt install clang-format
         pre-commit install
         ;;
     # Echo all global variables.

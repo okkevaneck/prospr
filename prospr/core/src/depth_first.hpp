@@ -10,8 +10,7 @@
 
 #include "protein.hpp"
 
-
 /* A depth-first search function for finding a minimum energy conformation. */
-Protein* depth_first(Protein* protein);
+Protein *depth_first(Protein *protein);
 
 #endif

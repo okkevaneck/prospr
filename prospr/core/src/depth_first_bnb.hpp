@@ -11,10 +11,9 @@
 
 #include "protein.hpp"
 
-
 /* A depth-first branch-and-bound search function for finding a minimum energy
  * conformation.
  */
-Protein* depth_first_bnb(Protein* protein, std::string prune_func="");
+Protein *depth_first_bnb(Protein *protein, std::string prune_func = "");
 
 #endif

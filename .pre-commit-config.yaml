@@ -37,17 +37,14 @@ repos:
     hooks:
       - id: black
         language_version: python3.10
-  - repo: https://github.com/pocc/pre-commit-hooks
-    rev: master
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v15.0.7
     hooks:
       - id: clang-format
-        args: [ --style=Google ]
-      - id: clang-tidy
-      - id: oclint
-      - id: uncrustify
-      - id: cppcheck
-      - id: cpplint
-      - id: include-what-you-use
+#        args: [
+#            "--style=file:.clang-format",
+#            -i
+#        ]
   - repo: local
     hooks:
       - id: compress-files

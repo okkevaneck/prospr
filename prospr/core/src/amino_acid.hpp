@@ -10,44 +10,43 @@
 
 #include <string>
 
-
 class AminoAcid {
-    public:
-        /* Copy constructor. */
-        AminoAcid(const AminoAcid &other);
+public:
+  /* Copy constructor. */
+  AminoAcid(const AminoAcid &other);
 
-        /* Construct a new AminoAcid. */
-        AminoAcid(char type, int index, int prev_move=0, int next_move=0);
+  /* Construct a new AminoAcid. */
+  AminoAcid(char type, int index, int prev_move = 0, int next_move = 0);
 
-        /* Overload assignment operator for copy-assignments. */
-        AminoAcid& operator=(const AminoAcid &other);
+  /* Overload assignment operator for copy-assignments. */
+  AminoAcid &operator=(const AminoAcid &other);
 
-        /* Returns the AminoAcid's type. */
-        char get_type();
+  /* Returns the AminoAcid's type. */
+  char get_type();
 
-        /* Returns the AminoAcid's index. */
-        int get_index();
+  /* Returns the AminoAcid's index. */
+  int get_index();
 
-        /* Returns the AminoAcid's previous move. */
-        int get_prev_move();
+  /* Returns the AminoAcid's previous move. */
+  int get_prev_move();
 
-        /* Returns the AminoAcid's next move. */
-        int get_next_move();
+  /* Returns the AminoAcid's next move. */
+  int get_next_move();
 
-        /* Sets the AminoAcid's previous move. */
-        void set_prev_move(int move);
+  /* Sets the AminoAcid's previous move. */
+  void set_prev_move(int move);
 
-        /* Sets the AminoAcid's next move. */
-        void set_next_move(int move);
+  /* Sets the AminoAcid's next move. */
+  void set_next_move(int move);
 
-    private:
-        char type;
-        int index;
-        int prev_move;
-        int next_move;
+private:
+  char type;
+  int index;
+  int prev_move;
+  int next_move;
 };
 
 /* Overload << operator for printing AminoAcids. */
-std::ostream &operator<<(std::ostream &os, AminoAcid& amino_acid);
+std::ostream &operator<<(std::ostream &os, AminoAcid &amino_acid);
 
 #endif
