@@ -28,7 +28,7 @@ class Protein {
                 std::map<std::string, int> bond_values={},
                 bool bond_symmetry=true);
 
-        /* Overload assignment operator for copy-assignments. */
+        /* Overload assignment operator for assignments. */
         Protein& operator=(const Protein &other);
 
         /* Returns the Protein's sequence. */
