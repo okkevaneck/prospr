@@ -172,12 +172,15 @@ Protein* beam_search(Protein* protein, int beam_width) {
             num_elements = std::min(cur_proteins.size(), (size_t)beam_width);
         }
 
-        /* Update beam with highest ranked proteins and clear priority queue. */
+        /* Update beam with highest ranked proteins. */
         beam.clear();
         for (int i = 0; i < num_elements; i++) {
             beam.push_back(cur_proteins.top());
             cur_proteins.pop();
         }
+
+        /* Delete old priority queue and construct new empty one. */
+        ~cur_proteins();
         cur_proteins = std::priority_queue<PrioProtein,
                                            std::vector<PrioProtein>,
                                            std::greater<PrioProtein>>();
