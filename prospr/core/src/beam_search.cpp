@@ -180,7 +180,7 @@ Protein* beam_search(Protein* protein, int beam_width) {
         }
 
         /* Delete old priority queue and construct new empty one. */
-        ~cur_proteins();
+        delete cur_proteins;
         cur_proteins = std::priority_queue<PrioProtein,
                                            std::vector<PrioProtein>,
                                            std::greater<PrioProtein>>();
