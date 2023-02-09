@@ -27,10 +27,11 @@ def new_folder(folder_name):
     return f"{root}{folder_name}"
 
 
-def generate_hratio(p_len=25, size=300):
+def generate_hratio(p_len=25, size=1000):
     """
     Generates the H-ratio dataset given the provided arguments. The provided
     H-ratio range is including h_ratio_begin, and excluding h_ratio_end.
+    NOTE: This script has a 1-off bug for lenght 10 H-ratio 1.0!
     :param int      p_len:          Protein length of dataset.
     :param float    h_ratio_begin:  H-ratio fraction range begin (including).
     :param float    h_ratio_end:    H-ratio fraction range end (excluding).
@@ -45,19 +46,14 @@ def generate_hratio(p_len=25, size=300):
         os.makedirs(ds_path, exist_ok=True)
 
     # Construct a list with lower and upper bounds for the h-ratio.
-    h_ratio_space = np.arange(0.3, 1.0, 0.1)
-    h_ratio_range = [(0.0, 0.2)]
-    for h_ratio in h_ratio_space[:-1]:
-        h_ratio_range.append((round(h_ratio - 0.1, 1), round(h_ratio, 1)))
-    h_ratio_range.append((0.8, 1.0))
+    h_ratio_range = zip(
+        np.round(np.arange(0.0, 1.0, 0.1), 2),
+        np.round(np.arange(0.1, 1.1, 0.1), 2),
+    )
 
-    # Check if unique dataset of given size is possible given protein length.
-    if (
-        len(aminos) ** p_len < size
-        or math.comb(p_len, math.floor(0.8 * p_len)) < size
-    ):
-        print(f"Cannot produce {size} unique proteins of length {p_len}.")
-        exit(-1)
+    # Keep track of all produced proteins to prevent duplicates across files.
+    all_proteins = set()
+    prev_size_all = 0
 
     for h_ratio_low, h_ratio_high in h_ratio_range:
         cur_fname = f"{''.join(aminos)}{p_len}_r{h_ratio_high}.csv"
@@ -67,16 +63,36 @@ def generate_hratio(p_len=25, size=300):
             print(f"Dataset '{cur_fname}' already exists.")
             continue
 
+        # Track number of consecutive iterations no new proteins were produced.
+        no_changes = 0
+
+        # Compute maximum of given size and theoretically possible.
+        if (
+            len(aminos) ** p_len < size
+            or math.comb(p_len, math.floor(h_ratio_high * p_len)) < size
+        ):
+            print(
+                f"\n\nCannot produce {size} unique proteins of length {p_len} "
+                f"with upper H-ratio of {h_ratio_high}"
+            )
+            cur_size = math.comb(p_len, math.floor(h_ratio_high * p_len))
+            print(f"Producing maximally possible {cur_size} proteins instead.")
+        else:
+            cur_size = size
+            print(
+                f"\n\nProducing {cur_size} unique proteins of length {p_len} "
+                f"with upper h-ratio of {h_ratio_high}"
+            )
+
         with open(f"{ds_path}/{cur_fname}", "w") as fp:
             cur_set = set()
-            print(f"\nGenerating set with h-ratio of {h_ratio_high}..")
             fp.write("id,sequence\n")
 
             # Print debug length every 10 iterations.
             i = 0
 
             # Generate only unique proteins for this set.
-            while len(cur_set) < size:
+            while len(cur_set) < cur_size:
                 new_proteins = set(
                     [
                         "".join(
@@ -89,11 +105,12 @@ def generate_hratio(p_len=25, size=300):
                                 k=p_len,
                             )
                         )
-                        for _ in range(size)
+                        for _ in range(cur_size)
                     ]
                 )
 
-                # Filter newly generated proteins on the H-ratio requirements.
+                # Filter newly generated proteins on the H-ratio requirements
+                # and on previously generated proteins.
                 new_proteins = set(
                     [
                         p
@@ -102,10 +119,23 @@ def generate_hratio(p_len=25, size=300):
                         and h_ratio_low < p.count("H") / p_len <= h_ratio_high
                     ]
                 )
+                new_proteins -= all_proteins
+                all_proteins = all_proteins.union(new_proteins)
                 cur_set = cur_set.union(new_proteins)
 
+                # Put cut-off at 1000 iterations of no changes.
+                if len(all_proteins) == prev_size_all:
+                    no_changes += 1
+
+                    if no_changes == 1000:
+                        print("Cutting off due to no changes..")
+                        break
+                else:
+                    prev_size_all = len(all_proteins)
+                    no_changes = 0
+
                 # Print debug if needed, update tracker.
-                if i % 150 == 0:
+                if i % 250 == 0:
                     print(f"    {h_ratio_high} - cur_size:  {len(cur_set)}")
                     print("\tFilter:   " f"({h_ratio_low}, {h_ratio_high}]")
                     print(
@@ -129,8 +159,8 @@ if __name__ == "__main__":
     p_len_str = input("Protein length (default=25): ").strip()
     p_len = int(p_len_str) if p_len_str else 25
 
-    size_str = input("Number of proteins per set (default=300): ").strip()
-    size = int(size_str) if size_str else 300
+    size_str = input("Maximum #proteins per set (default=1000): ").strip()
+    size = int(size_str) if size_str else 1000
 
     # Generate the data using the provided arguments.
     generate_hratio(p_len, size)
