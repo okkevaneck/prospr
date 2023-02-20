@@ -11,7 +11,7 @@
 
 #include "../src/amino_acid.hpp"
 
-int main(int argc, char *argv[]) {
+int main(void) {
   /* Test creation of AminoAcid. */
   AminoAcid *new_aa = new AminoAcid('H', 0, 0, 0);
   std::cout << "\tAminoAcid creation successful.\n";

@@ -39,7 +39,7 @@ void assert_2d_protein_generation(Protein *protein,
   int score = protein->get_score();
   assert(score == 0);
 
-  int solutions_checked = protein->get_solutions_checked();
+  uint64_t solutions_checked = protein->get_solutions_checked();
   assert(solutions_checked == 0);
 
   std::vector<int> mweights = protein->get_max_weights();
@@ -185,7 +185,7 @@ void test_get_bonds() {
   std::cout << "\t2D get_bonds() work.\n";
 }
 
-int main(int argc, char *argv[]) {
+int main(void) {
   /* Test different Protein generation options. */
   test_protein_generation();
 
