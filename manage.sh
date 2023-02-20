@@ -17,7 +17,8 @@ SO_FILES=$(find prospr/ -type f -name "*.so")
 PY_FILES=$(find ${COREDIR}/ -type f -name "*.py" ! -name "__init__.py" \
     ! -name "setup.py")
 PYCACHES=$(find prospr/ -type d -name "__pycache__")
-CFLAGS="-o3 -Wall -Wextra -Wconversion -Wshadow -std=c++11"
+CFLAGS="-o2 -Wall -Wextra -Wl -Wconversion -Wshadow -std=c++11 -fPIC
+    -undefined dynamic_lookup"
 
 case "$1" in
     # Setup a developing environment.
@@ -39,11 +40,11 @@ case "$1" in
         echo "~ Creating the .py interface for the core.."
         # Add -undefined dynamic_lookup flag for MacOS builds.
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            c++ -O3 -Wall -shared -std=c++11 -fPIC -undefined dynamic_lookup \
+            c++ -o3 -Wall -shared -std=c++11 -fPIC -undefined dynamic_lookup \
             $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
             -o "prospr"/prospr_core$(python3-config --extension-suffix)
         else
-            c++ -O3 -Wall -shared -std=c++11 -fPIC \
+            c++ -o3 -Wall -shared -std=c++11 -fPIC \
             $(python3 -m pybind11 --includes) "${COREDIR}/core_module.cpp" \
             -o "prospr"/prospr_core$(python3-config --extension-suffix)
         fi

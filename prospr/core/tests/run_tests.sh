@@ -9,7 +9,7 @@
 set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-CFLAGS="-O3 -Wall -Wextra -Wconversion -Wshadow -std=c++11"
+CFLAGS="-o3 -Wall -Wextra -Wl -Wconversion -Wshadow -std=c++11 -fPIC -undefined dynamic_lookup"
 DEBUG=""
 
 
