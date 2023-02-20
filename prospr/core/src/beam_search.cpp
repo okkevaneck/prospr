@@ -53,7 +53,7 @@ std::ostream &operator<<(std::ostream &os, PrioProtein &prot) {
 /* Compute how amino acids can possibly form bonds. */
 BondInfo _comp_bondable_aminos(Protein *protein) {
   /* Fetch protein specific information. */
-  int max_length = protein->get_sequence().length();
+  int max_length = (int)protein->get_sequence().length();
   int no_neighbors = (int)pow(2, (protein->get_dim() - 1));
   std::vector<int> max_weights = protein->get_max_weights();
   std::vector<int> h_idxs = {};
@@ -103,13 +103,13 @@ int comp_score(Protein *protein, BondInfo *binfo) {
     /* Check if bondable amino is last of protein. */
     if (binfo->h_idxs[i] == binfo->max_length - 1) {
       /* The last amino being bondable can create an additional bond. */
-      branch_score += binfo->max_weights[binfo->h_idxs[i]] *
-                      std::min((size_t)binfo->no_neighbors + 1,
-                               binfo->bond_dists[i].size());
+      branch_score +=
+          binfo->max_weights[binfo->h_idxs[i]] *
+          std::min(binfo->no_neighbors + 1, (int)binfo->bond_dists[i].size());
     } else {
       branch_score +=
           binfo->max_weights[binfo->h_idxs[i]] *
-          std::min((size_t)binfo->no_neighbors, binfo->bond_dists[i].size());
+          std::min(binfo->no_neighbors, (int)binfo->bond_dists[i].size());
     }
   }
 
@@ -118,7 +118,7 @@ int comp_score(Protein *protein, BondInfo *binfo) {
 
 /* A beam search function for finding a minimum energy conformation. */
 Protein *beam_search(Protein *protein, int beam_width) {
-  int max_length = protein->get_sequence().length();
+  int max_length = (int)protein->get_sequence().length();
   int dim = protein->get_dim();
 
   /* The first two amino acids are fixed to prevent y-axis symmetry. */
@@ -165,9 +165,9 @@ Protein *beam_search(Protein *protein, int beam_width) {
 
     /* Interpret beam_width of -1 as all elements. */
     if (beam_width == -1) {
-      num_elements = cur_proteins.size();
+      num_elements = (int)cur_proteins.size();
     } else {
-      num_elements = std::min(cur_proteins.size(), (size_t)beam_width);
+      num_elements = std::min((int)cur_proteins.size(), beam_width);
     }
 
     /* Clear beam for next iteration. */

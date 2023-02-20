@@ -17,8 +17,8 @@ SO_FILES=$(find prospr/ -type f -name "*.so")
 PY_FILES=$(find ${COREDIR}/ -type f -name "*.py" ! -name "__init__.py" \
     ! -name "setup.py")
 PYCACHES=$(find prospr/ -type d -name "__pycache__")
-CFLAGS="-o2 -Wall -Wextra -Wl -Wconversion -Wshadow -std=c++11 -fPIC
-    -undefined dynamic_lookup"
+CFLAGS="-o2 -Wall -Wextra -Wconversion -Wcast-align -std=c++11
+    -Wunreachable-code -fPIC"
 
 case "$1" in
     # Setup a developing environment.

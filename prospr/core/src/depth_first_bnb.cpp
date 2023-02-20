@@ -75,13 +75,13 @@ bool reach_prune(Protein *protein, int move, int best_score,
     /* Check if bondable amino is last of protein. */
     if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
       /* The last amino being bondable can create an additional bond. */
-      branch_score += p_vars->max_weights[p_vars->h_idxs[i]] *
-                      std::min((size_t)p_vars->no_neighbors + 1,
-                               p_vars->bond_dists[i].size());
+      branch_score +=
+          p_vars->max_weights[p_vars->h_idxs[i]] *
+          std::min(p_vars->no_neighbors + 1, (int)p_vars->bond_dists[i].size());
     } else {
       branch_score +=
           p_vars->max_weights[p_vars->h_idxs[i]] *
-          std::min((size_t)p_vars->no_neighbors, p_vars->bond_dists[i].size());
+          std::min(p_vars->no_neighbors, (int)p_vars->bond_dists[i].size());
     }
   }
 
@@ -94,7 +94,7 @@ bool reach_prune(Protein *protein, int move, int best_score,
  * energy conformation.
  */
 Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
-  int max_length = protein->get_sequence().length();
+  int max_length = (int)protein->get_sequence().length();
   int dim = protein->get_dim();
   int no_neighbors = (int)pow(2, (dim - 1));
 
@@ -137,7 +137,7 @@ Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
     }
 
     /* Store number of bondable idxs. */
-    p_vars.num_idxs = p_vars.h_idxs.size();
+    p_vars.num_idxs = (int)p_vars.h_idxs.size();
   }
 
   /* Create a stack that tracks possible next moves, and a move variable

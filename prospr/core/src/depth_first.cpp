@@ -14,7 +14,7 @@
 
 /* A depth-first search function for finding a minimum energy conformation. */
 Protein *depth_first(Protein *protein) {
-  int max_length = protein->get_sequence().length();
+  int max_length = (int)protein->get_sequence().length();
   int dim = protein->get_dim();
 
   /* The first two amino acids are fixed to prevent y-axis symmetry. */
