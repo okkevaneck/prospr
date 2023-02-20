@@ -9,7 +9,7 @@
 set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-CFLAGS="-O3 -Wall -Wextra -std=c++11"
+CFLAGS="-O3 -Wall -Wextra -Wconversion -Wshadow -std=c++11"
 DEBUG=""
 
 

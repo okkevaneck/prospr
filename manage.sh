@@ -17,6 +17,7 @@ SO_FILES=$(find prospr/ -type f -name "*.so")
 PY_FILES=$(find ${COREDIR}/ -type f -name "*.py" ! -name "__init__.py" \
     ! -name "setup.py")
 PYCACHES=$(find prospr/ -type d -name "__pycache__")
+CFLAGS="-o3 -Wall -Wextra -Wconversion -Wshadow -std=c++11"
 
 case "$1" in
     # Setup a developing environment.
@@ -98,10 +99,10 @@ case "$1" in
     "comp_core")
         echo "~ Compiling core.."
         SRCDIR=$COREDIR/src
-        c++ -o3 -Wall -Wextra -std=c++11 -o test_algorithms \
-            $COREDIR/tests/test_algorithms.cpp $SRCDIR/beam_search.cpp \
-            $SRCDIR/depth_first.cpp $SRCDIR/depth_first_bnb.cpp \
-            $SRCDIR/protein.cpp $SRCDIR/amino_acid.cpp
+        c++ "$CFLAGS" -o test_algorithms $COREDIR/tests/test_algorithms.cpp \
+            $SRCDIR/beam_search.cpp $SRCDIR/depth_first.cpp \
+            $SRCDIR/depth_first_bnb.cpp $SRCDIR/protein.cpp \
+            $SRCDIR/amino_acid.cpp
         ;;
     *)
         echo "No command detected from first argument.."
