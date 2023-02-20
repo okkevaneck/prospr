@@ -98,7 +98,7 @@ case "$1" in
     "comp_core")
         echo "~ Compiling core.."
         SRCDIR=$COREDIR/src
-        c++ -o3 -Wall -std=c++11 -o test_algorithms \
+        c++ -o3 -Wall -Wextra -std=c++11 -o test_algorithms \
             $COREDIR/tests/test_algorithms.cpp $SRCDIR/beam_search.cpp \
             $SRCDIR/depth_first.cpp $SRCDIR/depth_first_bnb.cpp \
             $SRCDIR/protein.cpp $SRCDIR/amino_acid.cpp

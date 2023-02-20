@@ -182,7 +182,7 @@ Protein *beam_search(Protein *protein, int beam_width) {
       cur_proteins.pop();
     }
 
-    /* Delete old priority queue items. */
+    /* Delete old left over priority queue items. */
     while (!cur_proteins.empty()) {
       delete cur_proteins.top().protein;
       cur_proteins.pop();
