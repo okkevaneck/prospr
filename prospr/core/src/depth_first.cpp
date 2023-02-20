@@ -8,6 +8,7 @@
 #include "depth_first.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <stack>
 #include <vector>
 

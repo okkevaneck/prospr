@@ -18,6 +18,13 @@
 /* Zero argument constructor. */
 Protein::Protein(){};
 
+/* Destructor. */
+Protein::~Protein() {
+  for (AminoAcid *aa : this->amino_acids) {
+    delete aa;
+  }
+};
+
 /* Copy constructor. */
 Protein::Protein(const Protein &other) {
   /* Set model essentials. */

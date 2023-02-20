@@ -67,6 +67,7 @@ void test_protein_generation() {
   Protein *protein = new Protein("HPPHPPHH", 2, "HP");
   assert_2d_protein_generation(protein, {{"HH", -1}},
                                std::vector<int>{-1, 0, 0, -1, 0, 0, -1, -1});
+  delete protein;
   std::cout << "\tHP-model generation successful.\n";
 
   /* Check HPXN-model Protein generation. */
@@ -74,6 +75,7 @@ void test_protein_generation() {
   assert_2d_protein_generation(
       protein, {{"HH", -4}, {"PP", -1}, {"PN", -1}, {"NN", 1}},
       std::vector<int>{-4, -1, -1, -4, -1, -1, -4, -4});
+  delete protein;
   std::cout << "\tHPXN-model generation successful.\n";
 
   /* Check custom model Protein generation. */
@@ -81,6 +83,7 @@ void test_protein_generation() {
   assert_2d_protein_generation(
       protein, {{"HH", -4}, {"HP", -2}, {"PH", -2}},
       std::vector<int>{-4, -2, -2, -4, -2, -2, -4, -4});
+  delete protein;
   std::cout << "\tCustom model generation successful.\n";
 
   /* Check custom model Protein generation with symmetry option. */
@@ -88,6 +91,7 @@ void test_protein_generation() {
   assert_2d_protein_generation(
       protein, {{"HH", -4}, {"HP", -2}},
       std::vector<int>{-4, -2, -2, -4, -2, -2, -4, -4});
+  delete protein;
   std::cout << "\tCustom non-symmetry model generation successful.\n";
 }
 
@@ -123,6 +127,7 @@ void test_2d_protein() {
 
   assert(protein->get_score() == 0);
 
+  delete protein;
   std::cout << "\t2D Protein movements work.\n";
 }
 
@@ -158,6 +163,7 @@ void test_3d_protein() {
 
   assert(protein->get_score() == 0);
 
+  delete protein;
   std::cout << "\t3D Protein movements work.\n";
 }
 
@@ -174,6 +180,8 @@ void test_get_bonds() {
   std::vector<std::pair<int, int>> check_bonds = {std::pair<int, int>{0, 3},
                                                   std::pair<int, int>{3, 0}};
   assert(bonds == check_bonds);
+
+  delete protein;
   std::cout << "\t2D get_bonds() work.\n";
 }
 

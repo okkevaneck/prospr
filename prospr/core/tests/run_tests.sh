@@ -29,7 +29,8 @@ test_amino_acid() {
 test_protein() {
     echo -e "\n~ Testing protein.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_protein test_protein.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_protein test_protein.cpp ../src/protein.cpp \
+        ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_protein || true
@@ -41,7 +42,9 @@ test_protein() {
 test_depth_first() {
     echo -e "\n~ Testing depth_first.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp \
+        ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp \
+        ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first
@@ -54,7 +57,9 @@ test_depth_first() {
 test_depth_first_bnb() {
     echo -e "\n~ Testing depth_first_bnb.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp \
+        ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp \
+        ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms depth_first_bnb
@@ -67,7 +72,9 @@ test_depth_first_bnb() {
 test_beam_search() {
     echo -e "\n~ Testing beam_search.."
     # shellcheck disable=SC2086
-    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp ../src/amino_acid.cpp
+    c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp \
+        ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp \
+        ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
     $DEBUG ./test_algorithms beam_search

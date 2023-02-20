@@ -20,6 +20,9 @@ public:
   /* Zero argument constructor. */
   Protein();
 
+  /* Destructor. */
+  ~Protein();
+
   /* Copy constructor. */
   Protein(const Protein &other);
 

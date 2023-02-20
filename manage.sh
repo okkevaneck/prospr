@@ -89,10 +89,19 @@ case "$1" in
         pip uninstall -qy prospr
         echo "~ Done running tests!"
         ;;
-    # Test core without building the Python interfaces.
+    # Test core without building the Python interfaces and running GDB.
     "debug_core")
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2" "debug"
+        ;;
+    # Compile core into binary for debugging.
+    "comp_core")
+        echo "~ Compiling core.."
+        SRCDIR=$COREDIR/src
+        c++ -o3 -Wall -std=c++11 -o test_algorithms \
+            $COREDIR/tests/test_algorithms.cpp $SRCDIR/beam_search.cpp \
+            $SRCDIR/depth_first.cpp $SRCDIR/depth_first_bnb.cpp \
+            $SRCDIR/protein.cpp $SRCDIR/amino_acid.cpp
         ;;
     *)
         echo "No command detected from first argument.."

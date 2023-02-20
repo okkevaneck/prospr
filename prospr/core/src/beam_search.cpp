@@ -28,23 +28,21 @@ struct BondInfo {
 
 /* Type for ordering proteins in a priority queue.  */
 struct PrioProtein {
-  Protein protein;
+  Protein *protein;
   int score;
-};
 
-/* Overload > operator for Conformation in the priority queue.
- * Bigger indicates more potential for leading towards the minimum energy
- * conformation.
- */
-bool operator>(const PrioProtein &lhs, const PrioProtein &rhs) {
-  return lhs.score > rhs.score;
-}
+  /* Overload > operator for Conformation in the priority queue.
+   * Bigger indicates more potential for leading towards the minimum energy
+   * conformation.
+   */
+  bool operator>(const PrioProtein &rhs) const { return score > rhs.score; }
+};
 
 /* Overload << operator for printing PrioProteins. */
 std::ostream &operator<<(std::ostream &os, PrioProtein &prot) {
   std::cout << "<" << prot.score << ", [";
 
-  for (int i : prot.protein.hash_fold()) {
+  for (int i : prot.protein->hash_fold()) {
     std::cout << i << " ";
   }
 
@@ -144,21 +142,22 @@ Protein *beam_search(Protein *protein, int beam_width) {
   BondInfo binfo = _comp_bondable_aminos(protein);
 
   /* Loop over proteins in beam until proteins are fully folded. */
-  PrioProtein cur_prioprot = {*protein, comp_score(protein, &binfo)};
+  PrioProtein cur_prioprot = {protein, comp_score(protein, &binfo)};
   beam.push_back(cur_prioprot);
-  Protein cur_protein, cur_expansion;
+  Protein *cur_protein = NULL;
+  Protein *cur_expansion = NULL;
   int num_elements;
 
-  while (beam[0].protein.get_cur_len() != max_length) {
+  while (beam[0].protein->get_cur_len() != max_length) {
     /* Expand all proteins in the beam and add to priority queue. */
     for (PrioProtein prio_prot : beam) {
       cur_protein = prio_prot.protein;
 
       for (int m : all_moves) {
-        if (cur_protein.is_valid(m)) {
-          cur_expansion = cur_protein;
-          cur_expansion.place_amino(m);
-          cur_prioprot = {cur_expansion, comp_score(&cur_expansion, &binfo)};
+        if (cur_protein->is_valid(m)) {
+          cur_expansion = new Protein(*cur_protein);
+          cur_expansion->place_amino(m);
+          cur_prioprot = {cur_expansion, comp_score(cur_expansion, &binfo)};
           cur_proteins.push(cur_prioprot);
         }
       }
@@ -171,19 +170,32 @@ Protein *beam_search(Protein *protein, int beam_width) {
       num_elements = std::min(cur_proteins.size(), (size_t)beam_width);
     }
 
-    /* Update beam with highest ranked proteins. */
+    /* Clear beam for next iteration. */
+    for (PrioProtein prioprot : beam) {
+      delete prioprot.protein;
+    }
     beam.clear();
+
+    /* Update beam with highest ranked proteins. */
     for (int i = 0; i < num_elements; i++) {
       beam.push_back(cur_proteins.top());
       cur_proteins.pop();
     }
 
-    /* Delete old priority queue and construct new empty one. */
-    cur_proteins = std::priority_queue<PrioProtein, std::vector<PrioProtein>,
-                                       std::greater<PrioProtein>>();
+    /* Delete old priority queue items. */
+    while (!cur_proteins.empty()) {
+      delete cur_proteins.top().protein;
+      cur_proteins.pop();
+    }
   }
 
   /* First protein in priority queue will have highest score. */
-  *protein = beam[0].protein;
+  protein = new Protein(*beam[0].protein);
+
+  for (PrioProtein prioprot : beam) {
+    delete prioprot.protein;
+  }
+  beam.clear();
+
   return protein;
 }

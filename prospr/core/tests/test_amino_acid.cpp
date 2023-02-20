@@ -40,5 +40,6 @@ int main(int argc, char *argv[]) {
   assert(next_move == 1);
   std::cout << "\tAminoAcid setters check successful.\n";
 
+  delete new_aa;
   return 0;
 }
