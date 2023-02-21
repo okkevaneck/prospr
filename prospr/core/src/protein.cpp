@@ -236,6 +236,7 @@ std::vector<int> Protein::get_max_weights() { return max_weights; }
 
 /* Reset all variables of a protein as if it was just initialized. */
 void Protein::reset() {
+  /* Clear all conformational values and algorithm statistics. */
   space.clear();
   cur_len = 1;
   last_pos.assign(dim, 0);
@@ -244,17 +245,32 @@ void Protein::reset() {
   solutions_checked = 0;
   aminos_placed = 0;
 
+  /* Reset underlying AminoAcids. */
+  for (AminoAcid *aa : this->amino_acids) {
+    aa->set_prev_move(0);
+    aa->set_next_move(0);
+  }
+
+  /* Reset the origin. */
   space[last_pos] = amino_acids[0];
 }
 
 /* Reset only the conformation variables of a protein. */
 void Protein::reset_conformation() {
+  /* Clear all conformational values. */
   space.clear();
   cur_len = 1;
   last_pos.assign(dim, 0);
   last_move = 0;
   score = 0;
 
+  /* Reset underlying AminoAcids. */
+  for (AminoAcid *aa : this->amino_acids) {
+    aa->set_prev_move(0);
+    aa->set_next_move(0);
+  }
+
+  /* Reset the origin. */
   space[last_pos] = amino_acids[0];
 }
 
@@ -347,7 +363,7 @@ std::vector<int> Protein::hash_fold() {
 void Protein::set_hash(std::vector<int> fold_hash, bool track) {
   reset_conformation();
 
-  for (auto &move : fold_hash) {
+  for (int move : fold_hash) {
     place_amino(move, track);
   }
 }
@@ -444,7 +460,7 @@ std::vector<std::pair<int, int>> Protein::get_bonds() {
     /* Update move set with options from new position. */
     cur_moves = moves;
     cur_moves.erase(std::remove(cur_moves.begin(), cur_moves.end(),
-                                space[pos]->get_prev_move()),
+                                -space[pos]->get_prev_move()),
                     cur_moves.end());
 
     if (space[pos]->get_next_move() != 0)

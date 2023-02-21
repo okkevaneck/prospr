@@ -170,15 +170,16 @@ void test_3d_protein() {
 /* Test if a 2D protein correctly computes indexes of formed bonds. */
 void test_get_bonds() {
   Protein *protein = new Protein("HPPHPPHH", 2, "HP");
-  std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -2};
+  std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -1, -2, 1};
 
   for (int m : moves) {
     protein->place_amino(m);
   }
 
   std::vector<std::pair<int, int>> bonds = protein->get_bonds();
-  std::vector<std::pair<int, int>> check_bonds = {std::pair<int, int>{0, 3},
-                                                  std::pair<int, int>{3, 0}};
+  std::vector<std::pair<int, int>> check_bonds = {
+      std::pair<int, int>{0, 7}, std::pair<int, int>{0, 3},
+      std::pair<int, int>{3, 0}, std::pair<int, int>{7, 0}};
   assert(bonds == check_bonds);
 
   delete protein;
