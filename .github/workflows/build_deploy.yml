@@ -63,17 +63,8 @@ jobs:
       - name: Build and install
         run: pip install --verbose .
 
-      # Exclude beam_width specification for macOS as it has different results.
       - name: Test with pytest
-        run: pytest -k 'not beam_search'
-#        run: |
-#          if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "Windows" ]; then
-#              pytest
-#          elif [ "$RUNNER_OS" == "macOS" ]; then
-#              pytest -k 'not TestBeamSearch'; \
-#              pytest -k '_no_bw or _bw_m1'
-#          fi
-        shell: bash
+        run: pytest
 
   build_wheels:
     name: Build wheels

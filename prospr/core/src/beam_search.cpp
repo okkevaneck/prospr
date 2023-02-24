@@ -117,7 +117,7 @@ int comp_score(Protein *protein, BondInfo *binfo) {
 }
 
 /* A beam search function for finding a minimum energy conformation. */
-Protein *beam_search(Protein *protein, int beam_width) {
+void beam_search(Protein *protein, int beam_width) {
   int max_length = (int)protein->get_sequence().length();
   int dim = protein->get_dim();
 
@@ -125,7 +125,7 @@ Protein *beam_search(Protein *protein, int beam_width) {
   if (max_length > 1)
     protein->place_amino(-1);
   if (max_length <= 2)
-    return protein;
+    return;
 
   /* Create vector for current proteins, and a priority queue to filter. */
   std::vector<PrioProtein> beam = {};
@@ -138,13 +138,15 @@ Protein *beam_search(Protein *protein, int beam_width) {
   std::iota(all_moves.begin(), all_moves.end(), -dim);
   all_moves.erase(all_moves.begin() + dim);
 
+  /* Make a copy of the initial protein. */
+  Protein *cur_protein = new Protein(*protein);
+
   /* Compute future bondable connections for heuristic scoring. */
   BondInfo binfo = _comp_bondable_aminos(protein);
 
   /* Loop over proteins in beam until proteins are fully folded. */
-  PrioProtein cur_prioprot = {protein, comp_score(protein, &binfo)};
+  PrioProtein cur_prioprot = {cur_protein, comp_score(cur_protein, &binfo)};
   beam.push_back(cur_prioprot);
-  Protein *cur_protein = NULL;
   Protein *cur_expansion = NULL;
   int num_elements;
 
@@ -190,12 +192,12 @@ Protein *beam_search(Protein *protein, int beam_width) {
   }
 
   /* First protein in priority queue will have highest score. */
-  protein = new Protein(*beam[0].protein);
+  protein->set_hash(beam[0].protein->hash_fold(), true);
+  //  protein = new Protein(*beam[0].protein);
 
+  /* Deallocate old left over allocated beam proteins. */
   for (PrioProtein prioprot : beam) {
     delete prioprot.protein;
   }
   beam.clear();
-
-  return protein;
 }
