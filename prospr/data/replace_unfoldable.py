@@ -2,9 +2,9 @@ import random
 
 
 if __name__ == "__main__":
-    ids_to_replace = [938]
+    ids_to_replace = [1230]
     aminos = ["H", "P"]
-    h_ratio_low, h_ratio_high = 0.0, 0.2
+    h_ratio_low, h_ratio_high = 0.2, 0.3
     p_len = 30
     dataset = "vanEck_hratio"
     filename = f"{dataset}/{''.join(aminos)}{p_len}_r{h_ratio_high}.csv"
