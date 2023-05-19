@@ -117,7 +117,7 @@ int comp_score(Protein *protein, BondInfo *binfo) {
 }
 
 /* A beam search function for finding a minimum energy conformation. */
-void beam_search(Protein *protein, int beam_width) {
+Protein *beam_search(Protein *protein, int beam_width) {
   int max_length = (int)protein->get_sequence().length();
   int dim = protein->get_dim();
 
@@ -125,7 +125,7 @@ void beam_search(Protein *protein, int beam_width) {
   if (max_length > 1)
     protein->place_amino(-1);
   if (max_length <= 2)
-    return;
+    return protein;
 
   /* Create vector for current proteins, and a priority queue to filter. */
   std::vector<PrioProtein> beam = {};
@@ -199,4 +199,6 @@ void beam_search(Protein *protein, int beam_width) {
     delete prioprot.protein;
   }
   beam.clear();
+
+  return protein;
 }

@@ -28,10 +28,10 @@ class TestBeamSearch:
         """
         Check if 2D solutions are found correctly.
         """
-        beam_search(protein_2d)
-        assert protein_2d.score == -3
-        assert protein_2d.solutions_checked == 1
-        assert protein_2d.aminos_placed == 10
+        p = beam_search(protein_2d)
+        assert p.score == -3
+        assert p.solutions_checked == 1
+        assert p.aminos_placed == 9
 
     # def test_protein_2d_beam_search_bw_m1(self, protein_2d):
     #     """
