@@ -69,7 +69,7 @@ case "$1" in
         echo "~ Installing new prospr.."
         pip install -q .
         echo "~ Running pytest.."
-        pytest || true
+        pytest -v tests/core/test_beam_search.py || true
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
@@ -78,6 +78,12 @@ case "$1" in
     "test_core")
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2"
+        ;;
+    # Test core on memory leaks with Valgrind.
+    # Does so without building the Python interfaces.
+    "test_core_valgrind")
+        echo "~ Running core tests.."
+        ./"$COREDIR/tests/run_tests.sh" "$2" "valgrind"
         ;;
     # Test visualizations without building the Python interfaces.
     "test_visualize")

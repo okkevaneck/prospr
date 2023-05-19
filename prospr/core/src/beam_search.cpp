@@ -193,7 +193,6 @@ void beam_search(Protein *protein, int beam_width) {
 
   /* First protein in priority queue will have highest score. */
   protein->set_hash(beam[0].protein->hash_fold(), true);
-  //  protein = new Protein(*beam[0].protein);
 
   /* Deallocate old left over allocated beam proteins. */
   for (PrioProtein prioprot : beam) {
