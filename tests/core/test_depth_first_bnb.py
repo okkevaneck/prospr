@@ -14,12 +14,12 @@ import pytest
 
 @pytest.fixture()
 def protein_2d():
-    return Protein("PHPHPHPPH", 2, model="HP")
+    return Protein("PHPHPHPPH", dim=2, model="HP")
 
 
 @pytest.fixture()
 def protein_3d():
-    return Protein("HPPHPHPHPH", 3, model="HP")
+    return Protein("HPPHPHPHPH", dim=3, model="HP")
 
 
 @pytest.mark.order(order=2)

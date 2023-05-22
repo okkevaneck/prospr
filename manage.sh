@@ -69,7 +69,7 @@ case "$1" in
         echo "~ Installing new prospr.."
         pip install -q .
         echo "~ Running pytest.."
-        pytest -k 'not tests/visualize/test_visualization.py' || true
+        pytest || true
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
@@ -92,7 +92,7 @@ case "$1" in
         pip uninstall -qy prospr
         echo "~ Installing new prospr.."
         pip install -q .
-        python tests/visualize/test_visualization.py
+        python tests/visualize/test_visualization.py "show"
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
@@ -101,6 +101,18 @@ case "$1" in
     "debug_core")
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2" "debug"
+        ;;
+    # Install prospr locally, launch shell, and uninstall afterwards.
+    "debug_shell")
+        echo "~ Launch debug shell with Prospr installed.."
+                echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Installing new prospr.."
+        pip install -q .
+        python -i prospr_interpreter.py
+        echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Closed successfully!"
         ;;
     # Compile core into binary for debugging.
     "comp_core")

@@ -8,27 +8,27 @@ class TestVisualization:
         """
         Test the 2D plotting in all different styles.
         """
-        p = Protein("HPHPPPPPPP", model="HP")
+        p = Protein("HPHPPPPPPP", dim=2, model="HP")
         p.set_hash([-1, -1, 2, 2, 2, 2, 2, 2, 2])
         plot_protein(p, style="paper", show=False)
 
-        p = Protein("HPPHPPHPPH", model="HP")
+        p = Protein("HPPHPPHPPH", dim=2, model="HP")
         p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
         plot_protein(p, style="paper", show=False)
 
-        p = Protein("PHPHHPPPHHPHPHH", model="HP")
+        p = Protein("PHPHHPPPHHPHPHH", dim=2, model="HP")
         p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
         plot_protein(p, style="basic", legend=False, show=False)
 
-        p = Protein("PHPHHPPPHHPHPHH", model="HP")
+        p = Protein("PHPHHPPPHHPHPHH", dim=2, model="HP")
         p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
         plot_protein(p, style="paper", legend_style="inner", show=False)
 
-        p = Protein("HPPHPPPHPPPPPHH", model="HP")
+        p = Protein("HPPHPPPHPPPPPHH", dim=2, model="HP")
         p.set_hash([-1, -2, 1, -2, 1, 2, 2, 1, 2, 2, -1, -1, -2, 1])
         plot_protein(p, style="paper", legend_style="inner", show=False)
 
-        p = Protein("HHPHPHPPPHPHHHPPPPPPHPPPH", model="HP")
+        p = Protein("HHPHPHPPPHPHHHPPPPPPHPPPH", dim=2, model="HP")
         p.set_hash(
             [
                 -1,
@@ -74,7 +74,7 @@ class TestVisualization:
 if __name__ == "__main__":
     # Check whether to show the proteins.
     show = False
-    if len(sys.argv) > 1 and sys.argv[1] == "show":
+    if len(sys.argv) > 2 and sys.argv[2] == "show":
         show = True
 
     test_vis_inst = TestVisualization()
