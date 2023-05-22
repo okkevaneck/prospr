@@ -62,42 +62,42 @@ void test_depth_first_bnb() {
 void test_beam_search() {
   /* Check if 2D solutions are found correctly with a beam width of -1. */
   Protein *protein = new Protein("PHPHPHPPH", 2, "HP");
-  protein = beam_search(protein, -1);
+  beam_search(protein, -1);
   assert(protein->get_score() == -3);
   delete protein;
   std::cout << "\t2D Protein solution scores matches with beam_width = -1.\n";
 
   /* Check if 2D solutions are found correctly with a beam width of 99. */
   protein = new Protein("PHPHPHPPH", 2, "HP");
-  protein = beam_search(protein, 99);
+  beam_search(protein, 99);
   assert(protein->get_score() == -3);
   delete protein;
   std::cout << "\t2D Protein solution scores matches with beam_width = 99.\n ";
 
   /* Check if 2D solutions are found correctly with a beam width of 40. */
   protein = new Protein("PHPHPHPPH", 2, "HP");
-  protein = beam_search(protein, 40);
+  beam_search(protein, 40);
   assert(protein->get_score() == -2);
   delete protein;
   std::cout << "\t2D Protein solution scores matches with beam_width = 40.\n ";
 
   /* Check if 3D solutions are found correctly with a beam width of 99. */
   protein = new Protein("HPPHPHPHPH", 3, "HP");
-  protein = beam_search(protein, 99);
+  beam_search(protein, 99);
   assert(protein->get_score() == -4);
   delete protein;
   std::cout << "\t3D Protein solution scores matches with beam_width = 99.\n ";
 
   /* Check if 3D solutions are found correctly with a beam width of 10. */
   protein = new Protein("HPPHPHPHPH", 3, "HP");
-  protein = beam_search(protein, 10);
+  beam_search(protein, 10);
   assert(protein->get_score() == -4);
   delete protein;
   std::cout << "\t3D Protein solution scores matches with beam_width = 10.\n ";
 
   /* Check if 3D solutions are found correctly with a beam width of 5. */
   protein = new Protein("HPPHPHPHPH", 3, "HP");
-  protein = beam_search(protein, 5);
+  beam_search(protein, 5);
   assert(protein->get_score() == -3);
   delete protein;
   std::cout << "\t3D Protein solution scores matches with beam_width = 5.\n ";

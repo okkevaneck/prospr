@@ -117,7 +117,7 @@ int comp_score(Protein *protein, BondInfo *binfo) {
 }
 
 /* A beam search function for finding a minimum energy conformation. */
-Protein *beam_search(Protein *protein, int beam_width) {
+void beam_search(Protein *protein, int beam_width) {
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
 
@@ -125,11 +125,11 @@ Protein *beam_search(Protein *protein, int beam_width) {
   if (max_length > 1)
     protein->place_amino(-1);
   if (max_length <= 2)
-    return protein;
+    return;
 
   /* Return if given beam_width is not -1 or positive. */
   if (beam_width < 1 && beam_width != -1) {
-    return protein;
+    return;
   }
 
   /* Create vector for current proteins, and a priority queue to filter. */
@@ -206,6 +206,4 @@ Protein *beam_search(Protein *protein, int beam_width) {
     delete prioprot.protein;
   }
   beam.clear();
-
-  return protein;
 }

@@ -69,7 +69,7 @@ case "$1" in
         echo "~ Installing new prospr.."
         pip install -q .
         echo "~ Running pytest.."
-        pytest -v tests/core/test_beam_search.py || true
+        pytest -k 'not tests/visualize/test_visualization.py' || true
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
