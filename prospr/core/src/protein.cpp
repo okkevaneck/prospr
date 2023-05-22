@@ -188,7 +188,7 @@ int Protein::get_dim() { return dim; }
 std::map<std::string, int> Protein::get_bond_values() { return bond_values; }
 
 /* Returns the Protein's current length. */
-int Protein::get_cur_len() { return cur_len; }
+size_t Protein::get_cur_len() { return cur_len; }
 
 /* Returns the last performed move. */
 int Protein::get_last_move() { return last_move; }
@@ -216,7 +216,7 @@ std::uint64_t Protein::get_solutions_checked() { return solutions_checked; }
 std::uint64_t Protein::get_aminos_placed() { return aminos_placed; }
 
 /* Returns if the amino acid at the given index is weighted. */
-bool Protein::is_weighted(int index) {
+bool Protein::is_weighted(size_t index) {
   return weighted_amino_acids.find(sequence[index]) != std::string::npos;
 }
 
@@ -314,7 +314,7 @@ void Protein::place_amino(int move, bool track) {
   if (track) {
     aminos_placed++;
 
-    if (cur_len == (int)sequence.size()) {
+    if (cur_len == sequence.size()) {
       solutions_checked++;
     }
   }
@@ -344,10 +344,14 @@ std::vector<int> Protein::hash_fold() {
   AminoAcid *cur_amino;
   int next_move = 0;
 
+  //  std::cout << "Before space.count" << "\n";
   if (space.count(cur_pos) > 0) {
+    //      std::cout << "Before space.at" << "\n";
     cur_amino = space.at(cur_pos);
+    //      std::cout << "Before cur_amino->next" << "\n";
     next_move = cur_amino->get_next_move();
 
+    //    std::cout << "Before while" << "\n";
     while (next_move != 0) {
       cur_pos[abs(next_move) - 1] += next_move / abs(next_move);
       fold_hash.push_back(next_move);

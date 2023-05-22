@@ -17,12 +17,12 @@
 
 /* All possible variables required by custom pruning. */
 struct prune_vars {
-  int max_length;
-  int no_neighbors;
+  size_t max_length;
+  size_t no_neighbors;
   std::vector<int> max_weights;
-  int num_idxs;
-  std::vector<int> h_idxs;
-  std::vector<std::vector<int>> bond_dists;
+  size_t num_idxs;
+  std::vector<size_t> h_idxs;
+  std::vector<std::vector<size_t>> bond_dists;
 };
 
 /* Returns true if the branch cannot produce a better score. Possible bonds are
@@ -32,12 +32,12 @@ bool naive_prune(Protein *protein, int move, int best_score,
                  struct prune_vars *p_vars) {
   protein->place_amino(move, false);
 
-  int cur_len = protein->get_cur_len();
+  size_t cur_len = protein->get_cur_len();
   int cur_score = protein->get_score();
 
   /* Compute the sum of the remaining possible scoring connections. */
-  int branch_score = p_vars->no_neighbors *
-                     std::accumulate(p_vars->max_weights.begin() + cur_len,
+  int branch_score = (int)p_vars->no_neighbors *
+                     std::accumulate(p_vars->max_weights.begin() + (int)cur_len,
                                      p_vars->max_weights.end(), 0);
 
   /* End of amino has 1 more possible way of connecting, update
@@ -58,7 +58,7 @@ bool reach_prune(Protein *protein, int move, int best_score,
                  struct prune_vars *p_vars) {
   protein->place_amino(move, false);
 
-  int cur_len = protein->get_cur_len();
+  size_t cur_len = protein->get_cur_len();
   int cur_score = protein->get_score();
 
   /* Compute to be placed aminos possibly making bonds. */
@@ -71,17 +71,17 @@ bool reach_prune(Protein *protein, int move, int best_score,
 
   /* Compute branch score with the to be placed amino acids. */
   int branch_score = 0;
-  for (int i = p_vars->num_idxs - future_aminos; i < p_vars->num_idxs; i++) {
+  for (size_t i = p_vars->num_idxs - future_aminos; i < p_vars->num_idxs; i++) {
     /* Check if bondable amino is last of protein. */
     if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
       /* The last amino being bondable can create an additional bond. */
       branch_score +=
           p_vars->max_weights[p_vars->h_idxs[i]] *
-          std::min(p_vars->no_neighbors + 1, (int)p_vars->bond_dists[i].size());
+          (int)std::min(p_vars->no_neighbors + 1, p_vars->bond_dists[i].size());
     } else {
       branch_score +=
           p_vars->max_weights[p_vars->h_idxs[i]] *
-          std::min(p_vars->no_neighbors, (int)p_vars->bond_dists[i].size());
+          (int)std::min(p_vars->no_neighbors, p_vars->bond_dists[i].size());
     }
   }
 
@@ -94,9 +94,9 @@ bool reach_prune(Protein *protein, int move, int best_score,
  * energy conformation.
  */
 Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
-  int max_length = (int)protein->get_sequence().length();
+  size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
-  int no_neighbors = (int)pow(2, (dim - 1));
+  size_t no_neighbors = (size_t)pow(2, (dim - 1));
 
   /* The first two amino acids are fixed to prevent y-axis symmetry. */
   if (max_length > 1)
@@ -114,14 +114,14 @@ Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
   /* Determine if to use another prune criteria, and extend prune vars. */
   if (prune_func == "reach_prune") {
     prune_branch = reach_prune;
-    std::vector<int> cur_dists = {};
+    std::vector<size_t> cur_dists = {};
 
     /* Create vector with distances between aminos that can create bonds. */
-    for (int i = 0; i < max_length; i++) {
+    for (size_t i = 0; i < max_length; i++) {
       /* Only include indexes that can create bonds. */
       if (p_vars.max_weights[i] != 0) {
         /* Create vector with distances to previous bondable aminos. */
-        for (int idx : p_vars.h_idxs) {
+        for (size_t idx : p_vars.h_idxs) {
           if (i - idx >= 3 && (i - idx) % 2 == 1) {
             cur_dists.push_back(i - idx);
           }
@@ -137,7 +137,7 @@ Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
     }
 
     /* Store number of bondable idxs. */
-    p_vars.num_idxs = (int)p_vars.h_idxs.size();
+    p_vars.num_idxs = p_vars.h_idxs.size();
   }
 
   /* Create a stack that tracks possible next moves, and a move variable

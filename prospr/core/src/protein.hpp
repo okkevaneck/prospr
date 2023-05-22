@@ -44,7 +44,7 @@ public:
   std::map<std::string, int> get_bond_values();
 
   /* Returns the Protein's current length. */
-  int get_cur_len();
+  size_t get_cur_len();
 
   /* Returns the last performed move. */
   int get_last_move();
@@ -67,7 +67,7 @@ public:
   std::uint64_t get_aminos_placed();
 
   /* Returns if the amino acid at the given index is weighted. */
-  bool is_weighted(int index);
+  bool is_weighted(size_t index);
 
   /* Returns the weight created between two amino acids. */
   int get_weight(std::string aminos);
@@ -102,7 +102,7 @@ public:
 private:
   std::string sequence;
   std::map<std::vector<int>, AminoAcid *> space;
-  int cur_len;
+  size_t cur_len;
   int dim;
   std::map<std::string, int> bond_values;
   std::string weighted_amino_acids;
