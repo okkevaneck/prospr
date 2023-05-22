@@ -13,7 +13,7 @@
 #include <vector>
 
 /* A depth-first search function for finding a minimum energy conformation. */
-Protein *depth_first(Protein *protein) {
+void depth_first(Protein *protein) {
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
 
@@ -21,7 +21,7 @@ Protein *depth_first(Protein *protein) {
   if (max_length > 1)
     protein->place_amino(-1);
   if (max_length <= 2)
-    return protein;
+    return;
 
   /* Create a stack that tracks possible next moves. */
   std::stack<int> dfs_stack;
@@ -95,6 +95,4 @@ Protein *depth_first(Protein *protein) {
 
   /* Set best found conformation and return protein. */
   protein->set_hash(best_hash);
-
-  return protein;
 }

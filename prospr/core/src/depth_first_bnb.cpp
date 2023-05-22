@@ -93,7 +93,7 @@ bool reach_prune(Protein *protein, int move, int best_score,
 /* A depth-first branch-and-bound search function for finding a minimum
  * energy conformation.
  */
-Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
+void depth_first_bnb(Protein *protein, std::string prune_func) {
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
   size_t no_neighbors = (size_t)pow(2, (dim - 1));
@@ -102,7 +102,7 @@ Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
   if (max_length > 1)
     protein->place_amino(-1);
   if (max_length <= 2)
-    return protein;
+    return;
 
   /* Init default prune functions and arguments. */
   auto prune_branch = naive_prune;
@@ -215,6 +215,4 @@ Protein *depth_first_bnb(Protein *protein, std::string prune_func) {
 
   /* Set best found conformation and return protein. */
   protein->set_hash(best_hash);
-
-  return protein;
 }
