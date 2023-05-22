@@ -110,7 +110,8 @@ void test_2d_protein() {
   /* Make sure an amino acid was placed. */
   std::vector<int> amino_pos = std::vector<int>(protein->get_dim() - 1, 0);
   amino_pos.push_back(1);
-  AminoAcid *amino = protein->get_amino(amino_pos);
+  //  AminoAcid *amino = protein->get_amino(amino_pos);
+  std::shared_ptr<AminoAcid> amino = protein->get_amino(amino_pos);
   assert(amino != NULL);
 
   /* Test removing amino acids. */
@@ -146,7 +147,8 @@ void test_3d_protein() {
   /* Make sure an amino was placed. */
   std::vector<int> amino_pos = std::vector<int>(protein->get_dim() - 1, 0);
   amino_pos.push_back(1);
-  AminoAcid *amino = protein->get_amino(amino_pos);
+  //  AminoAcid *amino = protein->get_amino(amino_pos);
+  std::shared_ptr<AminoAcid> amino = protein->get_amino(amino_pos);
   assert(amino != NULL);
 
   /* Test removing amino acids. */

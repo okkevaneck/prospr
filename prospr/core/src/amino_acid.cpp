@@ -10,7 +10,8 @@
 #include <iostream>
 
 /* Copy constructor. */
-AminoAcid::AminoAcid(const AminoAcid &other) {
+AminoAcid::AminoAcid(const AminoAcid &other)
+    : std::enable_shared_from_this<AminoAcid>(other) {
   this->type = other.type;
   this->index = other.index;
   this->prev_move = other.prev_move;
@@ -18,7 +19,8 @@ AminoAcid::AminoAcid(const AminoAcid &other) {
 }
 
 /* Construct a new AminoAcid. */
-AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move) {
+AminoAcid::AminoAcid(char type, int index, int prev_move, int next_move)
+    : std::enable_shared_from_this<AminoAcid>() {
   this->type = type;
   this->index = index;
   this->prev_move = prev_move;

@@ -19,10 +19,11 @@
 Protein::Protein(){};
 
 /* Destructor. */
-Protein::~Protein() {
-  for (AminoAcid *aa : this->amino_acids) {
-    delete aa;
-  }
+Protein::~Protein(){
+    // TODO: Not needed with shared pointers?
+    //  for (AminoAcid *aa : this->amino_acids) {
+    //    delete aa;
+    //  }
 };
 
 /* Copy constructor. */
@@ -35,10 +36,14 @@ Protein::Protein(const Protein &other) {
   this->max_weights = other.max_weights;
 
   /* Create new AminoAcid objects for all amino acids. */
-  AminoAcid *new_aa;
+  //  AminoAcid *new_aa;
+  std::shared_ptr<AminoAcid> new_aa;
+
   this->amino_acids.clear();
-  for (AminoAcid *other_aa : other.amino_acids) {
-    new_aa = new AminoAcid(*other_aa);
+  //  for (AminoAcid *other_aa : other.amino_acids) {
+  for (std::shared_ptr<AminoAcid> other_aa : other.amino_acids) {
+    //    new_aa = new AminoAcid(*other_aa);
+    new_aa = std::make_shared<AminoAcid>(*other_aa);
     this->amino_acids.push_back(new_aa);
   }
 
@@ -131,7 +136,10 @@ Protein::Protein(std::string sequence, int dim, std::string model,
 
   /* Create AminoAcid objects for all amino acids. */
   for (std::string::size_type i = 0; i < sequence.size(); i++) {
-    AminoAcid *new_aa = new AminoAcid(sequence[i], (int)i, 0, 0);
+    //    AminoAcid *new_aa = new AminoAcid(sequence[i], (int)i, 0, 0);
+    std::shared_ptr<AminoAcid> new_aa(new AminoAcid(sequence[i], (int)i, 0, 0));
+    //    std::shared_ptr<AminoAcid> new_aa =
+    //    std::make_shared<AminoAcid>(sequence[i], (int)i, 0, 0);
     amino_acids.push_back(new_aa);
     this->max_weights.push_back(max_amino_weights[sequence[i]]);
   }
@@ -154,10 +162,12 @@ Protein &Protein::operator=(const Protein &other) {
   this->max_weights = other.max_weights;
 
   /* Create new AminoAcid objects for all amino acids. */
-  AminoAcid *new_aa;
+  //  AminoAcid *new_aa;
+  std::shared_ptr<AminoAcid> new_aa;
   this->amino_acids.clear();
-  for (AminoAcid *other_aa : other.amino_acids) {
-    new_aa = new AminoAcid(*other_aa);
+  for (auto other_aa : other.amino_acids) {
+    //    new_aa = new AminoAcid(*other_aa);
+    new_aa = std::make_shared<AminoAcid>(*other_aa);
     this->amino_acids.push_back(new_aa);
   }
 
@@ -199,10 +209,12 @@ std::vector<int> Protein::get_last_pos() { return last_pos; }
 /* Returns the AminoAcid at the given position, or NULL if there is
  * none.
  */
-AminoAcid *Protein::get_amino(std::vector<int> position) {
-  if (space.count(position))
-    return space.at(position);
-  else
+// AminoAcid *Protein::get_amino(std::vector<int> position) {
+std::shared_ptr<AminoAcid> Protein::get_amino(std::vector<int> position) {
+  if (space.count(position)) {
+    auto aa_sp = space.at(position);
+    return aa_sp;
+  } else
     return NULL;
 }
 
@@ -246,7 +258,8 @@ void Protein::reset() {
   aminos_placed = 0;
 
   /* Reset underlying AminoAcids. */
-  for (AminoAcid *aa : this->amino_acids) {
+  //  for (AminoAcid *aa : this->amino_acids) {
+  for (std::shared_ptr<AminoAcid> aa : this->amino_acids) {
     aa->set_prev_move(0);
     aa->set_next_move(0);
   }
@@ -265,7 +278,8 @@ void Protein::reset_conformation() {
   score = 0;
 
   /* Reset underlying AminoAcids. */
-  for (AminoAcid *aa : this->amino_acids) {
+  //  for (AminoAcid *aa : this->amino_acids) {
+  for (std::shared_ptr<AminoAcid> aa : this->amino_acids) {
     aa->set_prev_move(0);
     aa->set_next_move(0);
   }
@@ -341,17 +355,14 @@ void Protein::remove_amino() {
 std::vector<int> Protein::hash_fold() {
   std::vector<int> fold_hash;
   std::vector<int> cur_pos(dim, 0);
-  AminoAcid *cur_amino;
+  //  AminoAcid *cur_amino;
+  std::shared_ptr<AminoAcid> cur_amino;
   int next_move = 0;
 
-  //  std::cout << "Before space.count" << "\n";
   if (space.count(cur_pos) > 0) {
-    //      std::cout << "Before space.at" << "\n";
     cur_amino = space.at(cur_pos);
-    //      std::cout << "Before cur_amino->next" << "\n";
     next_move = cur_amino->get_next_move();
 
-    //    std::cout << "Before while" << "\n";
     while (next_move != 0) {
       cur_pos[abs(next_move) - 1] += next_move / abs(next_move);
       fold_hash.push_back(next_move);
@@ -365,6 +376,10 @@ std::vector<int> Protein::hash_fold() {
 
 /* Set the conformation to the given hash. */
 void Protein::set_hash(std::vector<int> fold_hash, bool track) {
+  /* Check if the hash fits within the Protein's length. */
+  if (fold_hash.size() >= this->sequence.size())
+    throw std::runtime_error("Hash to long for Protein..");
+
   reset_conformation();
 
   for (int move : fold_hash) {
@@ -409,7 +424,8 @@ void Protein::_change_score(int move, bool placed) {
 std::vector<std::pair<int, int>>
 Protein::_append_bond_pairs(std::vector<std::pair<int, int>> pairs,
                             std::vector<int> pos, std::vector<int> moves) {
-  AminoAcid *cur_amino = space[pos];
+  //  AminoAcid *cur_amino = space[pos];
+  std::shared_ptr<AminoAcid> cur_amino = space[pos];
   char cur_type = cur_amino->get_type();
   std::vector<int> other_pos;
   std::string bond;

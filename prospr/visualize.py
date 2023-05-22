@@ -130,6 +130,7 @@ def _plot_aminos_2d_paper(
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
+    print("Pairs: \n", pairs)
 
     for pos1, pos2 in pairs:
         ax.plot(

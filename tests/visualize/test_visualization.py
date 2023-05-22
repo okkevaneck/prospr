@@ -12,9 +12,13 @@ class TestVisualization:
         p.set_hash([-1, -1, 2, 2, 2, 2, 2, 2, 2])
         plot_protein(p, style="paper", show=False)
 
+        print("SECOND ONE NOW\n")
+
         p = Protein("HPPHPPHPPH", dim=2, model="HP")
         p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
         plot_protein(p, style="paper", show=False)
+
+        return
 
         p = Protein("PHPHHPPPHHPHPHH", dim=2, model="HP")
         p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
@@ -76,6 +80,10 @@ if __name__ == "__main__":
     show = False
     if len(sys.argv) > 2 and sys.argv[2] == "show":
         show = True
+
+    import faulthandler
+
+    faulthandler.enable()
 
     test_vis_inst = TestVisualization()
     test_vis_inst.test_2d_visualization(show=show)

@@ -8,9 +8,10 @@
 #ifndef AMINO_ACID_H
 #define AMINO_ACID_H
 
+#include <memory>
 #include <string>
 
-class AminoAcid {
+class AminoAcid : std::enable_shared_from_this<AminoAcid> {
 public:
   /* Copy constructor. */
   AminoAcid(const AminoAcid &other);
