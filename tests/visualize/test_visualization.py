@@ -74,7 +74,7 @@ class TestVisualization:
 if __name__ == "__main__":
     # Check whether to show the proteins.
     show = False
-    if len(sys.argv) > 2 and sys.argv[2] == "show":
+    if len(sys.argv) > 1 and sys.argv[1] == "show":
         show = True
 
     import faulthandler

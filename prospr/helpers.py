@@ -28,7 +28,6 @@ def get_scoring_aminos(protein):
     while next_dir != 0:
         # Compute position of next amino and get its amino and fold.
         cur_pos[abs(next_dir) - 1] += next_dir // abs(next_dir)
-        print("cur_pos: ", cur_pos)
         amino_acid = protein.get_amino(cur_pos)
         idx = amino_acid.index
         fold = amino_acid.next_move
