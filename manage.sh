@@ -79,6 +79,12 @@ case "$1" in
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2"
         ;;
+    # Test core on memory leaks with Valgrind.
+    # Does so without building the Python interfaces.
+    "test_core_valgrind")
+        echo "~ Running core tests.."
+        ./"$COREDIR/tests/run_tests.sh" "$2" "valgrind"
+        ;;
     # Test visualizations without building the Python interfaces.
     "test_visualize")
         echo "~ Running visualize tests.."
@@ -86,7 +92,7 @@ case "$1" in
         pip uninstall -qy prospr
         echo "~ Installing new prospr.."
         pip install -q .
-        python tests/visualize/test_visualization.py
+        python tests/visualize/test_visualization.py "show" "$2" "$3"
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"
@@ -95,6 +101,18 @@ case "$1" in
     "debug_core")
         echo "~ Running core tests.."
         ./"$COREDIR/tests/run_tests.sh" "$2" "debug"
+        ;;
+    # Install prospr locally, launch shell, and uninstall afterwards.
+    "debug_shell")
+        echo "~ Launch debug shell with Prospr installed.."
+                echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Installing new prospr.."
+        pip install -q .
+        python -i prospr_interpreter.py
+        echo "~ Uninstalling old prospr.."
+        pip uninstall -qy prospr
+        echo "~ Closed successfully!"
         ;;
     # Compile core into binary for debugging.
     "comp_core")

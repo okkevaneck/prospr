@@ -1,2 +1,4 @@
 [flake8]
 extend-ignore = E203, W503
+per-file-ignores =
+    prospr_interpreter.py: F401

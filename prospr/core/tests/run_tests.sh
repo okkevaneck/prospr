@@ -9,9 +9,10 @@
 set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-CFLAGS="-o3 -Wall -Wextra -Wconversion -Wcast-align -std=c++11
+CFLAGS="-o3 -g -Wall -Wextra -Wconversion -Wcast-align -std=c++11
     -Wunreachable-code"
 DEBUG=""
+VALGRIND=""
 
 
 # Test amino_acid functionality.
@@ -21,7 +22,14 @@ test_amino_acid() {
     c++ $CFLAGS -o test_amino_acid test_amino_acid.cpp ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_amino_acid || true
+
+    # Check memory leaks with Valgrind if specified.
+    if [ "$VALGRIND" == "valgrind" ]; then
+        valgrind ./test_amino_acid || true
+    else
+        $DEBUG ./test_amino_acid || true
+    fi
+
     rm test_amino_acid
     echo -e "~ Done"
 }
@@ -34,7 +42,13 @@ test_protein() {
         ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_protein || true
+
+    # Check memory leaks with Valgrind if specified.
+    if [ "$VALGRIND" == "valgrind" ]; then
+        valgrind ./test_protein || true
+    else
+        $DEBUG ./test_protein || true
+    fi
     rm test_protein
     echo -e "~ Done"
 }
@@ -48,7 +62,13 @@ test_depth_first() {
         ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_algorithms depth_first
+
+    # Check memory leaks with Valgrind if specified.
+    if [ "$VALGRIND" == "valgrind" ]; then
+        valgrind ./test_algorithms depth_first
+    else
+        $DEBUG ./test_algorithms depth_first
+    fi
 
     rm test_algorithms
     echo -e "~ Done"
@@ -63,7 +83,13 @@ test_depth_first_bnb() {
         ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_algorithms depth_first_bnb
+
+    # Check memory leaks with Valgrind if specified.
+    if [ "$VALGRIND" == "valgrind" ]; then
+        valgrind ./test_algorithms depth_first_bnb
+    else
+        $DEBUG ./test_algorithms depth_first_bnb
+    fi
 
     rm test_algorithms
     echo -e "~ Done"
@@ -78,7 +104,13 @@ test_beam_search() {
         ../src/amino_acid.cpp
 
     echo "~ Compilation successful, running the tests.."
-    $DEBUG ./test_algorithms beam_search
+
+    # Check memory leaks with Valgrind if specified.
+    if [ "$VALGRIND" == "valgrind" ]; then
+        valgrind ./test_algorithms beam_search
+    else
+        $DEBUG ./test_algorithms beam_search
+    fi
 
     rm test_algorithms
     echo -e "~ Done"
@@ -99,12 +131,16 @@ main() {
     cd "$SCRIPT_DIR" || exit 1
 
     # Determine if code needs to be debugged using gdb.
-    if [[ $# -eq 2 ]] && [ "$2" == "debug" ]; then
-        DEBUG="gdb"
+    if [[ $# -eq 2 ]]; then
+        if [ "$2" == "debug" ]; then
+            DEBUG="gdb"
+        elif [ "$2" == "valgrind" ]; then
+            VALGRIND="valgrind"
+        fi
     fi
 
     # Determine what module to test, default to all modules.
-    if [[ $# -ne 1 ]]; then
+    if [[ $# == 0 ]]; then
         echo "~ Module:  all"
         test_all
     else

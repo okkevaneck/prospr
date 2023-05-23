@@ -210,7 +210,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
 
     ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
 
-    sns.scatterplot(
+    ax.scatter(
         df_H["x"],
         df_H["y"],
         df_H["z"],
@@ -219,10 +219,9 @@ def _plot_aminos_3d_paper(protein, df, ax):
         edgecolor="royalblue",
         s=60,
         zorder=2,
-        ax=ax,
         label="H",
     )
-    sns.scatterplot(
+    ax.scatter(
         df_P["x"],
         df_P["y"],
         df_P["z"],
@@ -233,7 +232,6 @@ def _plot_aminos_3d_paper(protein, df, ax):
         linewidth=2,
         s=60,
         zorder=2,
-        ax=ax,
         label="P",
     )
 
@@ -242,6 +240,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
         ax.scatter(
             df.iloc[0]["x"],
             df.iloc[0]["y"],
+            df.iloc[0]["z"],
             marker="o",
             fc="royalblue",
             ec="#00ce00",
@@ -253,6 +252,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
         ax.scatter(
             df.iloc[0]["x"],
             df.iloc[0]["y"],
+            df.iloc[0]["z"],
             marker="o",
             fc="white",
             ec="#00ce00",
@@ -321,7 +321,7 @@ def plot_protein(
         if protein.dim == 2:
             ax = fig.gca()
         else:
-            ax = fig.gca(projection="3d")
+            ax = fig.add_subplot(projection="3d")
 
     # Fetch data in right dimension.
     if protein.dim == 2:
@@ -391,7 +391,7 @@ def plot_protein(
             )
         else:
             ax.legend(handles=handles, labels=labels, prop={"size": 12})
-    else:
+    elif protein.dim == 2:
         ax.get_legend().remove()
 
     # Show plot if specified.

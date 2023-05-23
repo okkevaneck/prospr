@@ -18,12 +18,12 @@
 
 /* Type for storing info on bondable amino acids.  */
 struct BondInfo {
-  int max_length;
-  int no_neighbors;
+  size_t max_length;
+  size_t no_neighbors;
   std::vector<int> max_weights;
   size_t num_idxs;
-  std::vector<int> h_idxs;
-  std::vector<std::vector<int>> bond_dists;
+  std::vector<size_t> h_idxs;
+  std::vector<std::vector<size_t>> bond_dists;
 };
 
 /* Type for ordering proteins in a priority queue.  */
@@ -53,20 +53,20 @@ std::ostream &operator<<(std::ostream &os, PrioProtein &prot) {
 /* Compute how amino acids can possibly form bonds. */
 BondInfo _comp_bondable_aminos(Protein *protein) {
   /* Fetch protein specific information. */
-  int max_length = (int)protein->get_sequence().length();
-  int no_neighbors = (int)pow(2, (protein->get_dim() - 1));
+  size_t max_length = protein->get_sequence().length();
+  size_t no_neighbors = (size_t)pow(2, (protein->get_dim() - 1));
   std::vector<int> max_weights = protein->get_max_weights();
-  std::vector<int> h_idxs = {};
-  std::vector<std::vector<int>> bond_dists = {};
+  std::vector<size_t> h_idxs = {};
+  std::vector<std::vector<size_t>> bond_dists = {};
 
   /* Create vector with distances between aminos that can create bonds. */
-  std::vector<int> cur_dists = {};
+  std::vector<size_t> cur_dists = {};
 
-  for (int i = 0; i < max_length; i++) {
+  for (size_t i = 0; i < max_length; i++) {
     /* Only include indexes that can create bonds. */
     if (max_weights[i] != 0) {
       /* Create vector with distances to previous bondable aminos. */
-      for (int idx : h_idxs) {
+      for (size_t idx : h_idxs) {
         if (i - idx >= 3 && (i - idx) % 2 == 1) {
           cur_dists.push_back(i - idx);
         }
@@ -105,11 +105,11 @@ int comp_score(Protein *protein, BondInfo *binfo) {
       /* The last amino being bondable can create an additional bond. */
       branch_score +=
           binfo->max_weights[binfo->h_idxs[i]] *
-          std::min(binfo->no_neighbors + 1, (int)binfo->bond_dists[i].size());
+          (int)std::min(binfo->no_neighbors + 1, binfo->bond_dists[i].size());
     } else {
       branch_score +=
           binfo->max_weights[binfo->h_idxs[i]] *
-          std::min(binfo->no_neighbors, (int)binfo->bond_dists[i].size());
+          (int)std::min(binfo->no_neighbors, binfo->bond_dists[i].size());
     }
   }
 
@@ -118,7 +118,7 @@ int comp_score(Protein *protein, BondInfo *binfo) {
 
 /* A beam search function for finding a minimum energy conformation. */
 void beam_search(Protein *protein, int beam_width) {
-  int max_length = (int)protein->get_sequence().length();
+  size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
 
   /* The first two amino acids are fixed to prevent y-axis symmetry. */
@@ -126,6 +126,11 @@ void beam_search(Protein *protein, int beam_width) {
     protein->place_amino(-1);
   if (max_length <= 2)
     return;
+
+  /* Return if given beam_width is not -1 or positive. */
+  if (beam_width < 1 && beam_width != -1) {
+    return;
+  }
 
   /* Create vector for current proteins, and a priority queue to filter. */
   std::vector<PrioProtein> beam = {};
@@ -148,7 +153,7 @@ void beam_search(Protein *protein, int beam_width) {
   PrioProtein cur_prioprot = {cur_protein, comp_score(cur_protein, &binfo)};
   beam.push_back(cur_prioprot);
   Protein *cur_expansion = NULL;
-  int num_elements;
+  size_t num_elements;
 
   while (beam[0].protein->get_cur_len() != max_length) {
     /* Expand all proteins in the beam and add to priority queue. */
@@ -165,11 +170,13 @@ void beam_search(Protein *protein, int beam_width) {
       }
     }
 
-    /* Interpret beam_width of -1 as all elements. */
+    /* Interpret beam_width of -1 as all elements.
+     * Check for beam_width values below -1 or 0 is done above.
+     */
     if (beam_width == -1) {
-      num_elements = (int)cur_proteins.size();
+      num_elements = cur_proteins.size();
     } else {
-      num_elements = std::min((int)cur_proteins.size(), beam_width);
+      num_elements = std::min(cur_proteins.size(), (size_t)beam_width);
     }
 
     /* Clear beam for next iteration. */
@@ -179,7 +186,7 @@ void beam_search(Protein *protein, int beam_width) {
     beam.clear();
 
     /* Update beam with highest ranked proteins. */
-    for (int i = 0; i < num_elements; i++) {
+    for (size_t i = 0; i < num_elements; i++) {
       beam.push_back(cur_proteins.top());
       cur_proteins.pop();
     }
@@ -193,7 +200,6 @@ void beam_search(Protein *protein, int beam_width) {
 
   /* First protein in priority queue will have highest score. */
   protein->set_hash(beam[0].protein->hash_fold(), true);
-  //  protein = new Protein(*beam[0].protein);
 
   /* Deallocate old left over allocated beam proteins. */
   for (PrioProtein prioprot : beam) {

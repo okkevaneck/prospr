@@ -27,23 +27,17 @@ void assert_2d_protein_generation(Protein *protein,
   std::map<std::string, int> bond_values = protein->get_bond_values();
   assert(bond_values == model_bonds);
 
-  int length = protein->get_cur_len();
-  assert(length == 1);
+  assert(protein->get_cur_len() == 1);
 
-  int last_move = protein->get_last_move();
-  assert(last_move == 0);
+  assert(protein->get_last_move() == 0);
 
-  std::vector<int> last_pos = protein->get_last_pos();
-  assert(last_pos == std::vector<int>(dim, 0));
+  assert(protein->get_last_pos() == std::vector<int>(dim, 0));
 
-  int score = protein->get_score();
-  assert(score == 0);
+  assert(protein->get_score() == 0);
 
-  uint64_t solutions_checked = protein->get_solutions_checked();
-  assert(solutions_checked == 0);
+  assert(protein->get_solutions_checked() == 0);
 
-  std::vector<int> mweights = protein->get_max_weights();
-  assert(mweights == max_weights);
+  assert(protein->get_max_weights() == max_weights);
 
   /* Test getters with arguments. */
   bool weighted = protein->is_weighted(0);
@@ -108,7 +102,7 @@ void test_2d_protein() {
     performed_moves = std::vector<int>(moves.begin(), moves.begin() + i + 1);
 
     assert(protein->hash_fold() == performed_moves);
-    assert(protein->get_cur_len() == (int)performed_moves.size() + 1);
+    assert(protein->get_cur_len() == performed_moves.size() + 1);
     assert(protein->get_last_move() == moves[i]);
     assert(protein->get_score() == scores[i]);
   }
@@ -120,9 +114,9 @@ void test_2d_protein() {
   assert(amino != NULL);
 
   /* Test removing amino acids. */
-  for (unsigned int i = 0; i < moves.size(); i++) {
+  for (size_t i = 0; i < moves.size(); i++) {
     protein->remove_amino();
-    assert(protein->get_cur_len() == (int)(moves.size() - i));
+    assert(protein->get_cur_len() == (moves.size() - i));
   }
 
   assert(protein->get_score() == 0);
@@ -139,12 +133,12 @@ void test_3d_protein() {
   std::vector<int> performed_moves;
 
   /* Perform predetermined moves and assert correctness of the Protein. */
-  for (unsigned int i = 0; i < moves.size(); i++) {
+  for (size_t i = 0; i < moves.size(); i++) {
     protein->place_amino(moves[i]);
     performed_moves = std::vector<int>(moves.begin(), moves.begin() + i + 1);
 
     assert(protein->hash_fold() == performed_moves);
-    assert(protein->get_cur_len() == (int)performed_moves.size() + 1);
+    assert(protein->get_cur_len() == performed_moves.size() + 1);
     assert(protein->get_last_move() == moves[i]);
     assert(protein->get_score() == scores[i]);
   }
@@ -156,9 +150,9 @@ void test_3d_protein() {
   assert(amino != NULL);
 
   /* Test removing amino acids. */
-  for (unsigned int i = 0; i < moves.size(); i++) {
+  for (size_t i = 0; i < moves.size(); i++) {
     protein->remove_amino();
-    assert(protein->get_cur_len() == (int)(moves.size() - i));
+    assert(protein->get_cur_len() == (moves.size() - i));
   }
 
   assert(protein->get_score() == 0);

@@ -36,6 +36,7 @@ Protein::Protein(const Protein &other) {
 
   /* Create new AminoAcid objects for all amino acids. */
   AminoAcid *new_aa;
+
   this->amino_acids.clear();
   for (AminoAcid *other_aa : other.amino_acids) {
     new_aa = new AminoAcid(*other_aa);
@@ -156,7 +157,7 @@ Protein &Protein::operator=(const Protein &other) {
   /* Create new AminoAcid objects for all amino acids. */
   AminoAcid *new_aa;
   this->amino_acids.clear();
-  for (AminoAcid *other_aa : other.amino_acids) {
+  for (auto other_aa : other.amino_acids) {
     new_aa = new AminoAcid(*other_aa);
     this->amino_acids.push_back(new_aa);
   }
@@ -188,7 +189,7 @@ int Protein::get_dim() { return dim; }
 std::map<std::string, int> Protein::get_bond_values() { return bond_values; }
 
 /* Returns the Protein's current length. */
-int Protein::get_cur_len() { return cur_len; }
+size_t Protein::get_cur_len() { return cur_len; }
 
 /* Returns the last performed move. */
 int Protein::get_last_move() { return last_move; }
@@ -200,9 +201,10 @@ std::vector<int> Protein::get_last_pos() { return last_pos; }
  * none.
  */
 AminoAcid *Protein::get_amino(std::vector<int> position) {
-  if (space.count(position))
-    return space.at(position);
-  else
+  if (space.count(position)) {
+    auto aa_sp = space.at(position);
+    return aa_sp;
+  } else
     return NULL;
 }
 
@@ -216,7 +218,7 @@ std::uint64_t Protein::get_solutions_checked() { return solutions_checked; }
 std::uint64_t Protein::get_aminos_placed() { return aminos_placed; }
 
 /* Returns if the amino acid at the given index is weighted. */
-bool Protein::is_weighted(int index) {
+bool Protein::is_weighted(size_t index) {
   return weighted_amino_acids.find(sequence[index]) != std::string::npos;
 }
 
@@ -314,7 +316,7 @@ void Protein::place_amino(int move, bool track) {
   if (track) {
     aminos_placed++;
 
-    if (cur_len == (int)sequence.size()) {
+    if (cur_len == sequence.size()) {
       solutions_checked++;
     }
   }
@@ -361,6 +363,10 @@ std::vector<int> Protein::hash_fold() {
 
 /* Set the conformation to the given hash. */
 void Protein::set_hash(std::vector<int> fold_hash, bool track) {
+  /* Check if the hash fits within the Protein's length. */
+  if (fold_hash.size() >= this->sequence.size())
+    throw std::runtime_error("Hash to long for Protein..");
+
   reset_conformation();
 
   for (int move : fold_hash) {
