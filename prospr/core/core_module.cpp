@@ -54,7 +54,7 @@ PYBIND11_MODULE(prospr_core, m) {
 
       .def("get_amino", &Protein::get_amino,
            "Get amino index and next direction from amino at given position",
-           py::arg("position"))
+           py::arg("position"), py::return_value_policy::reference_internal)
       .def("is_weighted", &Protein::is_weighted,
            "Check if the amino acid at index is weighted", py::arg("index"))
       .def("reset", &Protein::reset, "Reset the whole protein")

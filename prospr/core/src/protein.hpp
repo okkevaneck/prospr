@@ -10,7 +10,6 @@
 
 #include <cstdint>
 #include <map>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -56,8 +55,7 @@ public:
   /* Returns the AminoAcid at the given position, or NULL if there is
    * none.
    */
-  //  AminoAcid *get_amino(std::vector<int> position);
-  std::shared_ptr<AminoAcid> get_amino(std::vector<int> position);
+  AminoAcid *get_amino(std::vector<int> position);
 
   /* Returns the Protein's current score. */
   int get_score();
@@ -103,8 +101,7 @@ public:
 
 private:
   std::string sequence;
-  //  std::map<std::vector<int>, AminoAcid *> space;
-  std::map<std::vector<int>, std::shared_ptr<AminoAcid>> space;
+  std::map<std::vector<int>, AminoAcid *> space;
   size_t cur_len;
   int dim;
   std::map<std::string, int> bond_values;
@@ -115,8 +112,7 @@ private:
   int score;
   std::uint64_t aminos_placed;
   std::uint64_t solutions_checked;
-  //  std::vector<AminoAcid *> amino_acids;
-  std::vector<std::shared_ptr<AminoAcid>> amino_acids;
+  std::vector<AminoAcid *> amino_acids;
 
   /* Change score according to the already performed addition or removal
    * of the given move.
