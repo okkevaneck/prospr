@@ -92,7 +92,7 @@ case "$1" in
         pip uninstall -qy prospr
         echo "~ Installing new prospr.."
         pip install -q .
-        python tests/visualize/test_visualization.py "show"
+        python tests/visualize/test_visualization.py "show" "$2" "$3"
         echo "~ Uninstalling old prospr.."
         pip uninstall -qy prospr
         echo "~ Done running tests!"

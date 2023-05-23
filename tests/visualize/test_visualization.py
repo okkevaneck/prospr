@@ -66,21 +66,58 @@ class TestVisualization:
         """
         Test the 3D plotting in all different styles.
         """
+        p = Protein("HPPHPPHH", dim=3, model="HP")
+        p.set_hash([1, 2, -1, 3, -2, -1, -3])
+        plot_protein(p, style="paper", show=False)
+
+        p = Protein("HPHPPPPP", dim=3, model="HP")
+        p.set_hash([-1, 2, 3, 1, -2, 1, -3])
+        plot_protein(p, style="paper", show=False)
+
+        p = Protein("HPPHPPHH", dim=3, model="HP")
+        p.set_hash([1, 2, -1, 3, -2, -1, -3])
+        plot_protein(p, style="basic", show=False)
+
+        p = Protein("HPPHPPHH", dim=3, model="HP")
+        p.set_hash([1, 2, -1, 3, -2, -1, -3])
+        plot_protein(p, style="paper", legend=False, show=False)
+
+        p = Protein("HPPHPPHH", dim=3, model="HP")
+        p.set_hash([1, 2, -1, 3, -2, -1, -3])
+        plot_protein(p, style="paper", legend_style="outer", show=False)
+
         if show:
             plt.show()
-        return
 
 
 if __name__ == "__main__":
-    # Check whether to show the proteins.
+    # Check for given arguments.
     show = False
+    test_2d = True
+    test_3d = True
+
     if len(sys.argv) > 1 and sys.argv[1] == "show":
         show = True
+    if (len(sys.argv) > 2 and sys.argv[2] == "not_2d") or (
+        len(sys.argv) > 3 and sys.argv[3] == "not_2d"
+    ):
+        test_2d = False
+    if (len(sys.argv) > 2 and sys.argv[2] == "not_3d") or (
+        len(sys.argv) > 3 and sys.argv[3] == "not_3d"
+    ):
+        test_3d = False
 
-    import faulthandler
-
-    faulthandler.enable()
-
+    # Execute tests as instructed.
     test_vis_inst = TestVisualization()
-    test_vis_inst.test_2d_visualization(show=show)
-    test_vis_inst.test_3d_visualization(show=show)
+
+    if test_2d:
+        print("\tExecuting 2D visualization tests..")
+        test_vis_inst.test_2d_visualization(show=show)
+    else:
+        print("\tSkipping 2D visualization tests..")
+
+    if test_3d:
+        print("\tExecuting 3D visualization tests..")
+        test_vis_inst.test_3d_visualization(show=show)
+    else:
+        print("\tSkipping 3D visualization tests..")
