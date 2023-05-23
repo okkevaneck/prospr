@@ -102,7 +102,7 @@ def _plot_aminos_2d_paper(
         label="P",
     )
 
-    # Plot first point with a subscript 1.
+    # Plot first point with a green edge color.
     if annotate_first:
         # Plot first point with a different color.
         if df.iloc[0]["Type"] == "H":
@@ -245,31 +245,32 @@ def _plot_aminos_3d_paper(
         depthshade=False,
     )
 
-    # Plot first point with a different color.
-    if df.iloc[0]["Type"] == "H":
-        ax.scatter(
-            df.iloc[0]["x"],
-            df.iloc[0]["y"],
-            df.iloc[0]["z"],
-            marker="o",
-            fc="royalblue",
-            ec="#00ce00",
-            lw=1.3,
-            s=markersize,
-            zorder=2,
-        )
-    else:
-        ax.scatter(
-            df.iloc[0]["x"],
-            df.iloc[0]["y"],
-            df.iloc[0]["z"],
-            marker="o",
-            fc="white",
-            ec="#00ce00",
-            lw=1.3,
-            s=markersize,
-            zorder=2,
-        )
+    # Plot first point with a green edge color.
+    if annotate_first:
+        if df.iloc[0]["Type"] == "H":
+            ax.scatter(
+                df.iloc[0]["x"],
+                df.iloc[0]["y"],
+                df.iloc[0]["z"],
+                marker="o",
+                fc="royalblue",
+                ec="#00ce00",
+                lw=1.3,
+                s=markersize,
+                zorder=2,
+            )
+        else:
+            ax.scatter(
+                df.iloc[0]["x"],
+                df.iloc[0]["y"],
+                df.iloc[0]["z"],
+                marker="o",
+                fc="white",
+                ec="#00ce00",
+                lw=1.3,
+                s=markersize,
+                zorder=2,
+            )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
