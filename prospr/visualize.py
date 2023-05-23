@@ -238,7 +238,7 @@ def _plot_aminos_3d_paper(
         marker="o",
         facecolor="white",
         edgecolor="orange",
-        lw=1.5,
+        lw=1.3,
         s=markersize,
         zorder=2,
         label="P",
@@ -254,7 +254,7 @@ def _plot_aminos_3d_paper(
             marker="o",
             fc="royalblue",
             ec="#00ce00",
-            lw=1.5,
+            lw=1.3,
             s=markersize,
             zorder=2,
         )
@@ -266,7 +266,7 @@ def _plot_aminos_3d_paper(
             marker="o",
             fc="white",
             ec="#00ce00",
-            lw=1.5,
+            lw=1.3,
             s=markersize,
             zorder=2,
         )
