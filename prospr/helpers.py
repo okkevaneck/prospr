@@ -16,33 +16,22 @@ def get_scoring_aminos(protein):
     """
     score_pos = {}
     cur_pos = [0 for _ in range(protein.dim)]
-    # amino_acid = protein.get_amino(cur_pos)
-    # idx = amino_acid.index
-    # next_dir = amino_acid.next_move
-    # max_weights = protein.max_weights
-    idx = protein.get_amino(cur_pos).index
-    next_dir = protein.get_amino(cur_pos).next_move
+    amino_acid = protein.get_amino(cur_pos)
+    idx = amino_acid.index
+    next_dir = amino_acid.next_move
     max_weights = protein.max_weights
-
-    print("idx: ", idx)
-    print("next_dir: ", next_dir)
-    print("max_weights: ", max_weights)
 
     # Store origin if it may score points.
     if max_weights[idx] < 0:
         score_pos[tuple(cur_pos)] = np.array([0, next_dir], dtype=np.int64)
 
-    print("score_pos before while: ", score_pos)
-
     while next_dir != 0:
         # Compute position of next amino and get its amino and fold.
         cur_pos[abs(next_dir) - 1] += next_dir // abs(next_dir)
         print("cur_pos: ", cur_pos)
-        # amino_acid = protein.get_amino(cur_pos)
-        # idx = amino_acid.index
-        # fold = amino_acid.next_move
-        idx = protein.get_amino(cur_pos).index
-        fold = protein.get_amino(cur_pos).next_move
+        amino_acid = protein.get_amino(cur_pos)
+        idx = amino_acid.index
+        fold = amino_acid.next_move
 
         # Store previous directions for checking existing connections.
         prev_dir = -next_dir
@@ -64,7 +53,6 @@ def get_scoring_pairs(protein):
     """
     # Get dictionary with the amino's that can possibly score points.
     score_aminos = get_scoring_aminos(protein)
-    print("Scoring_aminos: \n", score_aminos)
 
     # Sort positions from bottom-left to upper-right.
     moves = np.array([m for m in range(1, protein.dim + 1)])
