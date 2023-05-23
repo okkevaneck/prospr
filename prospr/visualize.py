@@ -197,7 +197,9 @@ def _plot_aminos_3d_basic(protein, df, ax):
         )
 
 
-def _plot_aminos_3d_paper(protein, df, ax):
+def _plot_aminos_3d_paper(
+    protein, df, ax, linewidth, markersize, annotate_first=False
+):
     """
     Plot amino acids in paper style in a 3D figure.
     :param Protein      protein:    Protein object to plot the hash of.
@@ -208,31 +210,39 @@ def _plot_aminos_3d_paper(protein, df, ax):
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
-    ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
+    ax.plot(
+        df["x"],
+        df["y"],
+        df["z"],
+        color="black",
+        alpha=0.65,
+        linewidth=linewidth,
+        zorder=1,
+    )
 
     ax.scatter(
         df_H["x"],
         df_H["y"],
         df_H["z"],
-        data=df_H,
         marker="o",
         edgecolor="royalblue",
-        s=60,
+        s=markersize,
         zorder=2,
         label="H",
+        depthshade=False,
     )
     ax.scatter(
         df_P["x"],
         df_P["y"],
         df_P["z"],
-        data=df_P,
         marker="o",
         facecolor="white",
         edgecolor="orange",
-        linewidth=2,
-        s=60,
+        lw=2.5,
+        s=markersize,
         zorder=2,
         label="P",
+        depthshade=False,
     )
 
     # Plot first point with a different color.
@@ -245,7 +255,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
             fc="royalblue",
             ec="#00ce00",
             lw=2.5,
-            s=80,
+            s=markersize,
             zorder=2,
         )
     else:
@@ -257,7 +267,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
             fc="white",
             ec="#00ce00",
             lw=2.5,
-            s=80,
+            s=markersize,
             zorder=2,
         )
 
@@ -273,7 +283,7 @@ def _plot_aminos_3d_paper(protein, df, ax):
             color="indianred",
             alpha=0.9,
             zorder=1,
-            lw=2,
+            lw=linewidth,
         )
 
     # Remove axis, and position legend in the upper right with created space.
@@ -342,7 +352,9 @@ def plot_protein(
                 protein, df, ax, linewidth, markersize, annotate_first
             )
         else:
-            _plot_aminos_3d_paper(protein, df, ax)
+            _plot_aminos_3d_paper(
+                protein, df, ax, linewidth, markersize, annotate_first
+            )
     elif style == "basic":
         ax.set_xlabel("x-axis", fontsize=13)
         ax.set_ylabel("y-axis", fontsize=13)
