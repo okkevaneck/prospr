@@ -7,8 +7,8 @@ from prospr_core import (
 )
 from .datasets import load_vanEck250, load_vanEck1000, load_vanEck_hratio
 from .visualize import plot_protein
+from __version__ import __version__
 
-__version__ = "0.2a43"
 
 __all__ = [
     "__version__",

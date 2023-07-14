@@ -137,6 +137,17 @@ attribute. If the C++ core is used, the property can be accessed using a method.
 Each property is described below with the Python and C++ syntax for accessing
 them.
 
+    | **bond_values**
+    |     The ways to form bonds and their stability.
+
+             +-----------------+----------------------+
+             | **Python**      | *.bond_values*       |
+             +-----------------+----------------------+
+             | **C++**         | *.get_bond_values()* |
+             +-----------------+----------------------+
+             | **Return type** | *Dict[str, int]*     |
+             +-----------------+----------------------+
+
     | **changes**
     |     The number of amino acids placed so far.
 
@@ -202,6 +213,17 @@ them.
              +-----------------+-------------------+
              | **Return type** | *List[int]*       |
              +-----------------+-------------------+
+
+    | **max_weigths**
+    |     For each amino acid, the maximum value a bond can make.
+
+             +-----------------+----------------------+
+             | **Python**      | *.max_weigths*       |
+             +-----------------+----------------------+
+             | **C++**         | *.get_max_weigths()* |
+             +-----------------+----------------------+
+             | **Return type** | *List[int]*          |
+             +-----------------+----------------------+
 
     | **score**
     |     The score of the current conformation.

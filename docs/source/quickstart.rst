@@ -16,17 +16,12 @@ be installed.
 Creating Proteins
 -----------------
 After installing Prospr, creating Protein objects is quite easy. A Protein
-object can be seen as a space manager for AminoAcid objects. AminoAcid objects
-can simply be created as:
+object can be seen as a space manager for AminoAcid objects. The AminoAcid
+objects store the internal linkage, their index in the protein sequence, and
+their type. When generating a Protein object, the required AminoAcid objects
+are created and linked automatically as well.
 
-.. code-block:: python
-    from prospr import AminoAcid
-
-
-
-
-one can simply create a Protein object as
-follows:
+One can simply create an HP-model Protein object as follows:
 
 .. code-block:: python
 
@@ -38,15 +33,50 @@ follows:
     p_5d = Protein("HPPHPPH", dim=5)
     ...
 
-There are many other options for constructing a Protein object. Please see
-:doc:`api` for more details.
+where *dim* is the dimension to fold in.
+
+The *model* parameter allows for selecting different models in the future.
+So far, only the HP and HPXN models are supported. You can create a HPXN-model
+protein as follows:
+
+.. code-block:: python
+
+    from prospr import Protein
+
+    p_2d_hpxn = Protein("HPNPPNH", model="HPXN")
+    ...
+
+Custom models are also possible by providing a dictionary mapping the possible
+ways to bond. The dictionary should map strings to integers, where the strings
+are two characters identifying the amino acid types that can bond, and the
+integer the stability value of that bond. As an example, this is a redefinition
+of the HPXN-model:
+
+.. code-block:: python
+
+    from prospr import Protein
+
+    bond_values = {"HH": -4, "PP": -1, "PN": -1, "NN": 1}
+    p_2d_HP = Protein("HPNPPNH", dim=2, bond_values=bond_values)
+
+Note that the inverse of the bonds (e.g. *NP* from the *PN* bond) are added
+automatically. If you **do not** want this, disable *bond_symmetry* through the
+parameter:
+
+.. code-block:: python
+
+    from prospr import Protein
+
+    bond_values = {"HH": -4, "PP": -1, "PN": -1, "NN": 1}
+    p_2d_HP = Protein("HPNPPNH", dim=2, bond_values=bond_values, bond_symmetry=False)
+
 
 Protein attributes
 ------------------
 A Protein object keeps track of multiple properties while it is being folded.
-These properties can be checked as attributes of the Protein object. Below all
-properties are listed, but please refer to the :doc:`api` to see what they
-all keep track of exactly.
+These properties can be checked as attributes of the Protein object. All
+properties are listed below, but please refer to the :doc:`api` to see what
+they keep track of exactly.
 
 .. code-block:: python
 
@@ -80,6 +110,9 @@ all keep track of exactly.
 
     p_2d.bond_values
     >>> {"HH": -1}
+
+    p_2d.max_weights
+    >>> [-1, 0, 0, -1]
 
 Placing amino acids
 -------------------
@@ -129,8 +162,9 @@ Placement information
 While writing algorithms, it might be necessary to check what amino acid is
 placed at a specific spot, or where the previous and next ones are placed. This
 can be checked via the *.get_amino(position)* function, which takes a list of
-integers representing the requested position as an argument. It returns a list
-containing the amino acids index, previous direction, and next direction.
+integers representing the requested position as an argument. It returns an
+AminoAcid object, which has its *type*, *index*, *prev_move*, and *next_move*
+as attributes.
 
 .. code-block:: python
 
@@ -139,8 +173,19 @@ containing the amino acids index, previous direction, and next direction.
     p_2d = Protein("HPPH")
     p_2d.place_amino(1)
     p_2d.place_amino(2)
-    p_2d.get_amino([1, 0])
-    >>> [1, -1, 2]
+    amino = p_2d.get_amino([1, 0])
+
+    amino.type
+    >>> "H"
+
+    amino.index
+    >>> 1
+
+    amino.prev_move
+    >>> -1
+
+    amino.next_move
+    >>> 2
 
 It might also occur that you want to check if an amino acid at a specific index
 can create bonds. This can be checked via the *.is_weighted(index)* function,
@@ -303,11 +348,10 @@ the origin remains in place.
 
 Built-in algorithms
 -------------------
-Prospr offers some algorithms for finding the most optimal conformation of a
-Protein. These are included in the C++ core, making them time efficient relative
-to Python alternatives. The :doc:`api` contain a list of all available
-built-in algorithms. They can all easily be used via a direct import, as is
-shown below.
+Prospr offers some algorithms for folding Proteins. These are included in the
+C++ core, making them time efficient relative to Python alternatives. The
+:doc:`api` contain a list of all available built-in algorithms. They can all
+be easily used via a direct import, as is shown below.
 
 .. code-block:: python
 
@@ -323,7 +367,7 @@ shown below.
 
 Visualizing conformations
 -------------------------
-Visualizing conformations can be key to understanding how the optimal
+Visualizing conformations can be key to understanding how the resulting
 conformation was found. It also helps illustrating your research. Prospr's
 Python package has a built-in visualization module so you do not have to write
 your own. Visualizing a conformation can easily be done via the *plot_protein()*
