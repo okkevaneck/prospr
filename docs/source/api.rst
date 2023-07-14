@@ -61,11 +61,23 @@ submodule, e.g.
                     sequences.
 
     | **load_vanEck1000**\ (*length=10*)
-    |     Loads the vanEck250 dataset containing 1000 proteins per length, with
-          lengths from 10 till 100.
+    |     Loads the vanEck1000 dataset containing 1000 proteins per length,
+          with lengths from 10 till 100.
     |         *Parameters:*
     |             * **length** - *int (optional)*: the length of the protein
                     sequences to load.
+    |         *Returns:*
+    |             * **DataFrame** - a Pandas DataFrame containing the protein
+                    sequences.
+
+    | **load_vanEck_hratio**\ (*length=25, hratio=0.1*)
+    |     Loads the vanEck_hratio dataset containing proteins per length and
+          hratio combination.
+    |         *Parameters:*
+    |             * **length** - *int (optional)*: the length of the protein
+                    sequences to load.
+    |             * **hratio** - *float (optional)*: the hratio upperbound of
+                    the hratio interval to use.
     |         *Returns:*
     |             * **DataFrame** - a Pandas DataFrame containing the protein
                     sequences.
@@ -335,10 +347,27 @@ e.g.
     from prospr.visualize import plot_protein
 ..
 
-    | **plot_protein**\ (*protein*)
+    | **plot_protein**\ (*protein, style="basic", ax=None, legend=True,
+                            legend_style="inner", show=True,*
+    |                    *linewidth=2.5, markersize=210, annotate_first=False*)
     |     Plots the current set conformation of the given Protein object.
     |         *Parameters:*
     |             * **protein** - *Protein*: a Protein object to plot the
                     conformation of.
+    |             * **style** - *str (optional)*: The figure style to use,
+                    either 'basic' or 'paper'.
+    |             * **ax** - *Axes (optional)*: If given, plot the conformation
+                    on the given Matplotlib Axes.
+    |             * **legend** - *bool (optional)*: Set to False to disable the
+                    legend.
+    |             * **legend_style** - *str (optional)*: The legend style to
+                    use, either 'inner' or 'outer'.
+    |             * **show** - *bool (optional)*: Set to False to disable
+                    plt.show() call.
+    |             * **linewidth** - *float (optional)*: Line width of the chain.
+    |             * **markersize** - *float (optional)*: Size of the amino
+                    acids.
+    |             * **annotate_first** - *float (optional)*: Set to True to
+                    highlight first amino acid with a color.
     |         *Returns:*
     |             * **None**

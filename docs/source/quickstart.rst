@@ -75,8 +75,8 @@ Protein attributes
 ------------------
 A Protein object keeps track of multiple properties while it is being folded.
 These properties can be checked as attributes of the Protein object. All
-properties are listed below, but please refer to the :doc:`api` to see what
-they keep track of exactly.
+properties are listed below and speak for themselves, but please refer to the
+:doc:`api` to see their exact descriptions.
 
 .. code-block:: python
 
@@ -390,19 +390,88 @@ function from the *prospr.visualize* module.
     :align: center
     :scale: 85
 
+The *plot_protein()* function has a couple parameters to style the figure to
+your likings. Most importantly, there are two styles to select: *basic* and
+*paper*. The first will show the protein in a clear and zoomed-in way, while
+the latter is more compact and fancy. Here you can see the difference between
+the two for the same conformation.
+
+.. code-block:: python
+
+    plot_protein(p_2d)
+    >>>
+
+    plot_protein(p_2d, style="paper")
+    >>>
+
+|basic_fig| |paper_fig|
+
+.. |basic_fig| image:: _static/quickstart_example_fold_no_score.png
+   :width: 49%
+
+.. |paper_fig| image:: _static/quickstart_example_fold.png
+   :width: 49%
+
+Besides the style, it is also possible to change the positioning of the legend.
+You can turn the legend off through the *legend* parameter, or change its
+position to be *inner* or *outer* via the *legend_style* paremeter.
+
+.. code-block:: python
+
+    plot_protein(p_2d, legend_style="inner")
+    >>>
+
+    plot_protein(p_2d, legend_style="outer")
+    >>>
+
+    plot_protein(p_2d, legend=False)
+    >>>
+
+|inner_legend| |outer_legend| |no_legend|
+
+.. |inner_legend| image:: _static/quickstart_example_fold_no_score.png
+   :width: 32%
+
+.. |outer_legend| image:: _static/quickstart_example_fold.png
+   :width: 32%
+
+.. |no_legend| image:: _static/quickstart_example_fold.png
+   :width: 32%
+
+There are also some parameters that alter the style of the figure. Please refer
+to the :doc:`api` for a full overview.
+
+
 Using datasets
 --------------
 Datasets are valuable for a fair comparison between algorithms. That is why
 Prospr's Python package comes with a built-in collection of datasets. Loading a
 dataset can easily be done via the available load functions in the
-*prospr.datasets* module. Please refer to the :doc:`api` for all available
-datasets.
+*prospr.datasets* module. Currently, there are three datasets available:
+*vanEck250*, *vanEck1000*, and *vanEck_hratio*.
+
+The *vanEck1000* dataset contains 1000 unique proteins for lengths
+[10, 15, 20, .., 100], where the chances of sampling a H or P are equal.
+*vanEck250* offers a subset of *vanEck1000*, by simply offering the first 250
+proteins for each length. *vanEck_hratio* has around 1000 proteins sampled for
+each of the H-ratio intervals
+{(0.0, 0.1), [0.1, 0.2), [0.2, 0.3), .., [0.9, 1.0)}. You can find their usage
+below, as well as in the :doc:`api`.
 
 .. code-block:: python
 
-    from prospr.datasets import load_vanEck250
+    from prospr.datasets import load_vanEck250, load_vanEck1000, load_vanEck_hratio
 
     length_10 = load_vanEck250()
     length_15 = load_vanEck250(15)
     length_20 = load_vanEck250(20)
-    ...
+    len(length_20)
+    >>> 250
+
+    length_20 = load_vanEck1000(20)
+    len(length_20)
+    >>> 1000
+
+    length_25_hratio_01 = load_vanEck_hratio()
+    length_10_hratio_04 = load_vanEck_hratio(10, 0.4)
+    length_15_hratio_06 = load_vanEck_hratio(length=15, hratio=0.6)
