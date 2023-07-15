@@ -18,7 +18,7 @@ sys.path.insert(1, "../../prospr")
 
 
 # Import of current version of the package.
-from __version__ import __version__  # noqa: E402
+from _version import __version__  # noqa: E402
 
 
 # -- Project information -----------------------------------------------------

@@ -398,6 +398,8 @@ the two for the same conformation.
 
 .. code-block:: python
 
+    p_2d = Protein("HPHPHPPPHH")
+    depth_first_bnb(p_2d)
     plot_protein(p_2d)
     >>>
 
@@ -406,36 +408,36 @@ the two for the same conformation.
 
 |basic_fig| |paper_fig|
 
-.. |basic_fig| image:: _static/quickstart_example_fold_no_score.png
+.. |basic_fig| image:: _static/quickstart_basic.png
    :width: 49%
 
-.. |paper_fig| image:: _static/quickstart_example_fold.png
+.. |paper_fig| image:: _static/quickstart_paper.png
    :width: 49%
 
 Besides the style, it is also possible to change the positioning of the legend.
 You can turn the legend off through the *legend* parameter, or change its
-position to be *inner* or *outer* via the *legend_style* paremeter.
+position to be *inner* or *outer* via the *legend_style* parameter.
 
 .. code-block:: python
 
-    plot_protein(p_2d, legend_style="inner")
+    plot_protein(p_2d, style="paper", legend_style="inner")
     >>>
 
-    plot_protein(p_2d, legend_style="outer")
+    plot_protein(p_2d, style="paper", legend_style="outer")
     >>>
 
-    plot_protein(p_2d, legend=False)
+    plot_protein(p_2d, style="paper", legend=False)
     >>>
 
 |inner_legend| |outer_legend| |no_legend|
 
-.. |inner_legend| image:: _static/quickstart_example_fold_no_score.png
+.. |inner_legend| image:: _static/quickstart_paper.png
    :width: 32%
 
-.. |outer_legend| image:: _static/quickstart_example_fold.png
+.. |outer_legend| image:: _static/quickstart_paper_outer.png
    :width: 32%
 
-.. |no_legend| image:: _static/quickstart_example_fold.png
+.. |no_legend| image:: _static/quickstart_paper_no_legend.png
    :width: 32%
 
 There are also some parameters that alter the style of the figure. Please refer
