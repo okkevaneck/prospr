@@ -7,11 +7,11 @@ build:
 
 # Build from the docs/ directory with Sphinx.
 sphinx:
+  builder: dirhtml
   configuration: docs/source/conf.py
 
 # Install Python requirements.
 python:
+  version: "3.8"
   install:
     - requirements: docs/requirements.txt
-    - method: pip
-      path: .
