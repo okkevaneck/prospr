@@ -5,6 +5,13 @@ build:
   tools:
     python: "3.10"
 
-# Build from the docs/ directory with Sphinx
+# Build from the docs/ directory with Sphinx.
 sphinx:
   configuration: docs/source/conf.py
+
+# Install Python requirements.
+python:
+  install:
+    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
