@@ -275,6 +275,15 @@ references below.
                     move.
     |             E.g. `[0, 1]`
 
+    | **.get_bonds**\ ()
+    |     Returns a list of amino acid index pairs that are bonding.
+    |         *Parameters:*
+    |             * **None**
+    |         *Returns:*
+    |             * **List[Tuple[int,int]]** - a list of tuples with two amino
+                    acid indexes that bond.
+    |             E.g. `[(0, 9), (2, 9), (9, 2), (9, 0)]`
+
     | **.hash_fold**\ ()
     |     Returns a list of moves representing the current conformation.
     |         *Parameters:*
