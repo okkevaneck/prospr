@@ -27,7 +27,7 @@ specifying a submodule, e.g.
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found
                     conformation and with updated properties according to the
-                    performedmoves.
+                    performed moves.
 
     | **depth_first_bnb**\ (*protein*)
     |     Finds the most optimal conformation using a depth-first
@@ -37,7 +37,19 @@ specifying a submodule, e.g.
     |             * **protein** - *Protein*: the Protein object to fold.
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found
-                    conformationand with updated properties according to the
+                    conformation and with updated properties according to the
+                    performed moves.
+
+    | **beam_search**\ (*protein, beam_width=-1*)
+    |     Finds a best-effort conformation using a beam search algorithm.
+    |     *Does not reset the Protein properties beforehand!*
+    |         *Parameters:*
+    |             * **protein** - *Protein*: the Protein object to fold.
+    |             * **beam_width** - *int (optional)*: the beam width to use,
+            where -1 indicates traversal of the entire search space.
+    |         *Returns:*
+    |             * **Protein** - the Protein object set at the found
+                    conformation and with updated properties according to the
                     performed moves.
 
 AminoAcid - core
