@@ -40,6 +40,70 @@ specifying a submodule, e.g.
                     conformationand with updated properties according to the
                     performed moves.
 
+AminoAcid - core
+----------------
+Protein objects use AminoAcid objects internally to keep track of the chain on
+the grid. AminoAcid objects have read-only properties, which are consulted
+internally by the Protein object. The AminoAcid class can be imported directly
+from *prospr* without specifying a submodule, e.g.
+
+.. code-block:: python
+
+    from prospr import AminoAcid
+
+AminoAcid Properties
+~~~~~~~~~~~~~~~~~~~~
+When using the Python package, each property can be directly called as an
+attribute. If the C++ core is used, the property can be accessed using a method.
+Each property is described below with the Python and C++ syntax for accessing
+them.
+
+    | **type**
+    |     Type of the AminoAcid.
+
+             +-----------------+---------------+
+             | **Python**      | *.type*       |
+             +-----------------+---------------+
+             | **C++**         | *.get_type()* |
+             +-----------------+---------------+
+             | **Return type** | *str*         |
+             +-----------------+---------------+
+
+    | **index**
+    |     Index of the AminoAcid within the Protein's sequence.
+
+             +-----------------+----------------+
+             | **Python**      | *.index*       |
+             +-----------------+----------------+
+             | **C++**         | *.get_index()* |
+             +-----------------+----------------+
+             | **Return type** | *int*          |
+             +-----------------+----------------+
+
+    | **prev_move**
+    |     Move to perform in order to get to the previous AminoAcid in the
+            chain.
+
+             +-----------------+--------------------+
+             | **Python**      | *.prev_move*       |
+             +-----------------+--------------------+
+             | **C++**         | *.get_prev_move()* |
+             +-----------------+--------------------+
+             | **Return type** | *int*              |
+             +-----------------+--------------------+
+
+    | **next_move**
+    |     Move to perform in order to get to the next AminoAcid in the chain.
+
+             +-----------------+--------------------+
+             | **Python**      | *.next_move*       |
+             +-----------------+--------------------+
+             | **C++**         | *.get_next_move()* |
+             +-----------------+--------------------+
+             | **Return type** | *int*              |
+             +-----------------+--------------------+
+
+
 Datasets
 --------
 Prospr provides many datasets. Each can be imported from the *prospr.datasets*
@@ -142,8 +206,8 @@ directly from *prospr* without specifying a submodule, e.g.
     from prospr import Protein
 ..
 
-Properties
-~~~~~~~~~~
+Protein Properties
+~~~~~~~~~~~~~~~~~~
 When using the Python package, each property can be directly called as an
 attribute. If the C++ core is used, the property can be accessed using a method.
 Each property is described below with the Python and C++ syntax for accessing
