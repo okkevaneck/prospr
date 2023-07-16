@@ -370,7 +370,8 @@ Visualizing conformations
 Visualizing conformations can be key to understanding how the resulting
 conformation was found. It also helps illustrating your research. Prospr's
 Python package has a built-in visualization module so you do not have to write
-your own. Visualizing a conformation can easily be done via the *plot_protein()*
+your own. The module automatically detects the dimension and plots accordingly.
+Visualizing a conformation can easily be done via the *plot_protein()*
 function from the *prospr.visualize* module.
 
 .. code-block:: python

@@ -10,7 +10,7 @@ instructions are provided for both scenarios.
 
 Python package
 --------------
-Prospr offers support for Python 3.6 and newer. However, using the latest Python
+Prospr offers support for Python 3.9 and newer. However, using the latest Python
 version is always recommended. The instructions below assume that a new project
 will be set up.
 
