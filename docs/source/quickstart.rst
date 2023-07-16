@@ -176,7 +176,7 @@ as attributes.
     amino = p_2d.get_amino([1, 0])
 
     amino.type
-    >>> "H"
+    >>> "P"
 
     amino.index
     >>> 1
