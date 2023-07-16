@@ -7,16 +7,18 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
-import pkg_resources
+# import pkg_resources
 import pandas as pd
 
 
 def _load_dataset(folder, filename):
     """Returns a specified dataset as a dataframe."""
-    stream = pkg_resources.resource_stream(
-        "prospr", f"data/{folder}/{filename}"
-    )
-    return pd.read_csv(stream)
+    return pd.read_csv(f"prospr/data/{folder}/{filename}")
+
+    # stream = pkg_resources.resource_stream(
+    #     "prospr", f"data/{folder}/{filename}"
+    # )
+    # return pd.read_csv(stream)
 
 
 def load_vanEck250(length=10):

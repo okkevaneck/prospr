@@ -2,12 +2,16 @@
 <p align="center">
     <img src="docs/source/_static/prospr_logo.png" alt="Prospr's logo" width="496" height="308">  
 </p>
+<div align="center">
 
 ![GitHub](https://img.shields.io/github/license/OkkeVanEck/prospr)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/OkkeVanEck/prospr?include_prereleases)
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/OkkeVanEck/prospr/.github/workflows/build_deploy.yml?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/prospr/badge/?version=latest)](https://prospr.readthedocs.io/en/latest/?badge=latest)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)  
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
+</div>
+
 **Creator:** Okke van Eck
 
 Prospr is a universal toolbox for protein structure prediction within the
