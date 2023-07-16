@@ -3,25 +3,25 @@
     "runOn": "master",
     "os": "ubuntu-latest",
     "cibw_skip": "",
-    "cibw_build": "cp39-* cp310-* pp37-* pp38-* pp39-*"
+    "cibw_build": "cp39-* cp310-* pp39-*"
   },
   {
     "runOn": "master",
     "os": "macos-latest",
     "cibw_skip": "",
-    "cibw_build": "cp39-* cp310-* pp37-* pp38-* pp39-*"
+    "cibw_build": "cp39-* cp310-* pp39-*"
   },
   {
     "runOn": "release-",
     "os": "ubuntu-latest",
     "cibw_skip": "",
-    "cibw_build": "cp39-* cp310-* pp37-* pp38-* pp39-*"
+    "cibw_build": "cp39-* cp310-* pp39-*"
   },
   {
     "runOn": "release-",
     "os": "macos-latest",
     "cibw_skip": "",
-    "cibw_build": "cp39-* cp310-* pp37-* pp38-* pp39-*"
+    "cibw_build": "cp39-* cp310-* pp39-*"
   },
   {
     "runOn": "always",

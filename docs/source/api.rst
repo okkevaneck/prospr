@@ -27,7 +27,7 @@ specifying a submodule, e.g.
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found
                     conformation and with updated properties according to the
-                    performedmoves.
+                    performed moves.
 
     | **depth_first_bnb**\ (*protein*)
     |     Finds the most optimal conformation using a depth-first
@@ -37,8 +37,84 @@ specifying a submodule, e.g.
     |             * **protein** - *Protein*: the Protein object to fold.
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found
-                    conformationand with updated properties according to the
+                    conformation and with updated properties according to the
                     performed moves.
+
+    | **beam_search**\ (*protein, beam_width=-1*)
+    |     Finds a best-effort conformation using a beam search algorithm.
+    |     *Does not reset the Protein properties beforehand!*
+    |         *Parameters:*
+    |             * **protein** - *Protein*: the Protein object to fold.
+    |             * **beam_width** - *int (optional)*: the beam width to use,
+            where -1 indicates traversal of the entire search space.
+    |         *Returns:*
+    |             * **Protein** - the Protein object set at the found
+                    conformation and with updated properties according to the
+                    performed moves.
+
+AminoAcid - core
+----------------
+Protein objects use AminoAcid objects internally to keep track of the chain on
+the grid. AminoAcid objects have read-only properties, which are consulted
+internally by the Protein object. The AminoAcid class can be imported directly
+from *prospr* without specifying a submodule, e.g.
+
+.. code-block:: python
+
+    from prospr import AminoAcid
+
+AminoAcid Properties
+~~~~~~~~~~~~~~~~~~~~
+When using the Python package, each property can be directly called as an
+attribute. If the C++ core is used, the property can be accessed using a method.
+Each property is described below with the Python and C++ syntax for accessing
+them.
+
+    | **type**
+    |     Type of the AminoAcid.
+
+             +-----------------+---------------+
+             | **Python**      | *.type*       |
+             +-----------------+---------------+
+             | **C++**         | *.get_type()* |
+             +-----------------+---------------+
+             | **Return type** | *str*         |
+             +-----------------+---------------+
+
+    | **index**
+    |     Index of the AminoAcid within the Protein's sequence.
+
+             +-----------------+----------------+
+             | **Python**      | *.index*       |
+             +-----------------+----------------+
+             | **C++**         | *.get_index()* |
+             +-----------------+----------------+
+             | **Return type** | *int*          |
+             +-----------------+----------------+
+
+    | **prev_move**
+    |     Move to perform in order to get to the previous AminoAcid in the
+            chain.
+
+             +-----------------+--------------------+
+             | **Python**      | *.prev_move*       |
+             +-----------------+--------------------+
+             | **C++**         | *.get_prev_move()* |
+             +-----------------+--------------------+
+             | **Return type** | *int*              |
+             +-----------------+--------------------+
+
+    | **next_move**
+    |     Move to perform in order to get to the next AminoAcid in the chain.
+
+             +-----------------+--------------------+
+             | **Python**      | *.next_move*       |
+             +-----------------+--------------------+
+             | **C++**         | *.get_next_move()* |
+             +-----------------+--------------------+
+             | **Return type** | *int*              |
+             +-----------------+--------------------+
+
 
 Datasets
 --------
@@ -61,11 +137,23 @@ submodule, e.g.
                     sequences.
 
     | **load_vanEck1000**\ (*length=10*)
-    |     Loads the vanEck250 dataset containing 1000 proteins per length, with
-          lengths from 10 till 100.
+    |     Loads the vanEck1000 dataset containing 1000 proteins per length,
+          with lengths from 10 till 100.
     |         *Parameters:*
     |             * **length** - *int (optional)*: the length of the protein
                     sequences to load.
+    |         *Returns:*
+    |             * **DataFrame** - a Pandas DataFrame containing the protein
+                    sequences.
+
+    | **load_vanEck_hratio**\ (*length=25, hratio=0.1*)
+    |     Loads the vanEck_hratio dataset containing proteins per length and
+          hratio combination.
+    |         *Parameters:*
+    |             * **length** - *int (optional)*: the length of the protein
+                    sequences to load.
+    |             * **hratio** - *float (optional)*: the hratio upperbound of
+                    the hratio interval to use.
     |         *Returns:*
     |             * **DataFrame** - a Pandas DataFrame containing the protein
                     sequences.
@@ -130,12 +218,23 @@ directly from *prospr* without specifying a submodule, e.g.
     from prospr import Protein
 ..
 
-Properties
-~~~~~~~~~~
+Protein Properties
+~~~~~~~~~~~~~~~~~~
 When using the Python package, each property can be directly called as an
 attribute. If the C++ core is used, the property can be accessed using a method.
 Each property is described below with the Python and C++ syntax for accessing
 them.
+
+    | **bond_values**
+    |     The ways to form bonds and their stability.
+
+             +-----------------+----------------------+
+             | **Python**      | *.bond_values*       |
+             +-----------------+----------------------+
+             | **C++**         | *.get_bond_values()* |
+             +-----------------+----------------------+
+             | **Return type** | *Dict[str, int]*     |
+             +-----------------+----------------------+
 
     | **changes**
     |     The number of amino acids placed so far.
@@ -203,6 +302,17 @@ them.
              | **Return type** | *List[int]*       |
              +-----------------+-------------------+
 
+    | **max_weigths**
+    |     For each amino acid, the maximum value a bond can make.
+
+             +-----------------+----------------------+
+             | **Python**      | *.max_weigths*       |
+             +-----------------+----------------------+
+             | **C++**         | *.get_max_weigths()* |
+             +-----------------+----------------------+
+             | **Return type** | *List[int]*          |
+             +-----------------+----------------------+
+
     | **score**
     |     The score of the current conformation.
 
@@ -240,6 +350,15 @@ references below.
     |             * **List[int]** - a list with the amino acid's index and next
                     move.
     |             E.g. `[0, 1]`
+
+    | **.get_bonds**\ ()
+    |     Returns a list of amino acid index pairs that are bonding.
+    |         *Parameters:*
+    |             * **None**
+    |         *Returns:*
+    |             * **List[Tuple[int,int]]** - a list of tuples with two amino
+                    acid indexes that bond.
+    |             E.g. `[(0, 9), (2, 9), (9, 2), (9, 0)]`
 
     | **.hash_fold**\ ()
     |     Returns a list of moves representing the current conformation.
@@ -313,10 +432,27 @@ e.g.
     from prospr.visualize import plot_protein
 ..
 
-    | **plot_protein**\ (*protein*)
+    | **plot_protein**\ (*protein, style="basic", ax=None, legend=True,
+                            legend_style="inner", show=True,*
+    |                    *linewidth=2.5, markersize=210, annotate_first=False*)
     |     Plots the current set conformation of the given Protein object.
     |         *Parameters:*
     |             * **protein** - *Protein*: a Protein object to plot the
                     conformation of.
+    |             * **style** - *str (optional)*: The figure style to use,
+                    either 'basic' or 'paper'.
+    |             * **ax** - *Axes (optional)*: If given, plot the conformation
+                    on the given Matplotlib Axes.
+    |             * **legend** - *bool (optional)*: Set to False to disable the
+                    legend.
+    |             * **legend_style** - *str (optional)*: The legend style to
+                    use, either 'inner' or 'outer'.
+    |             * **show** - *bool (optional)*: Set to False to disable
+                    plt.show() call.
+    |             * **linewidth** - *float (optional)*: Line width of the chain.
+    |             * **markersize** - *float (optional)*: Size of the amino
+                    acids.
+    |             * **annotate_first** - *float (optional)*: Set to True to
+                    highlight first amino acid with a color.
     |         *Returns:*
     |             * **None**

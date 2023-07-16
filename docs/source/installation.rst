@@ -10,7 +10,7 @@ instructions are provided for both scenarios.
 
 Python package
 --------------
-Prospr offers support for Python 3.6 and newer. However, using the latest Python
+Prospr offers support for Python 3.9 and newer. However, using the latest Python
 version is always recommended. The instructions below assume that a new project
 will be set up.
 
@@ -36,8 +36,8 @@ For Windows:
     > py -3 -m venv venv
     > venv/Scripts/activate
 
-Installing Prospr
-~~~~~~~~~~~~~~~~~
+Installing Prospr (Python)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 After activating the environment, use pip to install Prospr:
 
 .. code-block:: bash
@@ -53,8 +53,8 @@ C++ core
 Using the C++ core for your project is very easy. Follow the installation steps
 below and include the header files you want to use in your code.
 
-Installing Prospr
-~~~~~~~~~~~~~~~~~
+Installing Prospr (C++)
+~~~~~~~~~~~~~~~~~~~~~~~
 Using the C++ core is very easy. Download a *prospr_core* archive from the
 `archives <https://github.com/OkkeVanEck/prospr/tree/master/archives>`_ folder
 on GitHub, then drag the source files to your code directory. Add the files to

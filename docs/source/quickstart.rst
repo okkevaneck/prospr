@@ -16,17 +16,12 @@ be installed.
 Creating Proteins
 -----------------
 After installing Prospr, creating Protein objects is quite easy. A Protein
-object can be seen as a space manager for AminoAcid objects. AminoAcid objects
-can simply be created as:
+object can be seen as a space manager for AminoAcid objects. The AminoAcid
+objects store the internal linkage, their index in the protein sequence, and
+their type. When generating a Protein object, the required AminoAcid objects
+are created and linked automatically as well.
 
-.. code-block:: python
-    from prospr import AminoAcid
-
-
-
-
-one can simply create a Protein object as
-follows:
+One can simply create an HP-model Protein object as follows:
 
 .. code-block:: python
 
@@ -38,15 +33,50 @@ follows:
     p_5d = Protein("HPPHPPH", dim=5)
     ...
 
-There are many other options for constructing a Protein object. Please see
-:doc:`api` for more details.
+where *dim* is the dimension to fold in.
+
+The *model* parameter allows for selecting different models in the future.
+So far, only the HP and HPXN models are supported. You can create a HPXN-model
+protein as follows:
+
+.. code-block:: python
+
+    from prospr import Protein
+
+    p_2d_hpxn = Protein("HPNPPNH", model="HPXN")
+    ...
+
+Custom models are also possible by providing a dictionary mapping the possible
+ways to bond. The dictionary should map strings to integers, where the strings
+are two characters identifying the amino acid types that can bond, and the
+integer the stability value of that bond. As an example, this is a redefinition
+of the HPXN-model:
+
+.. code-block:: python
+
+    from prospr import Protein
+
+    bond_values = {"HH": -4, "PP": -1, "PN": -1, "NN": 1}
+    p_2d_HP = Protein("HPNPPNH", dim=2, bond_values=bond_values)
+
+Note that the inverse of the bonds (e.g. *NP* from the *PN* bond) are added
+automatically. If you **do not** want this, disable *bond_symmetry* through the
+parameter:
+
+.. code-block:: python
+
+    from prospr import Protein
+
+    bond_values = {"HH": -4, "PP": -1, "PN": -1, "NN": 1}
+    p_2d_HP = Protein("HPNPPNH", dim=2, bond_values=bond_values, bond_symmetry=False)
+
 
 Protein attributes
 ------------------
 A Protein object keeps track of multiple properties while it is being folded.
-These properties can be checked as attributes of the Protein object. Below all
-properties are listed, but please refer to the :doc:`api` to see what they
-all keep track of exactly.
+These properties can be checked as attributes of the Protein object. All
+properties are listed below and speak for themselves, but please refer to the
+:doc:`api` to see their exact descriptions.
 
 .. code-block:: python
 
@@ -80,6 +110,9 @@ all keep track of exactly.
 
     p_2d.bond_values
     >>> {"HH": -1}
+
+    p_2d.max_weights
+    >>> [-1, 0, 0, -1]
 
 Placing amino acids
 -------------------
@@ -129,8 +162,9 @@ Placement information
 While writing algorithms, it might be necessary to check what amino acid is
 placed at a specific spot, or where the previous and next ones are placed. This
 can be checked via the *.get_amino(position)* function, which takes a list of
-integers representing the requested position as an argument. It returns a list
-containing the amino acids index, previous direction, and next direction.
+integers representing the requested position as an argument. It returns an
+AminoAcid object, which has its *type*, *index*, *prev_move*, and *next_move*
+as attributes.
 
 .. code-block:: python
 
@@ -139,8 +173,19 @@ containing the amino acids index, previous direction, and next direction.
     p_2d = Protein("HPPH")
     p_2d.place_amino(1)
     p_2d.place_amino(2)
-    p_2d.get_amino([1, 0])
-    >>> [1, -1, 2]
+    amino = p_2d.get_amino([1, 0])
+
+    amino.type
+    >>> "H"
+
+    amino.index
+    >>> 1
+
+    amino.prev_move
+    >>> -1
+
+    amino.next_move
+    >>> 2
 
 It might also occur that you want to check if an amino acid at a specific index
 can create bonds. This can be checked via the *.is_weighted(index)* function,
@@ -303,11 +348,10 @@ the origin remains in place.
 
 Built-in algorithms
 -------------------
-Prospr offers some algorithms for finding the most optimal conformation of a
-Protein. These are included in the C++ core, making them time efficient relative
-to Python alternatives. The :doc:`api` contain a list of all available
-built-in algorithms. They can all easily be used via a direct import, as is
-shown below.
+Prospr offers some algorithms for folding Proteins. These are included in the
+C++ core, making them time efficient relative to Python alternatives. The
+:doc:`api` contain a list of all available built-in algorithms. They can all
+be easily used via a direct import, as is shown below.
 
 .. code-block:: python
 
@@ -323,10 +367,11 @@ shown below.
 
 Visualizing conformations
 -------------------------
-Visualizing conformations can be key to understanding how the optimal
+Visualizing conformations can be key to understanding how the resulting
 conformation was found. It also helps illustrating your research. Prospr's
 Python package has a built-in visualization module so you do not have to write
-your own. Visualizing a conformation can easily be done via the *plot_protein()*
+your own. The module automatically detects the dimension and plots accordingly.
+Visualizing a conformation can easily be done via the *plot_protein()*
 function from the *prospr.visualize* module.
 
 .. code-block:: python
@@ -346,19 +391,90 @@ function from the *prospr.visualize* module.
     :align: center
     :scale: 85
 
+The *plot_protein()* function has a couple parameters to style the figure to
+your likings. Most importantly, there are two styles to select: *basic* and
+*paper*. The first will show the protein in a clear and zoomed-in way, while
+the latter is more compact and fancy. Here you can see the difference between
+the two for the same conformation.
+
+.. code-block:: python
+
+    p_2d = Protein("HPHPHPPPHH")
+    depth_first_bnb(p_2d)
+    plot_protein(p_2d)
+    >>>
+
+    plot_protein(p_2d, style="paper")
+    >>>
+
+|basic_fig| |paper_fig|
+
+.. |basic_fig| image:: _static/quickstart_basic.png
+   :width: 49%
+
+.. |paper_fig| image:: _static/quickstart_paper.png
+   :width: 49%
+
+Besides the style, it is also possible to change the positioning of the legend.
+You can turn the legend off through the *legend* parameter, or change its
+position to be *inner* or *outer* via the *legend_style* parameter.
+
+.. code-block:: python
+
+    plot_protein(p_2d, style="paper", legend_style="inner")
+    >>>
+
+    plot_protein(p_2d, style="paper", legend_style="outer")
+    >>>
+
+    plot_protein(p_2d, style="paper", legend=False)
+    >>>
+
+|inner_legend| |outer_legend| |no_legend|
+
+.. |inner_legend| image:: _static/quickstart_paper.png
+   :width: 32%
+
+.. |outer_legend| image:: _static/quickstart_paper_outer.png
+   :width: 32%
+
+.. |no_legend| image:: _static/quickstart_paper_no_legend.png
+   :width: 32%
+
+There are also some parameters that alter the style of the figure. Please refer
+to the :doc:`api` for a full overview.
+
+
 Using datasets
 --------------
 Datasets are valuable for a fair comparison between algorithms. That is why
 Prospr's Python package comes with a built-in collection of datasets. Loading a
 dataset can easily be done via the available load functions in the
-*prospr.datasets* module. Please refer to the :doc:`api` for all available
-datasets.
+*prospr.datasets* module. Currently, there are three datasets available:
+*vanEck250*, *vanEck1000*, and *vanEck_hratio*.
+
+The *vanEck1000* dataset contains 1000 unique proteins for lengths
+[10, 15, 20, .., 100], where the chances of sampling a H or P are equal.
+*vanEck250* offers a subset of *vanEck1000*, by simply offering the first 250
+proteins for each length. *vanEck_hratio* has around 1000 proteins sampled for
+each of the H-ratio intervals
+{(0.0, 0.1), [0.1, 0.2), [0.2, 0.3), .., [0.9, 1.0)}. You can find their usage
+below, as well as in the :doc:`api`.
 
 .. code-block:: python
 
-    from prospr.datasets import load_vanEck250
+    from prospr.datasets import load_vanEck250, load_vanEck1000, load_vanEck_hratio
 
     length_10 = load_vanEck250()
     length_15 = load_vanEck250(15)
     length_20 = load_vanEck250(20)
-    ...
+    len(length_20)
+    >>> 250
+
+    length_20 = load_vanEck1000(20)
+    len(length_20)
+    >>> 1000
+
+    length_25_hratio_01 = load_vanEck_hratio()
+    length_10_hratio_04 = load_vanEck_hratio(10, 0.4)
+    length_15_hratio_06 = load_vanEck_hratio(length=15, hratio=0.6)

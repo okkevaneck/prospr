@@ -9,20 +9,26 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+
+
+# Add prospr core folder to path in order to import the current version.
+import sys
+
+sys.path.insert(1, "../../prospr")
+
+
+# Import of current version of the package.
+from _version import __version__  # noqa: E402
 
 
 # -- Project information -----------------------------------------------------
 
 project = "prospr"
-copyright = "2021, Okke van Eck"
+copyright = "2023, Okke van Eck"
 author = "Okke van Eck"
 
 # The full version, including alpha/beta/rc tags
-release = "0.2a3"
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -45,19 +51,40 @@ exclude_patterns = []
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-html_theme = "alabaster"
+html_theme = "furo"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+# Furo theme options.
+html_css_files = [
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/"
+    "fontawesome.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/"
+    "solid.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/"
+    "brands.min.css",
+]
+
+html_logo = "_static/prospr_logo.png"
+html_title = (
+    "<html>"
+    "<span style='font-style: italic; font-size: 19px'>"
+    "Optimized Protein folding in Python and C++"
+    "</span>"
+    "</html>"
+)
+
 html_theme_options = {
-    "logo": "prospr_logo.png",
-    "description": "Optimized Protein folding in Python and C++.",
-    "description_font_style": "italic",
-    "github_user": "OkkeVanEck",
-    "github_repo": "prospr",
-    "github_type": "star",
+    "footer_icons": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/okkevaneck/prospr",
+            "html": "",
+            "class": "fa-brands fa-solid fa-github fa-2x",
+        },
+    ],
+    "navigation_with_keys": True,
 }

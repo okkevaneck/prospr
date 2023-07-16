@@ -60,7 +60,16 @@ case "$1" in
         echo -e "~ Removing build directories.."
         rm -rf build
         rm -rf prospr.egg-info
+        echo -e "~ Removing generated docs.."
+        rm -rf docs/build
         echo -e "~ Done cleaning!"
+        ;;
+    # Generate docs locally.
+    "gen_docs")
+        cd docs
+        echo -e "~ Generating HTML documentation.."
+        make html
+        echo -e "~ Done generating!"
         ;;
     # Build core, test all Python code, and then clean everything.
     "test")
