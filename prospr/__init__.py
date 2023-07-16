@@ -8,7 +8,8 @@ from prospr_core import (
 from .datasets import load_vanEck250, load_vanEck1000, load_vanEck_hratio
 from .visualize import plot_protein
 
-__version__ = "0.2a43"
+# Import __version__ from _version.py during compile time.
+exec(open("prospr/_version.py").read())
 
 __all__ = [
     "__version__",

@@ -88,6 +88,6 @@ PYBIND11_MODULE(prospr_core, m) {
 
   /* Beam search function definition. */
   m.def("beam_search", beam_search,
-        "Finds the optimal conformation via beam search", py::arg("protein"),
+        "Finds a best-effort conformation via beam search", py::arg("protein"),
         py::arg("beam_width") = -1);
 }

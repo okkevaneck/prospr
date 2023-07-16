@@ -5,7 +5,7 @@
 
 Prospr: The Protein Structure Prediction Toolbox
 ================================================
-Release v\ |release|
+Release v\ |release|.
 
 Welcome to Prospr's documentation! Prospr is a Python toolbox for protein
 structure prediction, build on a C++ core. The Python package can be used when

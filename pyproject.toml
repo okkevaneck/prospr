@@ -53,7 +53,7 @@ platforms = ["Linux", "macOS", "Windows"]
 prospr = ["data/*/*.csv", "core/src/*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "prospr.__version__"}
+version = {attr = "prospr._version.__version__"}
 
 [tool.black]
 line-length = 79
