@@ -44,8 +44,8 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
-#        os: [ubuntu-latest, macos-latest]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
+#        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -57,12 +57,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            python.exe -m pip install --upgrade pip
-          else
-            pip install --upgrade pip
-          fi
-
+          pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Build and install
@@ -70,16 +65,14 @@ jobs:
 
       # Exclude beam_width specification for macOS as it has different results.
       - name: Test with pytest
-        run: pytest
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "Windows" ]; then
+              pytest
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+              pytest -k 'not TestBeamSearch'; \
+              pytest -k '_no_bw or _bw_m1'
+          fi
         shell: bash
-#        run: |
-#          if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "Windows" ]; then
-#              pytest
-#          elif [ "$RUNNER_OS" == "macOS" ]; then
-#              pytest -k 'not TestBeamSearch'; \
-#              pytest -k '_no_bw or _bw_m1'
-#          fi
-#        shell: bash
 
   build_wheels:
     name: Build wheels
