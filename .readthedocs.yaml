@@ -7,7 +7,6 @@ build:
 
 # Build from the docs/ directory with Sphinx.
 sphinx:
-#  builder: dirhtml
   configuration: docs/source/conf.py
 
 # Install Python requirements.
