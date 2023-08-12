@@ -30,12 +30,17 @@ keywords = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Operating System :: OS Independent",
     "Topic :: Education",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "matplotlib==3.7.2",
+    "pandas==2.0.3",
+    "seaborn==0.12.2",
 ]
 
 [project.urls]
