@@ -2,11 +2,26 @@ name: CI-CD
 
 on:
   push:
-    allow_deploy: true
+    inputs:
+      allowDeploy:
+        description: "Whether to deploy."
+        required: true
+        default: true
+        type: boolean
   pull_request:
-    allow_deploy: false
+    inputs:
+      allowDeploy:
+        description: "Whether to deploy."
+        required: true
+        default: false
+        type: boolean
   workflow_dispatch:
-    allow_deploy: false
+    inputs:
+      allowDeploy:
+        description: "Whether to deploy."
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   matrix_prep:
