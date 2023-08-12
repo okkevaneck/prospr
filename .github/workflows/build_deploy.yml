@@ -2,11 +2,11 @@ name: CI-CD
 
 on:
   push:
-    ALLOW_DEPLOY: True
+    allow_deploy: true
   pull_request:
-    ALLOW_DEPLOY: False
+    allow_deploy: false
   workflow_dispatch:
-    ALLOW_DEPLOY: False
+    allow_deploy: false
 
 jobs:
   matrix_prep:
@@ -131,7 +131,7 @@ jobs:
           path: dist/*.tar.gz
 
   deploy:
-    if: (${{ ALLOW_DEPLOY }} == True) && (github.ref == 'refs/heads/master')
+    if: (${{ allow_deploy }} == true) && (github.ref == 'refs/heads/master')
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
