@@ -14,7 +14,7 @@ on:
       allowDeploy:
         description: "Whether to deploy."
         required: true
-        default: false
+        default: true
         type: boolean
   workflow_dispatch:
     inputs:
@@ -147,7 +147,7 @@ jobs:
           path: dist/*.tar.gz
 
   deploy:
-    if: github.ref == 'refs/heads/master' && inputs.allowDeploy == 'true'
+    if: github.ref == 'refs/heads/master' && inputs.allowDeploy == true
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
