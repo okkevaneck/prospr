@@ -9,6 +9,8 @@ on:
         default: true
         type: boolean
   pull_request:
+    types:
+      - [opened, edited, synchronize, reopened]
     inputs:
       allowDeploy:
         description: "Whether to deploy."
