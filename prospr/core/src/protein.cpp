@@ -33,7 +33,6 @@ Protein::Protein(const Protein &other) {
   this->bond_values = other.bond_values;
   this->weighted_amino_acids = other.weighted_amino_acids;
   this->max_weights = other.max_weights;
-  this->allow_violations = other.allow_violations;
 
   /* Create new AminoAcid objects for all amino acids. */
   AminoAcid *new_aa;
@@ -61,8 +60,7 @@ Protein::Protein(const Protein &other) {
 
 /* Construct a new Protein. */
 Protein::Protein(std::string sequence, int dim, std::string model,
-                 std::map<std::string, int> bond_values, bool bond_symmetry,
-                 bool allow_violations) {
+                 std::map<std::string, int> bond_values, bool bond_symmetry) {
   this->sequence = sequence;
   space = {};
   cur_len = 0;
@@ -72,7 +70,6 @@ Protein::Protein(std::string sequence, int dim, std::string model,
   score = 0;
   solutions_checked = 0;
   aminos_placed = 0;
-  this->allow_violations = allow_violations;
 
   /* Deduct what model to use, or apply custom one. */
   if (model == "HP") {
@@ -301,7 +298,7 @@ void Protein::place_amino(int move, bool track) {
   last_pos[abs(move) - 1] += move / abs(move);
 
   /* Check for illegal folds. */
-  if (!allow_violations && space.count(last_pos) > 0)
+  if (space.count(last_pos) > 0)
     throw std::runtime_error("Protein folded onto itself..");
 
   /* Place amino acid on new (valid) position. */

@@ -29,7 +29,7 @@ public:
   /* Construct a new Protein. */
   Protein(std::string sequence, int dim = 2, std::string model = "HP",
           std::map<std::string, int> bond_values = {},
-          bool bond_symmetry = true, bool allow_violations = false);
+          bool bond_symmetry = true);
 
   /* Overload assignment operator for assignments. */
   Protein &operator=(const Protein &other);
@@ -113,7 +113,6 @@ private:
   std::uint64_t aminos_placed;
   std::uint64_t solutions_checked;
   std::vector<AminoAcid *> amino_acids;
-  bool allow_violations;
 
   /* Change score according to the already performed addition or removal
    * of the given move.
