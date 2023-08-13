@@ -36,10 +36,10 @@ PYBIND11_MODULE(prospr_core, m) {
   /* Protein class definition. */
   py::class_<Protein>(m, "Protein")
       .def(py::init<const std::string, int, const std::string,
-                    std::map<std::string, int>, bool &>(),
+                    std::map<std::string, int>, bool, bool &>(),
            "Protein constructor", py::arg("sequence"), py::arg("dim") = 2,
            py::arg("model") = "HP", py::arg("bond_values") = bond_values,
-           py::arg("bond_symmetry") = true)
+           py::arg("bond_symmetry") = true, py::arg("allow_violations") = false)
       .def_property_readonly("solutions_checked",
                              &Protein::get_solutions_checked)
       .def_property_readonly("aminos_placed", &Protein::get_aminos_placed)
