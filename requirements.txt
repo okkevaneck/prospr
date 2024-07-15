@@ -7,7 +7,7 @@ pybind11==2.11.1
 pytest==7.4.0
 pytest-order==1.1.0
 seaborn==0.12.2
-setuptools==68.0.0
+setuptools==70.0.0
 sphinx==7.0.1
 twine>=4.0.2
 wheel==0.40.0
