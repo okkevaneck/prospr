@@ -31,7 +31,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - id: set-matrix
         uses: JoshuaTheMiller/conditional-build-matrix@main
@@ -45,16 +45,16 @@ jobs:
     name: Check for syntax errors
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Flake8 - Error on syntax errors or undefined names
-        uses: py-actions/flake8@v2
+        uses: py-actions/flake8@v2.3.0
         with:
           args: --count --select=E9,F63,F7,F82 --show-source --statistics
           update-pip: "true"
 
       - name: Flake8 - Warn on everything else
-        uses: py-actions/flake8@v2
+        uses: py-actions/flake8@v2.3.0
         with:
           args: --count --exit-zero --max-complexity=10 --statistics
           max-line-length: 127
@@ -70,10 +70,10 @@ jobs:
 #        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -103,15 +103,15 @@ jobs:
       matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.9"
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.3
+        uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: ${{ matrix.cibw_build }}
           CIBW_SKIP: ${{ matrix.cibw_skip }}
@@ -126,10 +126,10 @@ jobs:
     needs: pytest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.9"
 
@@ -151,7 +151,7 @@ jobs:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.9"
 
