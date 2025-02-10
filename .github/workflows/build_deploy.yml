@@ -11,35 +11,13 @@ on:
         required: true
         default: false
         type: boolean
-  # push:
-  #   inputs:
-  #     allowDeploy:
-  #       description: "Whether to deploy."
-  #       required: true
-  #       default: true
-  #       type: boolean
-  # pull_request:
-  #   types: [opened, edited, synchronize, reopened]
-  #   inputs:
-  #     allowDeploy:
-  #       description: "Whether to deploy."
-  #       required: true
-  #       default: true
-  #       type: boolean
-  # workflow_dispatch:
-  #   inputs:
-  #     allowDeploy:
-  #       description: "Whether to deploy."
-  #       required: true
-  #       default: false
-  #       type: boolean
 
 jobs:
   matrix_prep:
     name: Prepare Matrix
     runs-on: ubuntu-latest
     outputs:
-      # matrix: ${{ steps.set-matrix.outputs.matrix }}
+      # Default to a single Linux build.
       matrix: ${{ steps.set-matrix.outputs.matrix || '{"os":["ubuntu-latest"],"cibw_build":"cp39-manylinux_x86_64"}' }}
     steps:
       - uses: actions/checkout@v4.2.2
@@ -105,7 +83,6 @@ jobs:
               pytest -k 'not TestBeamSearch'; \
               pytest -k '_no_bw or _bw_m1'
           fi
-        # shell: bash
 
   build_wheels:
     name: Build wheels
@@ -160,7 +137,6 @@ jobs:
           path: dist/*.tar.gz
 
   deploy:
-    # if: github.ref == 'refs/heads/master' && ${{ inputs.allowDeploy }} == 'true'
     if: github.ref == 'refs/heads/master' && (github.event_name != 'workflow_dispatch' || inputs.allowDeploy == 'true')
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
