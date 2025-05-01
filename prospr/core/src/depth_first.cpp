@@ -47,23 +47,23 @@ void depth_first(Protein *protein) {
         protein->place_amino(move);
         placed_amino = true;
 
-        /* Push next possible move if any exists. */
-        if (move != -dim) {
-          /* Skip 0 as potential next move. */
-          if (move == 1)
-            dfs_stack.push(-1);
-          else
-            dfs_stack.push(move - 1);
+        /* Push next possible move on stack for backtracking.
+         * Skip 0 as it is invalid.
+         */
+        if (move == 1) {
+          dfs_stack.push(-1);
         } else {
-          /* Push -dim - 1 if no possible next moves left. */
+          /* Pushes "-dim - 1" as backstop if no possible moves are left. */
           dfs_stack.push(move - 1);
         }
       } else {
-        /* Skip 0 as potential next move. */
-        if (move == 1)
+        /* Try next move, but skip 0 as it is invalid. */
+        if (move == 1) {
           move = -1;
-        else
+        } else {
+          /* Sets "-dim - 1" as backstop if no possible moves are left. */
           move -= 1;
+        }
       }
     }
 
