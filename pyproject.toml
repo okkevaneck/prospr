@@ -2,7 +2,7 @@
 requires = [
     "setuptools>=42",
     "wheel",
-    "pybind11~=2.11.0",
+    "pybind11>=2.12",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -38,9 +38,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-    "matplotlib==3.7.2",
+    "matplotlib>=3.7.2",
     "pandas>=2.2.3",
-    "seaborn==0.12.2",
+    "seaborn>=0.12.2",
 ]
 
 [project.urls]
