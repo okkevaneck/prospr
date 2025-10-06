@@ -140,6 +140,9 @@ jobs:
     if: github.ref == 'refs/heads/master' && (github.event_name != 'workflow_dispatch' || inputs.allowDeploy == 'true')
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
     steps:
       - uses: actions/setup-python@v5.4.0
         with:
@@ -153,6 +156,3 @@ jobs:
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
