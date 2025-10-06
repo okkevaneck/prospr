@@ -24,12 +24,9 @@ jobs:
 
       - id: set-matrix
         uses: JoshuaTheMiller/conditional-build-matrix@main
-        env:
-          BRANCH_NAME: ${GITHUB_REF#refs/heads/}
         with:
           inputFile: '.github/workflows/matrix_includes.json'
-          filter: '[?starts_with(`${{ env.BRANCH_NAME }}`, runOn) || runOn == `always`]'
-#?runOn==`${{ env.BRANCH_NAME }}` ||
+          filter: '[?starts_with(`${{ github.ref }}`, runOn) || runOn==`always`]'
 
   syntax_check:
     name: Check for syntax errors
