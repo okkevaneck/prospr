@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       # Default to a single Linux build.
-      matrix: ${{ steps.set-matrix.outputs.matrix || '{"os":["ubuntu-latest"],"cibw_build":"cp39-manylinux_x86_64"}' }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4.2.2
 
