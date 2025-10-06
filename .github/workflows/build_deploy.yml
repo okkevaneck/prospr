@@ -28,7 +28,8 @@ jobs:
           BRANCH_NAME: ${GITHUB_REF#refs/heads/}
         with:
           inputFile: '.github/workflows/matrix_includes.json'
-          filter: '[?starts_with(`${{ env.BRANCH_NAME }}`, runOn)] || [?runOn == `always`]'
+          filter: '[?starts_with(`${{ env.BRANCH_NAME }}`, runOn) || runOn == `always`]'
+#?runOn==`${{ env.BRANCH_NAME }}` ||
 
   syntax_check:
     name: Check for syntax errors
