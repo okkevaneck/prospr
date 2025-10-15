@@ -25,9 +25,9 @@ jobs:
         run: |
           # Detect for master branch pushes.
           if ${{ contains(github.ref, 'master') }}; then
-            echo "matrix={os: ['ubuntu-latest', 'ubuntu-24.04-arm', 'macos-latest'], cibw_skip: '', cibw_build: ['cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*'}" >> "$GITHUB_OUTPUT"
+            echo "matrix={os: ['ubuntu-latest', 'ubuntu-24.04-arm', 'macos-latest'], cibw_skip: '', cibw_build: 'cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*'}" >> "$GITHUB_OUTPUT"
           else
-            echo "matrix={os: ['ubuntu-latest', 'macos-latest'], cibw_skip: '', cibw_build: ['cp39-*'}" >> "$GITHUB_OUTPUT"
+            echo "matrix={os: ['ubuntu-latest', 'macos-latest'], cibw_skip: '', cibw_build: 'cp39-*'}" >> "$GITHUB_OUTPUT"
           fi
 
   syntax_check:
