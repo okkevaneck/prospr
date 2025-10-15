@@ -17,11 +17,14 @@ jobs:
     name: Prepare Matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      os: ${{ steps.set-matrix.outputs.os }}
+      cibw_build: ${{ steps.set-matrix.outputs.cibw_build }}
     steps:
       - name: Set Matrix
         id: set-matrix
         run: |
+          # Set variables for runners.
+
           # Platforms are the same regardless of branch.
           echo 'os=["ubuntu-latest", "ubuntu-24.04-arm", "macos-latest"]' >> "$GITHUB_OUTPUT"
 
@@ -31,7 +34,6 @@ jobs:
           else
             echo 'cibw_build="cp39-*"}' >> "$GITHUB_OUTPUT"
           fi
-          echo -e "\nThe GitHub output:\n$GITHUB_OUTPUT"
 
   syntax_check:
     name: Check for syntax errors
