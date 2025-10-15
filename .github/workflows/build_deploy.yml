@@ -21,12 +21,14 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4.2.2
-
       - id: set-matrix
-        uses: JoshuaTheMiller/conditional-build-matrix@main
-        with:
-          inputFile: '.github/workflows/matrix_includes.json'
-          filter: '[?starts_with(`${{ github.ref }}`, runOn)] || [runOn==`always`]'
+        run: |
+          # Detect for master branch pushes.
+          if [${{ contains(github.ref, 'master') }}] ; then
+            echo "matrix={os=['ubuntu-latest', 'ubuntu-24.04-arm', 'macos-latest'], cibw_skip='', cibw_build=['cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*'}" >> "$GITHUB_OUTPUT"
+          else
+            echo "matrix={os=['ubuntu-latest', 'macos-latest'], cibw_skip='', cibw_build=['cp39-*'}" >> "$GITHUB_OUTPUT"
+          fi
 
   syntax_check:
     name: Check for syntax errors
