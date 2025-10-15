@@ -91,7 +91,9 @@ jobs:
     name: Build wheels
     needs: [pytest, matrix_prep]
     strategy:
-      matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
+      matrix:
+        os: ${{ fromJson(needs.matrix_prep.outputs.os) }}
+        cibw_build: ${{ fromJson(needs.matrix_prep.outputs.cibw_build) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4.2.2
