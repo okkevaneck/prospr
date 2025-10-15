@@ -30,9 +30,9 @@ jobs:
 
           # Build only for all Python versions on master branch.
           if ${{ contains(github.ref, 'master') }}; then
-            echo 'cibw_build="cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*"}' >> "$GITHUB_OUTPUT"
+            echo 'cibw_build=["cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*"]' >> "$GITHUB_OUTPUT"
           else
-            echo 'cibw_build="cp39-*"}' >> "$GITHUB_OUTPUT"
+            echo 'cibw_build=["cp39-*"]' >> "$GITHUB_OUTPUT"
           fi
 
   syntax_check:
