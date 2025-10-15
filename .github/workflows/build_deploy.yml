@@ -21,13 +21,13 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4.2.2
-      - id: set-matrix
+        id: set-matrix
         run: |
           # Detect for master branch pushes.
           if ${{ contains(github.ref, 'master') }}; then
-            echo "matrix={os: ['ubuntu-latest', 'ubuntu-24.04-arm', 'macos-latest'], cibw_skip: '', cibw_build: 'cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*'}" >> "$GITHUB_OUTPUT"
+            echo 'matrix={os: ["ubuntu-latest", "ubuntu-24.04-arm", "macos-latest"], cibw_build: "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-* pp39-*"}' >> "$GITHUB_OUTPUT"
           else
-            echo "matrix={os: ['ubuntu-latest', 'macos-latest'], cibw_skip: '', cibw_build: 'cp39-*'}" >> "$GITHUB_OUTPUT"
+            echo 'matrix={os: ["ubuntu-latest", "macos-latest"], cibw_build: "cp39-*"}'' >> "$GITHUB_OUTPUT"
           fi
 
   syntax_check:
@@ -102,7 +102,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: ${{ matrix.cibw_build }}
-          CIBW_SKIP: ${{ matrix.cibw_skip }}
+          # CIBW_SKIP: ${{ matrix.cibw_skip }}
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
           CIBW_ARCHS_MACOS: "x86_64 arm64"
 
