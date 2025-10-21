@@ -94,6 +94,7 @@ bool reach_prune(Protein *protein, int move, int best_score,
  * energy conformation.
  */
 void depth_first_bnb(Protein *protein, std::string prune_func) {
+  protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
   size_t no_neighbors = (size_t)pow(2, (dim - 1));
