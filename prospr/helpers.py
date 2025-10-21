@@ -56,8 +56,8 @@ def export_protein(protein, path):
     # Amino acids
     for i, c in enumerate(coordinates):
         x, y, z = [v * 3.8 for v in c]  # "Safe" distance is 3.8 Angstrom
+        # Use some known H- and P-type amino acid
         amino_acid = "ALA" if protein.sequence[i] == "H" else "SER"
-
         buf.write(f"ATOM  {i+1:5d}  CA  {amino_acid:>3} A{i+1:4d}    ")
         buf.write(f"{x:8.3f}{y:8.3f}{z:8.3f}  1.00  0.00           C\n")
     # Chain
