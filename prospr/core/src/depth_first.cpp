@@ -14,6 +14,7 @@
 
 /* A depth-first search function for finding a minimum energy conformation. */
 void depth_first(Protein *protein) {
+  protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
 
