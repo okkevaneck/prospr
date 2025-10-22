@@ -62,16 +62,16 @@ bool reach_prune(Protein *protein, int move, int best_score,
   int cur_score = protein->get_score();
 
   /* Compute to be placed aminos possibly making bonds. */
-  int future_aminos = 0;
+  int remaining_Hs = 0;
   for (auto h_idx : p_vars->h_idxs) {
     if (h_idx >= cur_len) {
-      future_aminos++;
+      remaining_Hs++;
     }
   }
 
   /* Compute branch score with the to be placed amino acids. */
   int branch_score = 0;
-  for (size_t i = p_vars->num_idxs - future_aminos; i < p_vars->num_idxs; i++) {
+  for (size_t i = p_vars->num_idxs - remaining_Hs; i < p_vars->num_idxs; i++) {
     /* Check if bondable amino is last of protein. */
     if (p_vars->h_idxs[i] == p_vars->max_length - 1) {
       /* The last amino being bondable can create an additional bond. */
@@ -94,6 +94,7 @@ bool reach_prune(Protein *protein, int move, int best_score,
  * energy conformation.
  */
 void depth_first_bnb(Protein *protein, std::string prune_func) {
+  protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
   size_t no_neighbors = (size_t)pow(2, (dim - 1));
@@ -167,23 +168,23 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
         protein->place_amino(move);
         placed_amino = true;
 
-        /* Push next possible move if any exists. */
-        if (move != -dim) {
-          /* Skip 0 as potential next move. */
-          if (move == 1)
-            dfs_stack.push(-1);
-          else
-            dfs_stack.push(move - 1);
+        /* Push next possible move on stack for backtracking.
+         * Skip 0 as it is invalid.
+         */
+        if (move == 1) {
+          dfs_stack.push(-1);
         } else {
-          /* Push -dim - 1 if no possible next moves left. */
+          /* Pushes "-dim - 1" as backstop if no possible moves are left. */
           dfs_stack.push(move - 1);
         }
       } else {
-        /* Skip 0 as potential next move. */
-        if (move == 1)
+        /* Try next move, but skip 0 as it is invalid. */
+        if (move == 1) {
           move = -1;
-        else
+        } else {
+          /* Sets "-dim - 1" as backstop if no possible moves are left. */
           move -= 1;
+        }
       }
     }
 

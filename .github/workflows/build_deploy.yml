@@ -1,21 +1,9 @@
 name: CI-CD
 
 on:
-  push:
-    inputs:
-      allowDeploy:
-        description: "Whether to deploy."
-        required: true
-        default: true
-        type: boolean
+  push: {}
   pull_request:
     types: [opened, edited, synchronize, reopened]
-    inputs:
-      allowDeploy:
-        description: "Whether to deploy."
-        required: true
-        default: false
-        type: boolean
   workflow_dispatch:
     inputs:
       allowDeploy:
@@ -29,32 +17,38 @@ jobs:
     name: Prepare Matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      os: ${{ steps.set-matrix.outputs.os }}
+      cibw_build: ${{ steps.set-matrix.outputs.cibw_build }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Set Matrix
+        id: set-matrix
+        run: |
+          # Set variables for runners.
 
-      - id: set-matrix
-        uses: JoshuaTheMiller/conditional-build-matrix@main
-        env:
-          BRANCH_NAME: ${GITHUB_REF#refs/heads/}
-        with:
-          inputFile: '.github/workflows/matrix_includes.json'
-          filter: '[?starts_with(`${{ env.BRANCH_NAME }}`, runOn)] || [?runOn == `always`]'
+          # Platforms are the same regardless of branch.
+          echo 'os=["ubuntu-latest", "macos-latest", "windows-latest"]' >> "$GITHUB_OUTPUT"
+
+          # Build only for all Python versions on master branch.
+          if ${{ contains(github.ref, 'master') }}; then
+            echo 'cibw_build=["cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'cibw_build=["cp39-*"]' >> "$GITHUB_OUTPUT"
+          fi
 
   syntax_check:
     name: Check for syntax errors
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Flake8 - Error on syntax errors or undefined names
-        uses: py-actions/flake8@v2
+        uses: py-actions/flake8@v2.3.0
         with:
           args: --count --select=E9,F63,F7,F82 --show-source --statistics
           update-pip: "true"
 
       - name: Flake8 - Warn on everything else
-        uses: py-actions/flake8@v2
+        uses: py-actions/flake8@v2.3.0
         with:
           args: --count --exit-zero --max-complexity=10 --statistics
           max-line-length: 127
@@ -66,14 +60,13 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
-        os: [ubuntu-latest, macos-latest]
-#        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -94,31 +87,34 @@ jobs:
               pytest -k 'not TestBeamSearch'; \
               pytest -k '_no_bw or _bw_m1'
           fi
-        shell: bash
 
   build_wheels:
     name: Build wheels
     needs: [pytest, matrix_prep]
     strategy:
-      matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
+      matrix:
+        os: ${{ fromJson(needs.matrix_prep.outputs.os) }}
+        cibw_build: ${{ fromJson(needs.matrix_prep.outputs.cibw_build) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.9"
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.3
+        uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: ${{ matrix.cibw_build }}
-          CIBW_SKIP: ${{ matrix.cibw_skip }}
+          # CIBW_SKIP: ${{ matrix.cibw_skip }}
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
+          CIBW_ARCHS_MACOS: "x86_64 arm64"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: my-artifact-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -126,10 +122,10 @@ jobs:
     needs: pytest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.9"
 
@@ -142,26 +138,27 @@ jobs:
       - name: Check metadata
         run: twine check dist/*
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: dist/*.tar.gz
 
   deploy:
-    if: github.ref == 'refs/heads/master' && inputs.allowDeploy == true
+    if: github.ref == 'refs/heads/master' && (github.event_name != 'workflow_dispatch' || inputs.allowDeploy == 'true')
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.9"
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact
           path: dist
+          pattern: my-artifact-*
+          merge-multiple: true
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}

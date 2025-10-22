@@ -118,6 +118,7 @@ int comp_score(Protein *protein, BondInfo *binfo) {
 
 /* A beam search function for finding a minimum energy conformation. */
 void beam_search(Protein *protein, int beam_width) {
+  protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
 
