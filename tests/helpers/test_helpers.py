@@ -46,6 +46,7 @@ class TestHelpers:
         assert pdb_lines[0].startswith("HEADER    ")
         assert pdb_lines[1].startswith("TITLE     ")
         assert pdb_lines[2].startswith("REMARK    ")
+
         # Expect valid atoms section (Carbon with ALA/SER residue names for amino acids)
         assert all(
             pdb_lines[3 + i].startswith("ATOM ") for i in range(n_aminos)
@@ -69,12 +70,14 @@ class TestHelpers:
             pdb_lines[3 + i].split()[4:6] == ["A", str(i + 1)]
             for i in range(n_aminos)
         )
+
         # No negative positions
         assert all(
             float(s) >= 0
             for i in range(n_aminos)
             for s in pdb_lines[3 + i].split()[6:9]
         )
+
         # Grid size of 3.8 Angstrom
         assert all(
             int(float(s) * 100) % 38 == 0
@@ -85,17 +88,20 @@ class TestHelpers:
             pdb_lines[3 + i].split()[-3:] == ["1.00", "0.00", "C"]
             for i in range(n_aminos)
         )
+
         # Expect valid connections section
         assert all(
             pdb_lines[3 + n_aminos + i].startswith("CONECT ")
             for i in range(n_aminos - 1)
         )
         assert pdb_lines[3 + n_aminos].split()[1:] == ["1", "2"]
+
         # Remaining connections follow the pattern: <current> <last> <next>
         assert all(
             pdb_lines[3 + n_aminos + i].split()[1:]
             == [str(j) for j in [i + 1, i, i + 2]]
             for i in range(1, n_aminos - 1)
         )
+
         # End
         assert pdb_lines[-1] == "END"
