@@ -7,7 +7,65 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
+from io import StringIO
+from pathlib import Path
 import numpy as np
+
+
+def _protein_to_coordinates(protein):
+    """
+    Map 2D/3D protein fold to grid coordinates
+    """
+    coordinates = [[0, 0, 0]]
+    for move in protein.hash_fold():
+        coordinates.append(coordinates[-1].copy())
+        coordinates[-1][abs(move) - 1] += 1 if move > 0 else -1
+    offset = [0, 0, 0]
+    # Avoid negative coordinates
+    for c in coordinates:
+        for i in range(3):
+            if c[i] < 0:
+                offset[i] = max(offset[i], abs(c[i]))
+    for c in coordinates:
+        c[0] += offset[0]
+        c[1] += offset[1]
+        c[2] += offset[2]
+    return coordinates
+
+
+def export_protein(protein, path):
+    """
+    Save conformation of a protein in Protein Data Bank (PDB) file format
+    for processing or visualization with external software such as Mol*.
+    :param Protein  protein:        Protein object to save the hash of.
+    :param os.PathLike | str  path: The path of the output file.
+    """
+    if protein.dim not in [2, 3]:
+        raise ValueError("Only 2D or 3D proteins can be saved as PDB files.")
+    path = Path(path)
+    if not path.suffix.lower() == ".pdb":
+        raise ValueError('Suffix ".pdb" required for output PDB files.')
+    coordinates = _protein_to_coordinates(protein)
+    buf = StringIO()
+    # Header
+    buf.write("HEADER    HP-protein folding structure\n")
+    buf.write(f"TITLE     Sequence: {protein.sequence}\n")
+    buf.write(
+        "REMARK    Generated using prospr (https://github.com/okkevaneck/prospr)\n"
+    )
+    # Amino acids
+    for i, c in enumerate(coordinates):
+        x, y, z = [v * 3.8 for v in c]  # "Safe" distance is 3.8 Angstrom
+        # Use some known H- and P-type amino acid
+        amino_acid = "ALA" if protein.sequence[i] == "H" else "SER"
+        buf.write(f"ATOM  {i+1:5d}  CA  {amino_acid:>3} A{i+1:4d}    ")
+        buf.write(f"{x:8.3f}{y:8.3f}{z:8.3f}  1.00  0.00           C\n")
+    # Chain
+    buf.write(f"CONECT    1    2\n")
+    for i in range(2, len(coordinates)):
+        buf.write(f"CONECT {i:4d} {i-1:4d} {i+1:4d}\n")
+    buf.write("END\n")
+    path.write_text(buf.getvalue())
 
 
 def get_scoring_aminos(protein):

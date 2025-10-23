@@ -205,6 +205,15 @@ can be imported from the *prospr.helpers* submodule, e.g.
                     that score points.
     |             E.g. `[[(0, 0), (0, 1)], [(0, 0), (-1, 0)]]`
 
+    | **export_protein**\ (*protein, path*)
+    |     Save conformation of a protein in Protein Data Bank (PDB) file format
+          for processing or visualization with external software such as `Mol* <https://molstar.org/>`. 
+    |         *Parameters:*
+    |             * **protein** - *Protein*: Protein object to save the hash of.
+    |             * **path** - *os.PathLike or str*: The path of the output file.
+    |         *Returns:*
+    |             * **None**
+
 Protein - core
 --------------
 The Protein class is the cornerstone of Prospr. An instance tracks many

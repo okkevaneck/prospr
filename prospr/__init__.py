@@ -8,6 +8,7 @@ from prospr_core import (
     beam_search,
 )
 from .datasets import load_vanEck250, load_vanEck1000, load_vanEck_hratio
+from .helpers import export_protein
 from .visualize import plot_protein
 
 # Import __version__ from _version.py during compile time.
@@ -23,5 +24,6 @@ __all__ = [
     "load_vanEck250",
     "load_vanEck1000",
     "load_vanEck_hratio",
+    "export_protein",
     "plot_protein",
 ]
