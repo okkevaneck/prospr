@@ -81,6 +81,7 @@ jobs:
 
       # Exclude beam_width specification for macOS as it has different results.
       - name: Test with pytest
+        shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "Windows" ]; then
               pytest
