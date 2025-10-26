@@ -1,6 +1,6 @@
 furo==2023.5.20
 matplotlib>=3.7.2
-numpy>=1.25.1
+numpy>=2.0.0
 pandas>=2.2.3
 pre-commit>=3.3.3
 pybind11>=3.0.1

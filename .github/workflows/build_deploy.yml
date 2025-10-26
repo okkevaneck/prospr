@@ -1,7 +1,6 @@
 name: CI-CD
 
 on:
-  push: {}
   pull_request:
     types: [opened, edited, synchronize, reopened]
   workflow_dispatch:
@@ -60,8 +59,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
-        os: [ubuntu-latest, macos-latest]
-#        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4.2.2
@@ -81,6 +79,7 @@ jobs:
 
       # Exclude beam_width specification for macOS as it has different results.
       - name: Test with pytest
+        shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "Windows" ]; then
               pytest
