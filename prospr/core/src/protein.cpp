@@ -180,7 +180,7 @@ Protein &Protein::operator=(const Protein &other) {
 }
 
 /* Returns the Protein's sequence. */
-std::string Protein::get_sequence() { return sequence; }
+std::string Protein::get_sequence() const { return sequence; }
 
 /* Returns the Protein's set maximum dimension. */
 int Protein::get_dim() { return dim; }
@@ -212,10 +212,16 @@ AminoAcid *Protein::get_amino(std::vector<int> position) {
 int Protein::get_score() { return score; }
 
 /* Returns the number of checked solutions. */
-std::uint64_t Protein::get_solutions_checked() { return solutions_checked; }
+std::uint64_t Protein::get_solutions_checked() const { return solutions_checked; }
+
+/* Set the number of checked solutions. */
+void Protein::set_solutions_checked(std::uint64_t checked) { solutions_checked = checked; }
 
 /* Returns the number of amino acids placed. */
-std::uint64_t Protein::get_aminos_placed() { return aminos_placed; }
+std::uint64_t Protein::get_aminos_placed() const { return aminos_placed; }
+
+/* Set the number of amino acids placed. */
+void Protein::set_aminos_placed(std::uint64_t placed) { aminos_placed = placed; }
 
 /* Returns if the amino acid at the given index is weighted. */
 bool Protein::is_weighted(size_t index) {
@@ -340,7 +346,7 @@ void Protein::remove_amino() {
 }
 
 /* Hash and return the fold of the current conformation. */
-std::vector<int> Protein::hash_fold() {
+std::vector<int> Protein::hash_fold() const {
   std::vector<int> fold_hash;
   std::vector<int> cur_pos(dim, 0);
   AminoAcid *cur_amino;

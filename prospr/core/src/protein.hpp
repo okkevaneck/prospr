@@ -35,7 +35,7 @@ public:
   Protein &operator=(const Protein &other);
 
   /* Returns the Protein's sequence. */
-  std::string get_sequence();
+  std::string get_sequence() const;
 
   /* Returns the Protein's set maximum dimension. */
   int get_dim();
@@ -61,10 +61,16 @@ public:
   int get_score();
 
   /* Returns the number of performed changes. */
-  std::uint64_t get_solutions_checked();
+  std::uint64_t get_solutions_checked() const;
+
+  /* Set the number of performed changes. */
+  void set_solutions_checked(std::uint64_t);
 
   /* Returns the number of amino acids placed. */
-  std::uint64_t get_aminos_placed();
+  std::uint64_t get_aminos_placed() const;
+
+  /* Set the number of amino acids placed. */
+  void set_aminos_placed(std::uint64_t);
 
   /* Returns if the amino acid at the given index is weighted. */
   bool is_weighted(size_t index);
@@ -91,7 +97,7 @@ public:
   void remove_amino();
 
   /* Hash and return the fold of the current conformation. */
-  std::vector<int> hash_fold();
+  std::vector<int> hash_fold() const;
 
   /* Set the conformation to the given hash. */
   void set_hash(std::vector<int> fold_hash, bool track = false);

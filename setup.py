@@ -16,8 +16,15 @@ setup(
     ext_modules=[
         Pybind11Extension(
             name="prospr_core",
-            sources=["prospr/core/core_module.cpp"],
+            sources=[
+                "prospr/core/core_module.cpp",
+                "prospr/core/src/utils.cpp",
+            ],
             language="c++",
+            cxx_std=17,
+            # Uncomment to activate debugging
+            # (Console output and pausing in depth_first_bnb(...))
+            # define_macros=[("PROSPR_DEBUG_STEPS", None)],
         ),
     ],
     cmdclass={"build_ext": build_ext},
