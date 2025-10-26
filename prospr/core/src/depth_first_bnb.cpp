@@ -95,7 +95,8 @@ bool reach_prune(Protein *protein, int move, int best_score,
   return cur_score + branch_score >= best_score;
 }
 
-void try_save_checkpoint(const Protein& protein,
+/* If a checkpoint location is provided through the environment, attemt to store the checkpoint. */
+void try_store_checkpoint(const Protein& protein,
                         const std::stack<int>& dfs_stack,
                         int move,
                         bool placed_amino,
@@ -150,6 +151,7 @@ void try_save_checkpoint(const Protein& protein,
     ofs << "\n";
 }
 
+/* If a checkpoint location is provided through the environment, attemt to load the checkpoint. */
 void try_load_checkpoint(Protein& protein,
                         std::stack<int>& dfs_stack,
                         int& move,
@@ -226,6 +228,7 @@ void try_load_checkpoint(Protein& protein,
 
 std::atomic<int> caught_signal{0};
 
+/* Function to catch signals (SIGTERM, SIGINT) and store them for delayed handling. */
 void signal_handler(int signal) {
     caught_signal.store(signal, std::memory_order_relaxed);
 }
@@ -371,7 +374,7 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
     }
   } while (move != -dim - 1 || !dfs_stack.empty());
 
-  try_save_checkpoint(*protein, dfs_stack, move, placed_amino, best_score, score, best_hash);
+  try_store_checkpoint(*protein, dfs_stack, move, placed_amino, best_score, score, best_hash);
   if (!signal) {
     /* Set best found conformation. */
     protein->set_hash(best_hash);
