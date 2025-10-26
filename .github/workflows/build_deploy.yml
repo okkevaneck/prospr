@@ -1,6 +1,9 @@
 name: CI-CD
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     types: [opened, edited, synchronize, reopened]
   workflow_dispatch:
@@ -28,7 +31,7 @@ jobs:
           echo 'os=["ubuntu-latest", "macos-latest", "windows-latest"]' >> "$GITHUB_OUTPUT"
 
           # Build only for all Python versions on master branch.
-          if ${{ contains(github.base_ref, 'master') }}; then
+          if ${{ contains(github.base_ref, 'master') }} || ${{ contains(github.ref, 'master') }}; then
             echo 'cibw_build=["cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"]' >> "$GITHUB_OUTPUT"
           else
             echo 'cibw_build=["cp39-*"]' >> "$GITHUB_OUTPUT"
@@ -108,7 +111,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: ${{ matrix.cibw_build }}
-          # CIBW_SKIP: ${{ matrix.cibw_skip }}
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
           CIBW_ARCHS_MACOS: "x86_64 arm64"
 
