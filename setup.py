@@ -19,7 +19,7 @@ module = Pybind11Extension(
         "prospr/core/src/utils.cpp",
     ],
     language="c++",
-    cxx_std=20,
+    cxx_std=17,
 )
 
 # Check enable debugging

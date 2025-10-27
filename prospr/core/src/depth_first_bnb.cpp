@@ -17,6 +17,7 @@
 #include <fstream>
 #include <iostream>
 #include <numeric>
+#include <sstream>
 #include <stack>
 #include <vector>
 
@@ -224,7 +225,7 @@ void try_load_checkpoint(Protein& protein,
                 best_hash.push_back(std::stoi(token));
             }
         }
-        else if (key == "iterations") iterations = std::stoi(value);
+        else if (key == "iterations") iterations = std::stoi(value) - 1;
     }
 }
 
@@ -241,8 +242,8 @@ void signal_handler(int signal) {
  */
 void depth_first_bnb(Protein *protein, std::string prune_func) {
   /* Override signal handlers */
-  sighandler_t signal_handler_sigint = std::signal(SIGINT, signal_handler);
-  sighandler_t signal_handler_sigterm = std::signal(SIGTERM, signal_handler);
+  void (*signal_handler_sigint)(int) = std::signal(SIGINT, signal_handler);
+  void (*signal_handler_sigterm)(int) = std::signal(SIGTERM, signal_handler);
 
   protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
