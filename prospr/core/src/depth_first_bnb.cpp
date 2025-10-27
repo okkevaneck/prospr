@@ -383,10 +383,8 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
   } while (move != -dim - 1 || !dfs_stack.empty());
 
   try_store_checkpoint(*protein, dfs_stack, move, placed_amino, best_score, score, best_hash, iterations);
-  if (!signal) {
-    /* Set best found conformation. */
-    protein->set_hash(best_hash);
-  }
+  /* Set best found conformation. */
+  protein->set_hash(best_hash);
 
   /* Restore signal handlers */
   std::signal(SIGINT, signal_handler_sigint);
