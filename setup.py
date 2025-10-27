@@ -8,24 +8,27 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
+import os
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
+module = Pybind11Extension(
+    name="prospr_core",
+    sources=[
+        "prospr/core/core_module.cpp",
+        "prospr/core/src/utils.cpp",
+    ],
+    language="c++",
+    cxx_std=20,
+)
+
+# Check enable debugging
+# (Console output and pausing in depth_first_bnb(...))
+if os.getenv("PROSPR_DEBUG_STEPS", "false").lower() in ["1", "yes", "true", "on"]:
+    module.define_macros = list(module.define_macros or [])
+    module.define_macros.append(("PROSPR_DEBUG_STEPS", None))
 
 setup(
-    ext_modules=[
-        Pybind11Extension(
-            name="prospr_core",
-            sources=[
-                "prospr/core/core_module.cpp",
-                "prospr/core/src/utils.cpp",
-            ],
-            language="c++",
-            cxx_std=17,
-            # Uncomment to activate debugging
-            # (Console output and pausing in depth_first_bnb(...))
-            # define_macros=[("PROSPR_DEBUG_STEPS", None)],
-        ),
-    ],
+    ext_modules=[module],
     cmdclass={"build_ext": build_ext},
 )
