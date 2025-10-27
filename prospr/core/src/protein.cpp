@@ -389,7 +389,7 @@ void Protein::_change_score(int move, bool placed) {
   std::vector<int> moves;
 
   for (int i = -dim; i <= dim; i++) {
-    if (i != 0 and i != -move)
+    if (i != 0 && i != -move)
       moves.push_back(i);
   }
 
