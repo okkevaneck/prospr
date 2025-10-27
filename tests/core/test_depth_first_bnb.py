@@ -8,6 +8,9 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
+import os
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from prospr import Protein, depth_first_bnb
 import pytest
 
@@ -50,3 +53,44 @@ class TestDepthFirstBnB:
         assert protein_3d.score == -4
         assert protein_3d.solutions_checked == 5
         assert protein_3d.aminos_placed == 49368
+
+    def test_depth_first_bnb_no_checkpoint(self, protein_3d):
+        """
+        Test if a checkpoint is not created by default.
+        """
+        if "PROSPR_CACHE_DIR" in os.environ:
+            del os.environ["PROSPR_CACHE_DIR"]
+        with TemporaryDirectory() as tmpdir:
+            assert len(list(Path(tmpdir).iterdir())) == 0
+            depth_first_bnb(protein_3d)
+            assert len(list(Path(tmpdir).iterdir())) == 0
+        # Still solves the protein correctly
+        assert protein_3d.score == -4
+        assert protein_3d.solutions_checked == 5
+        assert protein_3d.aminos_placed == 49368
+
+    def test_depth_first_bnb_checkpoint(self, protein_3d):
+        """
+        Test if a checkpoint is created correctly.
+        """
+
+        # Still solves the protein correctly
+        def check_protein():
+            assert protein_3d.score == -4
+            assert protein_3d.solutions_checked == 5
+            assert protein_3d.aminos_placed == 49368
+
+        with TemporaryDirectory() as tmpdir:
+            os.environ["PROSPR_CACHE_DIR"] = tmpdir
+            checkpoint_path = Path(tmpdir) / "depth_first_bnb" / \
+                (protein_3d.sequence + ".checkpoint")
+            assert not checkpoint_path.exists()
+            depth_first_bnb(protein_3d)
+            check_protein()
+            assert checkpoint_path.exists()
+            checkpoint = checkpoint_path.read_text()
+            protein_3d.reset()
+            depth_first_bnb(protein_3d)
+            check_protein()
+            assert checkpoint_path.exists()
+            assert checkpoint == checkpoint_path.read_text()
