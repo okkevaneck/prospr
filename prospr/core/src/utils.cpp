@@ -85,7 +85,12 @@ std::optional<std::string> get_cache_dir(const std::string &algorithm, bool crea
     {
         return std::nullopt; // env var not set
     }
-    std::string cache_dir = std::string(cache_dir_env) + "/" + algorithm;
+    std::string cache_dir = std::string(cache_dir_env);
+    trim_inplace(cache_dir);
+    if (cache_dir.empty()) {
+        return std::nullopt; // env var was empty
+    }
+    cache_dir += PATH_SEPARATOR + algorithm;
     if (create)
     {
         if (!dir_exists(cache_dir))
