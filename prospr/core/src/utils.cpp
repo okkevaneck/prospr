@@ -8,30 +8,93 @@
 #include "utils.hpp"
 
 #include <iostream>
+#include <sstream>
+#include <string.h>
+#include <sys/stat.h>
 
-/* Return the path to the cache directory for a given algorithm, if the environment variable PROSPR_CACHE_DIR ist set. */
-std::optional<std::filesystem::path> get_cache_dir(const std::string &algorithm, bool create)
+#ifdef _WIN32
+#include <direct.h>
+#define mkdir(p, m) _mkdir(p)
+#include <sys/stat.h>
+#define stat _stat
+#ifndef S_ISDIR
+#define S_ISDIR(m) (((m) & _S_IFDIR) != 0)
+#endif
+#ifndef S_ISREG
+#define S_ISREG(m) (((m) & _S_IFREG) != 0)
+#endif
+#else
+#include <sys/stat.h>
+#endif
+
+/* Check if a file exists
+(Not using std::filesystem due to macOS compatibility issues)
+*/
+bool file_exists(const std::string &path)
+{
+    struct stat info;
+    return (stat(path.c_str(), &info) == 0 && S_ISREG(info.st_mode));
+}
+
+/* Check if a file exists
+(Not using std::filesystem due to macOS compatibility issues)
+*/
+static bool dir_exists(const std::string &path)
+{
+    struct stat info;
+    return stat(path.c_str(), &info) == 0 && S_ISDIR(info.st_mode);
+}
+
+/* Create directories of a path
+(Not using std::filesystem due to macOS compatibility issues)
+*/
+static bool make_dirs(const std::string &path)
+{
+    if (path.empty())
+        return false;
+    // if already exists, done
+    if (dir_exists(path))
+        return true;
+    // recursively create parent
+    auto pos = path.find_last_of(PATH_SEPARATOR);
+    if (pos != std::string::npos)
+    {
+        std::string parent = path.substr(0, pos);
+        if (!parent.empty() && !dir_exists(parent))
+        {
+            if (!make_dirs(parent))
+                return false;
+        }
+    }
+    // create this directory
+    if (mkdir(path.c_str(), 0755) != 0 && errno != EEXIST)
+    {
+        std::cerr << "Warning: mkdir failed for " << path << ": " << strerror(errno) << "\n";
+        return false;
+    }
+    return true;
+}
+
+/* Return the path to the cache directory for a given algorithm, if the environment variable PROSPR_CACHE_DIR ist set.
+(Not using std::filesystem due to macOS compatibility issues)
+*/
+std::optional<std::string> get_cache_dir(const std::string &algorithm, bool create)
 {
     const char *cache_dir_env = std::getenv("PROSPR_CACHE_DIR");
     if (!cache_dir_env)
     {
         return std::nullopt; // env var not set
     }
-    std::filesystem::path cache_dir(cache_dir_env);
-    cache_dir /= algorithm;
+    std::string cache_dir = std::string(cache_dir_env) + "/" + algorithm;
     if (create)
     {
-        try
+        if (!dir_exists(cache_dir))
         {
-            if (!std::filesystem::exists(cache_dir))
+            if (!make_dirs(cache_dir))
             {
-                std::filesystem::create_directories(cache_dir);
+                std::cerr << "Warning: Failed to create prospr cache directory at " << cache_dir << "\n";
+                return std::nullopt;
             }
-        }
-        catch (const std::filesystem::filesystem_error &e)
-        {
-            std::cerr << "Warning: Failed to create prospr cache directory: " << e.what() << "\n";
-            return std::nullopt;
         }
     }
     return cache_dir;

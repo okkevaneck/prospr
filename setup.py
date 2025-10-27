@@ -24,7 +24,14 @@ module = Pybind11Extension(
 
 # Check enable debugging
 # (Console output and pausing in depth_first_bnb(...))
-if os.getenv("PROSPR_DEBUG_STEPS", "false").lower() in ["1", "yes", "true", "on"]:
+if os.getenv("PROSPR_DEBUG_STEPS", "false").lower() in [
+    "1",
+    "on",
+    "yes",
+    "true",
+    "enable",
+    "enabled",
+]:
     module.define_macros = list(module.define_macros or [])
     module.define_macros.append(("PROSPR_DEBUG_STEPS", None))
 

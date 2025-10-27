@@ -112,7 +112,7 @@ void try_store_checkpoint(const Protein& protein,
 #endif
       return;
     }
-    std::string filename = (*cache_dir / protein.get_sequence().append(".checkpoint")).string();
+    std::string filename = *cache_dir + PATH_SEPARATOR + protein.get_sequence() + ".checkpoint";
 #ifdef PROSPR_DEBUG_STEPS
       std::cout << "[Debug depth_first_bnb] Writing to checkpoint: " << filename << std::endl;
 #endif
@@ -170,9 +170,8 @@ void try_load_checkpoint(Protein& protein,
 #endif
       return;
     }
-    std::string filename = (*cache_dir / protein.get_sequence().append(".checkpoint")).string();
-    std::filesystem::path path(filename);
-    if (!std::filesystem::exists(path)) {
+    std::string filename = *cache_dir + PATH_SEPARATOR + protein.get_sequence() + ".checkpoint";
+    if (!file_exists(filename)) {
 #ifdef PROSPR_DEBUG_STEPS
           std::cout << "[Debug depth_first_bnb] No checkpoint to load:" << filename << std::endl;
 #endif
