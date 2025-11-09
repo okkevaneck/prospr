@@ -21,9 +21,8 @@ if sys.platform == "darwin":
     # macOS: Requires libomp installed via brew install libomp
     use_omp = os.environ.get("MAC_USE_LOMP", "0") == "1"
     if use_omp:
-        for ext in self.extensions:
-            compile_args.append("-Xpreprocessor -fopenmp")
-            link_args.extend(["-lomp"])
+        compile_args.append("-Xpreprocessor -fopenmp")
+        link_args.extend(["-lomp"])
     else:
         print("Warning: OpenMP is not enabled on macOS by default."
               " Set MAC_USE_LOMP=1 to enable it.", file=sys.stderr)
