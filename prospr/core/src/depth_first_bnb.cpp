@@ -12,11 +12,14 @@
 
 #include <algorithm>
 #include <functional>
+#include <iostream>
 #include <numeric>
 #include <stack>
 #include <vector>
 
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 /* All possible variables required by custom pruning. */
 struct prune_vars {
@@ -264,7 +267,7 @@ std::vector<Protein> pre_fold(Protein* protein, size_t depth) {
  * conformation using OpenMP to explore multiple subtrees in parallel.
  */
 void depth_first_bnb_parallel(Protein *protein, std::string prune_func, float work_ratio) {
-
+#ifdef _OPENMP
   int workerCount;
   #pragma omp parallel
   #pragma omp single
@@ -297,4 +300,12 @@ void depth_first_bnb_parallel(Protein *protein, std::string prune_func, float wo
     }
   }
   protein->set_hash(best_hash);
+#else
+  static bool warned = false;
+  if (!warned) {
+      std::cerr << "Warning: Built without OpenMP support. Using serial depth_first_bnb(...) instead.\n";
+      warned = true;
+  }
+  depth_first_bnb(protein, prune_func);
+#endif
 }
