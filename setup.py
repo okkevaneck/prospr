@@ -8,6 +8,7 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
+import os
 import sys
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
