@@ -35,6 +35,24 @@ specifying a submodule, e.g.
     |     *Does not reset the Protein properties beforehand!*
     |         *Parameters:*
     |             * **protein** - *Protein*: the Protein object to fold.
+    |             * **prune_func** - *str*: "naive_prune" (default) or "reach_prune".
+    |             * **is_pre_folded** - *bool*: If _True_, the partial hash
+                    of the protein will not be reset (Default is _False_.)
+    |         *Returns:*
+    |             * **Protein** - the Protein object set at the found
+                    conformation and with updated properties according to the
+                    performed moves.
+
+    | **depth_first_bnb_parallel**\ (*protein*)
+    |     Finds the most optimal conformation using a depth-first
+          branch-and-bound algorithm.
+    |     Multiple subtrees are enumerated and solved in parallel using OpenMP.
+    |     *Does not reset the Protein properties beforehand!*
+    |         *Parameters:*
+    |             * **protein** - *Protein*: the Protein object to fold.
+    |             * **prune_func** - *str*: "naive_prune" (default) or "reach_prune".
+    |             * **work_ratio** - *float*: The number of subtrees per thread to aim for.
+                    Too low/high values may result in degraded performance. (Default is 3.)
     |         *Returns:*
     |             * **Protein** - the Protein object set at the found
                     conformation and with updated properties according to the

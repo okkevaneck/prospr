@@ -56,6 +56,16 @@ void test_depth_first_bnb() {
   assert(protein->get_score() == -4);
   delete protein;
   std::cout << "\t3D Protein solution scores matches.\n";
+
+  /* Check if parallel algorithm solutions are found correctly. */
+  protein = new Protein("PHPHPHPPH", 2, "HP");
+  depth_first_bnb_parallel(protein);
+  int score = protein->get_score();
+  protein->reset();
+  depth_first_bnb(protein);
+  assert(score == protein->get_score());
+  delete protein;
+  std::cout << "\t2D Protein solution scores matches between parallel and serial algorithms.\n";
 }
 
 /* Test functionality of depth_first_bnb. */

@@ -10,7 +10,7 @@ set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CFLAGS="-o3 -g -Wall -Wextra -Wconversion -Wcast-align -std=c++11
-    -Wunreachable-code"
+    -Wunreachable-code -fopenmp"
 DEBUG=""
 VALGRIND=""
 
@@ -122,6 +122,7 @@ test_all() {
     test_protein
     test_depth_first
     test_depth_first_bnb
+    test_depth_first_bnb_parallel
     test_beam_search
 }
 

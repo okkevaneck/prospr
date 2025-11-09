@@ -14,6 +14,11 @@
 /* A depth-first branch-and-bound search function for finding a minimum energy
  * conformation.
  */
-void depth_first_bnb(Protein *protein, std::string prune_func = "");
+void depth_first_bnb(Protein *protein, std::string prune_func = "", bool is_pre_folded = false);
+
+/* A depth-first branch-and-bound search function for finding a minimum energy
+ * conformation using OpenMP to explore multiple subtrees in parallel.
+ */
+void depth_first_bnb_parallel(Protein *protein, std::string prune_func = "", float work_ratio = 3);
 
 #endif
