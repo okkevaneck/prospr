@@ -289,7 +289,7 @@ void depth_first_bnb_parallel(Protein *protein, std::string prune_func, float wo
   int best_score = 1;
   std::vector<int> best_hash;
   #pragma omp parallel for schedule(dynamic) shared(best_score, best_hash)
-  for(size_t i = 0; i < pre_folded.size(); i++) {
+  for(int i = 0; i < (int) pre_folded.size(); i++) {
     Protein& candidate_protein = pre_folded[i];
     depth_first_bnb(&candidate_protein, prune_func, true);
     int score = candidate_protein.get_score();
