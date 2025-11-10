@@ -163,9 +163,13 @@ void depth_first_bnb(Protein *protein, std::string prune_func, bool is_pre_folde
 
   /* Declare and set variables for the depth-first search. */
   bool placed_amino = false;
-  int best_score = protein->get_score(); /* May be pre-folded */
+  int best_score = 1; protein->get_score();
   int score;
-  std::vector<int> best_hash = protein->hash_fold(); /* May be pre-folded */
+  std::vector<int> best_hash = protein->hash_fold();
+  if (is_pre_folded) {
+    best_score = protein->get_score();
+    best_hash = protein->hash_fold();
+  }
 
   do {
     placed_amino = false;
