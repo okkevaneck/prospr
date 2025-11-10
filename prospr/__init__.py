@@ -10,6 +10,7 @@ from prospr_core import (
 from .datasets import load_vanEck250, load_vanEck1000, load_vanEck_hratio
 from .helpers import export_protein
 from .visualize import plot_protein
+from .experimental import depth_first_symmetry
 
 # Import __version__ from _version.py during compile time.
 exec(open(Path(__file__).parent.absolute() / "_version.py").read())
@@ -19,6 +20,7 @@ __all__ = [
     "AminoAcid",
     "Protein",
     "depth_first",
+    "depth_first_symmetry",
     "depth_first_bnb",
     "beam_search",
     "load_vanEck250",
