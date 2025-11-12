@@ -9,13 +9,12 @@
 #include "depth_first_bnb.hpp"
 #include "utils.hpp"
 
-#include <math.h>
-
 #include <algorithm>
 #include <atomic>
 #include <csignal>
 #include <fstream>
 #include <iostream>
+#include <math.h>
 #include <numeric>
 #include <sstream>
 #include <stack>
