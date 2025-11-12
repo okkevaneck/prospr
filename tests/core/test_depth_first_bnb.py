@@ -8,7 +8,7 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
-from prospr import Protein, depth_first_bnb
+from prospr import Protein, depth_first_bnb, depth_first_bnb_parallel
 import pytest
 
 
@@ -50,3 +50,14 @@ class TestDepthFirstBnB:
         assert protein_3d.score == -4
         assert protein_3d.solutions_checked == 5
         assert protein_3d.aminos_placed == 49368
+
+    
+    def test_protein_2d_depth_first_bnb_parallel(self, protein_2d):
+        """
+        Test if parallel algorithm solution matches serial algorithm.
+        """
+        depth_first_bnb_parallel(protein_2d)
+        score = protein_2d.score
+        protein_2d.reset()
+        depth_first_bnb(protein_2d)
+        assert score == protein_2d.score

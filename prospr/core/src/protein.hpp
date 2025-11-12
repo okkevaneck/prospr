@@ -82,7 +82,7 @@ public:
   void reset_conformation();
 
   /* Returns true if a move is valid, returns false otherwise. */
-  bool is_valid(int move);
+  bool is_valid(int move) const;
 
   /* Place the next amino acid and update the conformation accordingly. */
   void place_amino(int move, bool track = true);
@@ -125,6 +125,10 @@ private:
   std::vector<std::pair<int, int>>
   _append_bond_pairs(std::vector<std::pair<int, int>> pairs,
                      std::vector<int> pos, std::vector<int> moves);
+
+  /* Private member access required to merge statistics of subtree solutions */
+  friend void depth_first_bnb_parallel(Protein *protein, std::string prune_func, float work_ratio);
+  friend void depth_first_bnb_parallel123(Protein *protein, std::string prune_func, float work_ratio);
 };
 
 /* Overload << operator for printing Proteins. */

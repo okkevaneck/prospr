@@ -84,7 +84,13 @@ PYBIND11_MODULE(prospr_core, m) {
   m.def("depth_first_bnb", depth_first_bnb,
         "Finds the optimal conformation via depth-first branch-and-bound "
         "search",
-        py::arg("protein"), py::arg("prune_func") = "");
+        py::arg("protein"), py::arg("prune_func") = "", py::arg("is_pre_folded") = false);
+
+  /* Parallel depth-first branch-and-bound search function definition. */
+  m.def("depth_first_bnb_parallel", depth_first_bnb_parallel,
+        "Finds the optimal conformation via depth-first branch-and-bound "
+        "search using OpenMP and multiple subtrees",
+        py::arg("protein"), py::arg("prune_func") = "", py::arg("work_ratio") = 3);
 
   /* Beam search function definition. */
   m.def("beam_search", beam_search,

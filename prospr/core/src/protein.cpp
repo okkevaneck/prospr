@@ -277,7 +277,7 @@ void Protein::reset_conformation() {
 }
 
 /* Returns true if a move is valid, returns false otherwise. */
-bool Protein::is_valid(int move) {
+bool Protein::is_valid(int move) const {
   std::vector<int> check_pos = last_pos;
   check_pos[abs(move) - 1] += move / abs(move);
 

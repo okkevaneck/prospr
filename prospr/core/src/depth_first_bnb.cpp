@@ -11,9 +11,15 @@
 #include <math.h>
 
 #include <algorithm>
+#include <functional>
+#include <iostream>
 #include <numeric>
 #include <stack>
 #include <vector>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 /* All possible variables required by custom pruning. */
 struct prune_vars {
@@ -93,17 +99,20 @@ bool reach_prune(Protein *protein, int move, int best_score,
 /* A depth-first branch-and-bound search function for finding a minimum
  * energy conformation.
  */
-void depth_first_bnb(Protein *protein, std::string prune_func) {
-  protein->reset_conformation();
+void depth_first_bnb(Protein *protein, std::string prune_func, bool is_pre_folded) {
+  if (!is_pre_folded)
+    protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
   size_t no_neighbors = (size_t)pow(2, (dim - 1));
 
-  /* The first two amino acids are fixed to prevent y-axis symmetry. */
-  if (max_length > 1)
-    protein->place_amino(-1);
-  if (max_length <= 2)
-    return;
+  if (!is_pre_folded) {
+    /* The first two amino acids are fixed to prevent y-axis symmetry. */
+    if (max_length > 1)
+      protein->place_amino(-1);
+    if (max_length <= 2)
+      return;
+  }
 
   /* Init default prune functions and arguments. */
   auto prune_branch = naive_prune;
@@ -154,9 +163,13 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
 
   /* Declare and set variables for the depth-first search. */
   bool placed_amino = false;
-  int best_score = 1;
+  int best_score = 1; protein->get_score();
   int score;
-  std::vector<int> best_hash;
+  std::vector<int> best_hash = protein->hash_fold();
+  if (is_pre_folded) {
+    best_score = protein->get_score();
+    best_hash = protein->hash_fold();
+  }
 
   do {
     placed_amino = false;
@@ -214,6 +227,89 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
     }
   } while (move != -dim - 1 || !dfs_stack.empty());
 
+  /* Complete hash with "straight line" */
+  while (best_hash.size() < max_length - 1)
+    best_hash.push_back(best_hash.back());
   /* Set best found conformation and return protein. */
   protein->set_hash(best_hash);
+}
+
+/* Iterate all valid leaf nodes of pre-folded proteins at a certain depth
+ * (limited to tree depth).
+ */
+std::vector<Protein> pre_fold(Protein* protein, size_t depth) {
+  std::vector<Protein> pre_folded;
+  const int dim = protein->get_dim();
+  const size_t max_length = protein->get_sequence().length();
+  std::function<void(const Protein&, size_t)> pre_fold_recurse;
+  pre_fold_recurse = [&](const Protein& protein, size_t recurse) {
+    for(int move = -dim; move <= dim; move++) {
+      if(move == 0) continue;
+      if(!protein.is_valid(move)) continue;
+      Protein next(protein);
+      next.place_amino(move);
+      if(recurse)
+        pre_fold_recurse(next, recurse - 1);
+      else
+        pre_folded.push_back(next);
+    }
+  };
+  Protein root(*protein);
+  root.reset_conformation();
+  /* The first two amino acids are fixed to prevent y-axis symmetry. */
+  if (max_length > 1)
+    root.place_amino(-1);
+  depth = std::min(max_length, depth) - 1;
+  if(depth > 0)
+    pre_fold_recurse(root, depth - 1);
+  else
+    pre_folded.push_back(root);
+  return pre_folded;
+}
+
+/* A depth-first branch-and-bound search function for finding a minimum energy
+ * conformation using OpenMP to explore multiple subtrees in parallel.
+ */
+void depth_first_bnb_parallel(Protein *protein, std::string prune_func, float work_ratio) {
+#ifdef _OPENMP
+  int workerCount;
+  #pragma omp parallel
+  #pragma omp single
+  {
+    workerCount = omp_get_num_threads();
+  }
+  float targetSubtreeCount = (float)(workerCount) * work_ratio;
+  /* Each node has up to 3 child nodes -> determine closest depth to match work_ratio */
+  size_t pre_fold_depth = (size_t)std::max(0ll, llround(log(targetSubtreeCount) / log(3.0)));
+  auto pre_folded = pre_fold(protein, pre_fold_depth);
+
+  /*TODO: Consider sharing a reference to best_score between threads for better pruning.
+   *      (Requires atomic compare-and-update.)
+   */
+  int best_score = 1;
+  std::vector<int> best_hash;
+  #pragma omp parallel for schedule(dynamic) shared(best_score, best_hash)
+  for(int i = 0; i < (int) pre_folded.size(); i++) {
+    Protein& candidate_protein = pre_folded[i];
+    depth_first_bnb(&candidate_protein, prune_func, true);
+    int score = candidate_protein.get_score();
+    #pragma omp critical
+    {
+      if(score < best_score) {
+        best_score = score;
+        best_hash = candidate_protein.hash_fold();
+        protein->aminos_placed += candidate_protein.get_aminos_placed();
+        protein->solutions_checked += candidate_protein.get_solutions_checked();
+      }
+    }
+  }
+  protein->set_hash(best_hash);
+#else
+  static bool warned = false;
+  if (!warned) {
+      std::cerr << "Warning: Built without OpenMP support. Using serial depth_first_bnb(...) instead.\n";
+      warned = true;
+  }
+  depth_first_bnb(protein, prune_func);
+#endif
 }
