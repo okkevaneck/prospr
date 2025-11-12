@@ -35,7 +35,7 @@ bool file_exists(const std::string &path) {
   return (stat(path.c_str(), &info) == 0 && S_ISREG(info.st_mode));
 }
 
-/* Check if a file exists.
+/* Check if a dir exists.
  * (Not using std::filesystem due to macOS compatibility issues)
  */
 static bool dir_exists(const std::string &path) {
