@@ -215,13 +215,13 @@ int Protein::get_score() { return score; }
 std::uint64_t Protein::get_solutions_checked() const { return solutions_checked; }
 
 /* Set the number of checked solutions. */
-void Protein::set_solutions_checked(std::uint64_t checked) { solutions_checked = checked; }
+void Protein::_set_solutions_checked(std::uint64_t checked) { solutions_checked = checked; }
 
 /* Returns the number of amino acids placed. */
 std::uint64_t Protein::get_aminos_placed() const { return aminos_placed; }
 
 /* Set the number of amino acids placed. */
-void Protein::set_aminos_placed(std::uint64_t placed) { aminos_placed = placed; }
+void Protein::_set_aminos_placed(std::uint64_t placed) { aminos_placed = placed; }
 
 /* Returns if the amino acid at the given index is weighted. */
 bool Protein::is_weighted(size_t index) {

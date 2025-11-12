@@ -63,14 +63,8 @@ public:
   /* Returns the number of performed changes. */
   std::uint64_t get_solutions_checked() const;
 
-  /* Set the number of performed changes. */
-  void set_solutions_checked(std::uint64_t);
-
   /* Returns the number of amino acids placed. */
   std::uint64_t get_aminos_placed() const;
-
-  /* Set the number of amino acids placed. */
-  void set_aminos_placed(std::uint64_t);
 
   /* Returns if the amino acid at the given index is weighted. */
   bool is_weighted(size_t index);
@@ -120,6 +114,12 @@ private:
   std::uint64_t solutions_checked;
   std::vector<AminoAcid *> amino_acids;
 
+  /* Set the number of performed changes. */
+  void _set_solutions_checked(std::uint64_t);
+
+  /* Set the number of amino acids placed. */
+  void _set_aminos_placed(std::uint64_t);
+
   /* Change score according to the already performed addition or removal
    * of the given move.
    */
@@ -131,6 +131,8 @@ private:
   std::vector<std::pair<int, int>>
   _append_bond_pairs(std::vector<std::pair<int, int>> pairs,
                      std::vector<int> pos, std::vector<int> moves);
+
+  friend void load_protein_state(Protein&, std::istream&);
 };
 
 /* Overload << operator for printing Proteins. */
