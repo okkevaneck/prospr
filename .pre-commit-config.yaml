@@ -4,7 +4,7 @@ exclude: >
   (?x)^(
       .idea/.*|
   )$
-default_stages: [commit]
+default_stages: [pre-commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
