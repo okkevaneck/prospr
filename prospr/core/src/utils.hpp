@@ -19,15 +19,22 @@
 #define PATH_SEPARATOR '/'
 #endif
 
-/* Check if a file exists
-(Not using std::filesystem due to macOS compatibility issues)
-*/
+/* Check if a file exists.
+ * (Not using std::filesystem due to macOS compatibility issues)
+ */
 bool file_exists(const std::string &path);
 
-/* Return the path to the cache directory for a given algorithm, if the environment variable PROSPR_CACHE_DIR ist set.
-(Not using std::filesystem due to macOS compatibility issues)
-*/
-std::optional<std::string> get_cache_dir(const std::string &algorithm, bool create = false);
+/* Check if a dir exists.
+ * (Not using std::filesystem due to macOS compatibility issues)
+ */
+static bool dir_exists(const std::string &path);
+
+/* Return the path to the cache directory for a given algorithm, if the
+ * environment variable PROSPR_CACHE_DIR ist set. (Not using std::filesystem due
+ * to macOS compatibility issues)
+ */
+std::optional<std::string> get_cache_dir(const std::string &algorithm,
+                                         bool create = false);
 
 /* Remove leading and trailing whitespace from a string */
 void trim_inplace(std::string &s);
