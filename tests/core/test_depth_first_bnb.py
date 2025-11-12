@@ -38,7 +38,7 @@ class TestDepthFirstBnB:
 
     def test_protein_2d_depth_first_bnb_reach(self, protein_2d):
         """
-        Test if a 2D solutions is folded correctly using reach_prune criteria.
+        Test if a 2D solution is folded correctly using reach_prune criteria.
         """
         depth_first_bnb(protein_2d, "reach_prune")
         assert protein_2d.score == -3
@@ -64,7 +64,7 @@ class TestDepthFirstBnB:
             assert len(list(Path(tmpdir).iterdir())) == 0
             depth_first_bnb(protein_3d)
             assert len(list(Path(tmpdir).iterdir())) == 0
-        # Still solves the protein correctly
+        # Still solves the protein correctly.
         assert protein_3d.score == -4
         assert protein_3d.solutions_checked == 5
         assert protein_3d.aminos_placed == 49368
@@ -82,8 +82,11 @@ class TestDepthFirstBnB:
 
         with TemporaryDirectory() as tmpdir:
             os.environ["PROSPR_CACHE_DIR"] = tmpdir
-            checkpoint_path = Path(tmpdir) / "depth_first_bnb" / \
-                (protein_3d.sequence + ".checkpoint")
+            checkpoint_path = (
+                Path(tmpdir)
+                / "depth_first_bnb"
+                / (protein_3d.sequence + ".checkpoint")
+            )
             assert not checkpoint_path.exists()
             depth_first_bnb(protein_3d)
             check_protein()
