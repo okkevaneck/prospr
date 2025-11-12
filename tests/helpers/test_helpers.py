@@ -11,7 +11,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 import pytest
-from prospr import *
+from prospr import Protein, export_protein, depth_first
 
 
 class TestHelpers:
@@ -47,7 +47,8 @@ class TestHelpers:
         assert pdb_lines[1].startswith("TITLE     ")
         assert pdb_lines[2].startswith("REMARK    ")
 
-        # Expect valid atoms section (Carbon with ALA/SER residue names for amino acids)
+        # Expect valid atoms section (Carbon with ALA/SER residue names for
+        # amino acids)
         assert all(
             pdb_lines[3 + i].startswith("ATOM ") for i in range(n_aminos)
         )
