@@ -20,6 +20,9 @@
 #include <stack>
 #include <vector>
 
+/* Global flag for custom handling of SIGINT. */
+std::atomic<int> COUGHT_SIGNAL{0};
+
 /* All possible variables required by custom pruning. */
 struct prune_vars {
   size_t max_length;
@@ -95,8 +98,8 @@ bool reach_prune(Protein *protein, int move, int best_score,
   return cur_score + branch_score >= best_score;
 }
 
-/* If a checkpoint location is provided through the environment, attemt to store
- * the checkpoint.
+/* If a checkpoint location is provided through the environment, attempt to
+ * store the checkpoint.
  */
 void try_store_checkpoint(const Protein &protein,
                           const std::stack<int> &dfs_stack, int move,
@@ -161,7 +164,7 @@ void try_store_checkpoint(const Protein &protein,
   ofs << "iterations=" << iterations << "\n";
 }
 
-/* If a checkpoint location is provided through the environment, attemt to load
+/* If a checkpoint location is provided through the environment, attempt to load
  * the checkpoint.
  */
 void try_load_checkpoint(Protein &protein, std::stack<int> &dfs_stack,
@@ -251,19 +254,17 @@ void try_load_checkpoint(Protein &protein, std::stack<int> &dfs_stack,
   }
 }
 
-std::atomic<int> caught_signal{0};
-
 /* Function to catch signals (SIGTERM, SIGINT) and store them for delayed
  * handling. */
 void signal_handler(int signal) {
-  caught_signal.store(signal, std::memory_order_relaxed);
+  COUGHT_SIGNAL.store(signal, std::memory_order_relaxed);
 }
 
 /* A depth-first branch-and-bound search function for finding a minimum
  * energy conformation.
  */
 void depth_first_bnb(Protein *protein, std::string prune_func) {
-  /* Override signal handlers */
+  /* Override signal handlers. */
   void (*signal_handler_sigint)(int) = std::signal(SIGINT, signal_handler);
   void (*signal_handler_sigterm)(int) = std::signal(SIGTERM, signal_handler);
 
@@ -344,7 +345,7 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
 
   do {
     /* Break if a signal was caught. */
-    signal = caught_signal.exchange(0);
+    signal = COUGHT_SIGNAL.exchange(0);
     if (signal)
       break;
 

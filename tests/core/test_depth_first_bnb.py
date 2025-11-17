@@ -73,7 +73,6 @@ class TestDepthFirstBnB:
         """
         Test if a checkpoint is created correctly.
         """
-
         # Still solves the protein correctly
         def check_protein():
             assert protein_3d.score == -4

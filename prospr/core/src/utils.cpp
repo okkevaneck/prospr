@@ -75,7 +75,7 @@ static bool make_dirs(const std::string &path) {
 }
 
 /* Return the path to the cache directory for a given algorithm, if the
- * environment variable PROSPR_CACHE_DIR ist set. (Not using std::filesystem due
+ * environment variable PROSPR_CACHE_DIR is set. (Not using std::filesystem due
  * to macOS compatibility issues)
  */
 std::optional<std::string> get_cache_dir(const std::string &algorithm,
