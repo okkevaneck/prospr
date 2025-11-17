@@ -9,7 +9,7 @@
 set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-CFLAGS="-o3 -g -Wall -Wextra -Wconversion -Wcast-align -std=c++11
+CFLAGS="-o3 -g -Wall -Wextra -Wconversion -Wcast-align -std=c++17
     -Wunreachable-code"
 DEBUG=""
 VALGRIND=""
@@ -80,7 +80,7 @@ test_depth_first_bnb() {
     # shellcheck disable=SC2086
     c++ $CFLAGS -o test_algorithms test_algorithms.cpp ../src/beam_search.cpp \
         ../src/depth_first.cpp ../src/depth_first_bnb.cpp ../src/protein.cpp \
-        ../src/amino_acid.cpp
+        ../src/amino_acid.cpp ../src/utils.cpp
 
     echo "~ Compilation successful, running the tests.."
 

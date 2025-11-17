@@ -53,7 +53,7 @@ documentation = "https://prospr.readthedocs.io"
 repository = "https://github.com/okkevaneck/prospr"
 
 [tool.setuptools]
-packages = ["prospr"]
+packages = {find = {include = ["prospr", "prospr.*"]}}
 package-dir = {"prospr" = "prospr"}
 zip-safe = false
 platforms = ["Linux", "macOS", "Windows"]

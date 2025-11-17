@@ -7,12 +7,13 @@ License:        This file is licensed under the GNU LGPL V3 license by
                 specifics.
 """
 
+from pathlib import Path
 import pandas as pd
 
 
 def _load_dataset(folder, filename):
     """Returns a specified dataset as a dataframe."""
-    return pd.read_csv(f"prospr/data/{folder}/{filename}")
+    return pd.read_csv(f"{Path(__file__).parent}/data/{folder}/{filename}")
 
 
 def load_vanEck250(length=10):
