@@ -132,6 +132,9 @@ private:
   _append_bond_pairs(std::vector<std::pair<int, int>> pairs,
                      std::vector<int> pos, std::vector<int> moves);
 
+  /* Deserialize the state of the protein from key=value format. 
+   * Required by the checkpointing utilities.
+   */
   friend void load_protein_state(Protein&, std::istream&);
 };
 
