@@ -35,7 +35,7 @@ public:
   Protein &operator=(const Protein &other);
 
   /* Returns the Protein's sequence. */
-  std::string get_sequence();
+  std::string get_sequence() const;
 
   /* Returns the Protein's set maximum dimension. */
   int get_dim();
@@ -61,10 +61,10 @@ public:
   int get_score();
 
   /* Returns the number of performed changes. */
-  std::uint64_t get_solutions_checked();
+  std::uint64_t get_solutions_checked() const;
 
   /* Returns the number of amino acids placed. */
-  std::uint64_t get_aminos_placed();
+  std::uint64_t get_aminos_placed() const;
 
   /* Returns if the amino acid at the given index is weighted. */
   bool is_weighted(size_t index);
@@ -91,7 +91,7 @@ public:
   void remove_amino();
 
   /* Hash and return the fold of the current conformation. */
-  std::vector<int> hash_fold();
+  std::vector<int> hash_fold() const;
 
   /* Set the conformation to the given hash. */
   void set_hash(std::vector<int> fold_hash, bool track = false);
@@ -114,6 +114,12 @@ private:
   std::uint64_t solutions_checked;
   std::vector<AminoAcid *> amino_acids;
 
+  /* Set the number of performed changes. */
+  void _set_solutions_checked(std::uint64_t);
+
+  /* Set the number of amino acids placed. */
+  void _set_aminos_placed(std::uint64_t);
+
   /* Change score according to the already performed addition or removal
    * of the given move.
    */
@@ -125,6 +131,11 @@ private:
   std::vector<std::pair<int, int>>
   _append_bond_pairs(std::vector<std::pair<int, int>> pairs,
                      std::vector<int> pos, std::vector<int> moves);
+
+  /* Deserialize the state of the protein from key=value format. 
+   * Required by the checkpointing utilities.
+   */
+  friend void load_protein_state(Protein&, std::istream&);
 };
 
 /* Overload << operator for printing Proteins. */
