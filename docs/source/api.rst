@@ -207,7 +207,8 @@ can be imported from the *prospr.helpers* submodule, e.g.
 
     | **export_protein**\ (*protein, path*)
     |     Save conformation of a protein in Protein Data Bank (PDB) file format
-          for processing or visualization with external software such as `Mol* <https://molstar.org/>`_. 
+          for processing or visualization with external software such as
+          `Mol* <https://molstar.org/>`_.
     |         *Parameters:*
     |             * **protein** - *Protein*: Protein object to save the hash of.
     |             * **path** - *os.PathLike or str*: The path of the output file.

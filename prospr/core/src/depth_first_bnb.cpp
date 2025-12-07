@@ -7,13 +7,21 @@
  */
 
 #include "depth_first_bnb.hpp"
-
-#include <math.h>
+#include "utils.hpp"
 
 #include <algorithm>
+#include <atomic>
+#include <csignal>
+#include <fstream>
+#include <iostream>
+#include <math.h>
 #include <numeric>
+#include <sstream>
 #include <stack>
 #include <vector>
+
+/* Global flag for custom handling of SIGINT. */
+std::atomic<int> COUGHT_SIGNAL{0};
 
 /* All possible variables required by custom pruning. */
 struct prune_vars {
@@ -90,10 +98,176 @@ bool reach_prune(Protein *protein, int move, int best_score,
   return cur_score + branch_score >= best_score;
 }
 
+/* If a checkpoint location is provided through the environment, attempt to
+ * store the checkpoint.
+ */
+void try_store_checkpoint(const Protein &protein,
+                          const std::stack<int> &dfs_stack, int move,
+                          bool placed_amino, int best_score, int score,
+                          const std::vector<int> &best_hash, int iterations) {
+  /* Return if cache not in use. */
+  auto cache_dir = get_cache_dir("depth_first_bnb", true);
+  if (!cache_dir) {
+#ifdef PROSPR_DEBUG_STEPS
+    std::cout
+        << "[Debug depth_first_bnb] No cache directory to save checkpoint to."
+        << std::endl;
+#endif
+    return;
+  }
+
+  /* If cache is in use, try writing to checkpoint. */
+  std::string filename =
+      *cache_dir + PATH_SEPARATOR + protein.get_sequence() + ".checkpoint";
+#ifdef PROSPR_DEBUG_STEPS
+  std::cout << "[Debug depth_first_bnb] Writing to checkpoint: " << filename
+            << std::endl;
+#endif
+  std::ofstream ofs(filename);
+  if (!ofs)
+    throw std::runtime_error("Cannot open checkpoint file for writing.");
+
+  ofs << "; prospr checkpoint for sequence " << protein.get_sequence() << "\n";
+  ofs << "; Protein state:\n";
+  dump_protein_state(protein, ofs);
+  ofs << "\n; Algorithm state:\n";
+  ofs << "algorithm=depth_first_bnb\n";
+
+  /* Serialize stack as comma-separated list. */
+  std::stack<int> temp = dfs_stack;
+  std::vector<int> stack_data;
+  while (!temp.empty()) {
+    stack_data.push_back(temp.top());
+    temp.pop();
+  }
+  std::reverse(stack_data.begin(), stack_data.end());
+  ofs << "dfs_stack=";
+  for (size_t i = 0; i < stack_data.size(); ++i) {
+    if (i != 0)
+      ofs << ",";
+    ofs << stack_data[i];
+  }
+  ofs << "\n";
+
+  ofs << "move=" << move << "\n";
+  ofs << "placed_amino=" << placed_amino << "\n";
+  ofs << "best_score=" << best_score << "\n";
+  ofs << "score=" << score << "\n";
+
+  ofs << "best_hash=";
+  for (size_t i = 0; i < best_hash.size(); ++i) {
+    if (i != 0)
+      ofs << ",";
+    ofs << best_hash[i];
+  }
+  ofs << "\n";
+  ofs << "iterations=" << iterations << "\n";
+}
+
+/* If a checkpoint location is provided through the environment, attempt to load
+ * the checkpoint.
+ */
+void try_load_checkpoint(Protein &protein, std::stack<int> &dfs_stack,
+                         int &move, bool &placed_amino, int &best_score,
+                         int &score, std::vector<int> &best_hash,
+                         int &iterations) {
+  /* Return if cache not in use. */
+  auto cache_dir = get_cache_dir("depth_first_bnb");
+  if (!cache_dir) {
+#ifdef PROSPR_DEBUG_STEPS
+    std::cout
+        << "[Debug depth_first_bnb] No cache directory to load checkpoint from."
+        << std::endl;
+#endif
+    return;
+  }
+
+  /* If cache is in use, try loading to checkpoint. */
+  std::string filename =
+      *cache_dir + PATH_SEPARATOR + protein.get_sequence() + ".checkpoint";
+  if (!file_exists(filename)) {
+#ifdef PROSPR_DEBUG_STEPS
+    std::cout << "[Debug depth_first_bnb] No checkpoint to load:" << filename
+              << std::endl;
+#endif
+    return;
+  }
+
+#ifdef PROSPR_DEBUG_STEPS
+  std::cout << "[Debug depth_first_bnb] Reading from checkpoint: " << filename
+            << std::endl;
+#endif
+  std::ifstream ifs(filename);
+  if (!ifs)
+    throw std::runtime_error("Cannot open checkpoint file for reading.");
+
+  /* Load the protein state. */
+  load_protein_state(protein, ifs);
+
+  /* Read the file again for loading the algorithm state. */
+  ifs.clear();
+  ifs.seekg(0, std::ios::beg);
+
+  std::string line;
+  while (std::getline(ifs, line)) {
+    std::string key;
+    std::string value;
+    if (!parse_ini_line(line, key, value))
+      continue;
+
+    if (key == "dfs_stack") {
+      /* Clear the stack. */
+      dfs_stack = std::stack<int>();
+      std::vector<int> stack_data;
+      std::stringstream ss(value);
+      std::string token;
+      while (std::getline(ss, token, ',')) {
+        stack_data.push_back(std::stoi(token));
+      }
+
+      /* Rebuild the stack. */
+      for (int v : stack_data)
+        dfs_stack.push(v);
+    } else if (key == "algorithm" && value != "depth_first_bnb") {
+#ifdef PROSPR_DEBUG_STEPS
+      std::cerr << "[Debug depth_first_bnb] Unexpected value for checkpoint "
+                   "algorithm: "
+                << value << std::endl;
+#endif
+    } else if (key == "move")
+      move = std::stoi(value);
+    else if (key == "placed_amino")
+      placed_amino = std::stoi(value);
+    else if (key == "best_score")
+      best_score = std::stoi(value);
+    else if (key == "score")
+      score = std::stoi(value);
+    else if (key == "best_hash") {
+      best_hash.clear();
+      std::stringstream ss(value);
+      std::string token;
+      while (std::getline(ss, token, ',')) {
+        best_hash.push_back(std::stoi(token));
+      }
+    } else if (key == "iterations")
+      iterations = std::stoi(value) - 1;
+  }
+}
+
+/* Function to catch signals (SIGTERM, SIGINT) and store them for delayed
+ * handling. */
+void signal_handler(int signal) {
+  COUGHT_SIGNAL.store(signal, std::memory_order_relaxed);
+}
+
 /* A depth-first branch-and-bound search function for finding a minimum
  * energy conformation.
  */
 void depth_first_bnb(Protein *protein, std::string prune_func) {
+  /* Override signal handlers. */
+  void (*signal_handler_sigint)(int) = std::signal(SIGINT, signal_handler);
+  void (*signal_handler_sigterm)(int) = std::signal(SIGTERM, signal_handler);
+
   protein->reset_conformation();
   size_t max_length = protein->get_sequence().length();
   int dim = protein->get_dim();
@@ -158,7 +332,30 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
   int score;
   std::vector<int> best_hash;
 
+  int signal = 0;
+  int iterations = 0;
+
+  /* Load intermediate solution from cache if present. */
+  try_load_checkpoint(*protein, dfs_stack, move, placed_amino, best_score,
+                      score, best_hash, iterations);
+#ifdef PROSPR_DEBUG_STEPS
+  std::cout << "[Debug depth_first_bnb] Algorithm starting from iteration "
+            << iterations << "." << std::endl;
+#endif
+
   do {
+    /* Break if a signal was caught. */
+    signal = COUGHT_SIGNAL.exchange(0);
+    if (signal)
+      break;
+
+    iterations++;
+#ifdef PROSPR_DEBUG_STEPS
+    std::cout << "[Debug depth_first_bnb] Paused before iteration "
+              << iterations << ". (Press enter to continue!) " << std::flush;
+    std::cin.get();
+#endif
+
     placed_amino = false;
 
     /* Try to place the current amino acid. */
@@ -214,6 +411,16 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
     }
   } while (move != -dim - 1 || !dfs_stack.empty());
 
-  /* Set best found conformation and return protein. */
+  /* Write possible temporary solution to cache, if available. */
+  try_store_checkpoint(*protein, dfs_stack, move, placed_amino, best_score,
+                       score, best_hash, iterations);
+
+  /* Set best found conformation. */
   protein->set_hash(best_hash);
+
+  /* Restore signal handlers and propagate caught signal. */
+  std::signal(SIGINT, signal_handler_sigint);
+  std::signal(SIGTERM, signal_handler_sigterm);
+  if (signal)
+    std::raise(signal);
 }

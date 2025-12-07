@@ -365,6 +365,26 @@ be easily used via a direct import, as is shown below.
     p_2d.hash_fold()
     >> [1, 2, -1]
 
+Checkpoints
+-------------------
+The algorithm *depth_first_bnb(protein)* supports checkpoints to resume an interrupted search
+by storing the state of the protein and the algorithm to a file, after a signal
+(*SIGTERM* or *SIGINT*) is received.
+
+.. code-block:: python
+
+    import os
+
+    from prospr import Protein, depth_first_bnb
+
+    os.environ["PROSPR_CACHE_DIR"] = "/tmp/prospr"
+
+    p_2d = Protein("HPPH")
+    # Will read/write /tmp/prospr/depth_first_bnb/HPPH.checkpoint
+    depth_first_bnb(p_2d)
+    print("Done.")
+    >>>
+
 Visualizing conformations
 -------------------------
 Visualizing conformations can be key to understanding how the resulting

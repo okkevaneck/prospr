@@ -51,7 +51,8 @@ def export_protein(protein, path):
     buf.write("HEADER    HP-protein folding structure\n")
     buf.write(f"TITLE     Sequence: {protein.sequence}\n")
     buf.write(
-        "REMARK    Generated using prospr (https://github.com/okkevaneck/prospr)\n"
+        "REMARK    "
+        + "Generated using prospr (https://github.com/okkevaneck/prospr)\n"
     )
     # Amino acids
     for i, c in enumerate(coordinates):
@@ -61,7 +62,7 @@ def export_protein(protein, path):
         buf.write(f"ATOM  {i+1:5d}  CA  {amino_acid:>3} A{i+1:4d}    ")
         buf.write(f"{x:8.3f}{y:8.3f}{z:8.3f}  1.00  0.00           C\n")
     # Chain
-    buf.write(f"CONECT    1    2\n")
+    buf.write("CONECT    1    2\n")
     for i in range(2, len(coordinates)):
         buf.write(f"CONECT {i:4d} {i-1:4d} {i+1:4d}\n")
     buf.write("END\n")
