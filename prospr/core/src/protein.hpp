@@ -128,7 +128,6 @@ private:
 
   /* Private member access required to merge statistics of subtree solutions */
   friend void depth_first_bnb_parallel(Protein *protein, std::string prune_func, float work_ratio);
-  friend void depth_first_bnb_parallel123(Protein *protein, std::string prune_func, float work_ratio);
 };
 
 /* Overload << operator for printing Proteins. */
