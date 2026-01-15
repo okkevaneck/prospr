@@ -104,7 +104,8 @@ bool reach_prune(Protein *protein, int move, int best_score,
 void try_store_checkpoint(const Protein &protein,
                           const std::stack<int> &dfs_stack, int move,
                           bool placed_amino, int best_score, int score,
-                          const std::vector<int> &best_hash, int iterations) {
+                          const std::vector<int> &best_hash,
+                          uint64_t iterations) {
   /* Return if cache not in use. */
   auto cache_dir = get_cache_dir("depth_first_bnb", true);
   if (!cache_dir) {
@@ -170,7 +171,7 @@ void try_store_checkpoint(const Protein &protein,
 void try_load_checkpoint(Protein &protein, std::stack<int> &dfs_stack,
                          int &move, bool &placed_amino, int &best_score,
                          int &score, std::vector<int> &best_hash,
-                         int &iterations) {
+                         uint64_t &iterations) {
   /* Return if cache not in use. */
   auto cache_dir = get_cache_dir("depth_first_bnb");
   if (!cache_dir) {
@@ -250,7 +251,7 @@ void try_load_checkpoint(Protein &protein, std::stack<int> &dfs_stack,
         best_hash.push_back(std::stoi(token));
       }
     } else if (key == "iterations")
-      iterations = std::stoi(value) - 1;
+      iterations = std::stoull(value) - 1;
   }
 }
 
@@ -333,7 +334,7 @@ void depth_first_bnb(Protein *protein, std::string prune_func) {
   std::vector<int> best_hash;
 
   int signal = 0;
-  int iterations = 0;
+  uint64_t iterations = 0;
 
   /* Load intermediate solution from cache if present. */
   try_load_checkpoint(*protein, dfs_stack, move, placed_amino, best_score,
