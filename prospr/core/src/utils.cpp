@@ -181,8 +181,8 @@ void load_protein_state(Protein &protein, std::istream &in) {
         protein.place_amino(std::stoi(token));
       }
     } else if (key == "aminos_placed")
-      protein._set_aminos_placed(std::stoi(value));
+      protein._set_aminos_placed(std::stoull(value));
     else if (key == "solutions_checked")
-      protein._set_solutions_checked(std::stoi(value));
+      protein._set_solutions_checked(std::stoull(value));
   }
 }
