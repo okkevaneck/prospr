@@ -21,6 +21,8 @@ BASIC_MARKERSIZE = 80
 BASIC_LINEWIDTH = 2
 PAPER_MARKERSIZE = 210
 PAPER_LINEWIDTH = 2.5
+PAPER_EDGEWIDTH = 2.5
+PAPER_MIN_EDGEWIDTH = 1.5
 
 # Global colors.
 COLOR_H = "tab:blue"
@@ -108,11 +110,11 @@ def _plot_aminos_2d_paper(
     :param bool         annotate_first: Annotate first amino acid.
     """
     # Scale edgewidth according to markersize scale.
-    edgewidth = 2.5
+    edgewidth = PAPER_EDGEWIDTH
     if markersize != PAPER_MARKERSIZE:
-        edgewidth *= markersize / PAPER_MARKERSIZE
-    if markersize < PAPER_MARKERSIZE:
-        edgewidth *= 2
+        edgewidth = max(
+            PAPER_MIN_EDGEWIDTH, edgewidth * markersize / PAPER_MARKERSIZE
+        )
 
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
@@ -271,11 +273,11 @@ def _plot_aminos_3d_paper(
     :param Axes         ax:         Axis to plot on.
     """
     # Scale edgewidth according to markersize scale.
-    edgewidth = 1.3
+    edgewidth = PAPER_EDGEWIDTH
     if markersize != PAPER_MARKERSIZE:
-        edgewidth *= markersize / PAPER_MARKERSIZE
-    if markersize < PAPER_MARKERSIZE:
-        edgewidth *= 2
+        edgewidth = max(
+            PAPER_MIN_EDGEWIDTH, edgewidth * markersize / PAPER_MARKERSIZE
+        )
 
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
@@ -492,12 +494,12 @@ def plot_protein(
             style == "paper" and legend_style == "outer"
         ) or legend_style == "outer":
             box = ax.get_position()
-            ax.set_position((box.x0, box.y0, box.width * 0.7, box.height))
+            ax.set_position((box.x0, box.y0, box.width * 0.8, box.height))
             ax.legend(
                 handles=handles,
                 labels=labels,
-                loc="upper left",
-                bbox_to_anchor=(1, 1),
+                loc="center left",
+                bbox_to_anchor=(1, 0.5),
                 fontsize=fontsize,
             )
         else:
