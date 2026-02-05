@@ -16,6 +16,32 @@ class TestVisualization:
         p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
         plot_protein(p, style="paper", show=False)
 
+        p = Protein("HPPHPPHPPH", dim=2, model="HP")
+        p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
+        plot_protein(
+            p,
+            style="paper",
+            markersize=75,
+            linewidth=1,
+            fontsize=8,
+            show=False,
+        )
+
+        p = Protein("HPPHPPHPPH", dim=2, model="HP")
+        p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
+        plot_protein(p, style="basic", show=False)
+
+        p = Protein("HPPHPPHPPH", dim=2, model="HP")
+        p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
+        plot_protein(
+            p,
+            style="basic",
+            markersize=20,
+            linewidth=0.8,
+            fontsize=8,
+            show=False,
+        )
+
         p = Protein("PHPHHPPPHHPHPHH", dim=2, model="HP")
         p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
         plot_protein(p, style="basic", legend=False, show=False)
