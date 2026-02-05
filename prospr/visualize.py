@@ -22,7 +22,6 @@ BASIC_LINEWIDTH = 2
 PAPER_MARKERSIZE = 210
 PAPER_LINEWIDTH = 2.5
 PAPER_EDGEWIDTH = 2.5
-PAPER_MIN_EDGEWIDTH = 1.5
 
 # Global colors.
 COLOR_H = "tab:blue"
@@ -112,9 +111,9 @@ def _plot_aminos_2d_paper(
     # Scale edgewidth according to markersize scale.
     edgewidth = PAPER_EDGEWIDTH
     if markersize != PAPER_MARKERSIZE:
-        edgewidth = max(
-            PAPER_MIN_EDGEWIDTH, edgewidth * markersize / PAPER_MARKERSIZE
-        )
+        edgewidth *= markersize / PAPER_MARKERSIZE
+    if markersize < PAPER_MARKERSIZE:
+        edgewidth *= 2
 
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
@@ -275,9 +274,9 @@ def _plot_aminos_3d_paper(
     # Scale edgewidth according to markersize scale.
     edgewidth = PAPER_EDGEWIDTH
     if markersize != PAPER_MARKERSIZE:
-        edgewidth = max(
-            PAPER_MIN_EDGEWIDTH, edgewidth * markersize / PAPER_MARKERSIZE
-        )
+        edgewidth *= markersize / PAPER_MARKERSIZE
+    if markersize < PAPER_MARKERSIZE:
+        edgewidth *= 2
 
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
