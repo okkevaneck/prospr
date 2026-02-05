@@ -18,6 +18,10 @@ class TestVisualization:
 
         p = Protein("HPPHPPHPPH", dim=2, model="HP")
         p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
+        plot_protein(p, style="paper", legend_style="outer", show=False)
+
+        p = Protein("HPPHPPHPPH", dim=2, model="HP")
+        p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
         plot_protein(
             p,
             style="paper",

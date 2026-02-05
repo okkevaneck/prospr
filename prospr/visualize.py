@@ -494,7 +494,7 @@ def plot_protein(
             style == "paper" and legend_style == "outer"
         ) or legend_style == "outer":
             box = ax.get_position()
-            ax.set_position((box.x0, box.y0, box.width * 0.7, box.height))
+            ax.set_position((box.x0, box.y0, box.width * 0.8, box.height))
             ax.legend(
                 handles=handles,
                 labels=labels,
