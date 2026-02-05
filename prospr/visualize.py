@@ -498,8 +498,8 @@ def plot_protein(
             ax.legend(
                 handles=handles,
                 labels=labels,
-                loc="upper left",
-                bbox_to_anchor=(1, 1),
+                loc="center left",
+                bbox_to_anchor=(1, 0.5),
                 fontsize=fontsize,
             )
         else:
