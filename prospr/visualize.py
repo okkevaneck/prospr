@@ -16,15 +16,35 @@ from matplotlib.lines import Line2D
 import seaborn as sns
 import pandas as pd
 
+# Global defaults for correct scaling.
+BASIC_MARKERSIZE = 80
+BASIC_LINEWIDTH = 2
+PAPER_MARKERSIZE = 210
+PAPER_LINEWIDTH = 2.5
 
-def _plot_aminos_2d_basic(protein, df, ax):
+# Global colors.
+COLOR_H = "tab:blue"
+COLOR_P = "orange"
+COLOR_ANNOTATE = "#00ce00"
+COLOR_CONTACT = "indianred"
+COLOR_CHAIN = "black"
+
+
+def _plot_aminos_2d_basic(
+    protein, df, ax, linewidth, markersize, annotate_first=False
+):
     """
     Plot amino acids in basic style in a 2D figure.
-    :param Protein      protein:    Protein object to plot the hash of.
-    :param DataFrame    df:         DataFrame with all ordered positions.
-    :param Axes         ax:         Axis to plot on.
+    :param Protein      protein:        Protein object to plot the hash of.
+    :param DataFrame    df:             DataFrame with all ordered positions.
+    :param Axes         ax:             Axis to plot on.
+    :param float        linewidth:      Width of the lines.
+    :param float        markersize:     Size of the markers.
+    :param bool         annotate_first: Annotate first amino acid.
     """
-    ax.plot(df["x"], df["y"], color="black", alpha=0.65, zorder=1)
+    ax.plot(
+        df["x"], df["y"], color=COLOR_CHAIN, alpha=0.65, zorder=1, lw=linewidth
+    )
     sns.scatterplot(
         x="x",
         y="y",
@@ -33,11 +53,32 @@ def _plot_aminos_2d_basic(protein, df, ax):
         hue_order=["H", "P"],
         style="Type",
         markers={"H": "o", "P": "s"},
-        palette={"H": "royalblue", "P": "orange"},
-        s=80,
+        palette={"H": COLOR_H, "P": COLOR_P},
+        s=markersize,
         zorder=2,
         ax=ax,
     )
+
+    # Plot first point with a green edge color.
+    if annotate_first:
+        if df.iloc[0]["Type"] == "H":
+            ax.scatter(
+                df.iloc[0]["x"],
+                df.iloc[0]["y"],
+                marker="o",
+                fc=COLOR_ANNOTATE,
+                s=markersize,
+                zorder=2,
+            )
+        else:
+            ax.scatter(
+                df.iloc[0]["x"],
+                df.iloc[0]["y"],
+                marker="s",
+                fc=COLOR_ANNOTATE,
+                s=markersize,
+                zorder=2,
+            )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -47,10 +88,10 @@ def _plot_aminos_2d_basic(protein, df, ax):
             [pos1[0], pos2[0]],
             [pos1[1], pos2[1]],
             linestyle=":",
-            color="indianred",
+            color=COLOR_CONTACT,
             alpha=0.9,
             zorder=1,
-            lw=2,
+            lw=linewidth,
         )
 
 
@@ -59,20 +100,29 @@ def _plot_aminos_2d_paper(
 ):
     """
     Plot amino acids in paper style in a 2D figure.
-    :param Protein      protein:    Protein object to plot the hash of.
-    :param DataFrame    df:         DataFrame with all ordered positions.
-    :param Axes         ax:         Axis to plot on.
+    :param Protein      protein:        Protein object to plot the hash of.
+    :param DataFrame    df:             DataFrame with all ordered positions.
+    :param Axes         ax:             Axis to plot on.
     :param float        linewidth:      Width of the lines.
     :param float        markersize:     Size of the markers.
+    :param bool         annotate_first: Annotate first amino acid.
     """
+    # Scale edgewidth according to markersize scale.
+    edgewidth = 2.5
+    if markersize != PAPER_MARKERSIZE:
+        edgewidth *= markersize / PAPER_MARKERSIZE
+    if markersize < PAPER_MARKERSIZE:
+        edgewidth *= 2
+
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
+    # Plot protein.
     ax.plot(
         df["x"],
         df["y"],
-        color="black",
+        color=COLOR_CHAIN,
         alpha=0.65,
         linewidth=linewidth,
         zorder=1,
@@ -82,7 +132,8 @@ def _plot_aminos_2d_paper(
         y="y",
         data=df_H,
         marker="o",
-        edgecolor="royalblue",
+        facecolor=COLOR_H,
+        edgecolor=COLOR_H,
         s=markersize,
         zorder=2,
         ax=ax,
@@ -94,8 +145,8 @@ def _plot_aminos_2d_paper(
         data=df_P,
         marker="o",
         facecolor="white",
-        edgecolor="orange",
-        linewidth=2.5,
+        edgecolor=COLOR_P,
+        linewidth=edgewidth,
         s=markersize,
         zorder=2,
         ax=ax,
@@ -110,9 +161,9 @@ def _plot_aminos_2d_paper(
                 df.iloc[0]["x"],
                 df.iloc[0]["y"],
                 marker="o",
-                fc="royalblue",
-                ec="#00ce00",
-                lw=2.5,
+                fc=COLOR_H,
+                ec=COLOR_ANNOTATE,
+                lw=edgewidth,
                 s=markersize,
                 zorder=2,
             )
@@ -122,8 +173,8 @@ def _plot_aminos_2d_paper(
                 df.iloc[0]["y"],
                 marker="o",
                 fc="white",
-                ec="#00ce00",
-                lw=2.5,
+                ec=COLOR_ANNOTATE,
+                lw=edgewidth,
                 s=markersize,
                 zorder=2,
             )
@@ -136,7 +187,7 @@ def _plot_aminos_2d_paper(
             [pos1[0], pos2[0]],
             [pos1[1], pos2[1]],
             linestyle=":",
-            color="indianred",
+            color=COLOR_CONTACT,
             alpha=0.9,
             linewidth=linewidth,
             zorder=1,
@@ -146,38 +197,51 @@ def _plot_aminos_2d_paper(
     ax.axis("off")
 
 
-def _plot_aminos_3d_basic(protein, df, ax):
+def _plot_aminos_3d_basic(
+    protein, df, ax, linewidth, markersize, annotate_first=False
+):
     """
     Plot amino acids in basic style in a 3D figure.
-    :param Protein      protein:    Protein object to plot the hash of.
-    :param DataFrame    df:         DataFrame with all ordered positions.
-    :param Axes         ax:         Axis to plot on.
+    :param Protein      protein:        Protein object to plot the hash of.
+    :param DataFrame    df:             DataFrame with all ordered positions.
+    :param Axes         ax:             Axis to plot on.
+    :param float        linewidth:      Width of the lines.
+    :param float        markersize:     Size of the markers.
+    :param bool         annotate_first: Annotate first amino acid.
     """
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
-    ax.plot(df["x"], df["y"], df["z"], color="black", alpha=0.65, zorder=1)
+    ax.plot(
+        df["x"],
+        df["y"],
+        df["z"],
+        color="black",
+        alpha=0.65,
+        zorder=1,
+        lw=linewidth,
+    )
 
     # Plot the aminos connected with an opaque line.
     ax.scatter(
         df_H["x"],
         df_H["y"],
         df_H["z"],
-        c="royalblue",
+        c=COLOR_H,
         marker="o",
         depthshade=False,
-        s=60,
+        s=markersize,
         label="H",
     )
     ax.scatter(
         df_P["x"],
         df_P["y"],
         df_P["z"],
-        c="orange",
+        c=COLOR_P,
         marker="s",
         depthshade=False,
-        s=60,
+        s=markersize,
         label="P",
     )
 
@@ -190,10 +254,10 @@ def _plot_aminos_3d_basic(protein, df, ax):
             [pos1[1], pos2[1]],
             [pos1[2], pos2[2]],
             linestyle=":",
-            color="indianred",
+            color=COLOR_CONTACT,
             alpha=0.9,
             zorder=1,
-            lw=2,
+            lw=linewidth,
         )
 
 
@@ -206,15 +270,23 @@ def _plot_aminos_3d_paper(
     :param DataFrame    df:         DataFrame with all ordered positions.
     :param Axes         ax:         Axis to plot on.
     """
+    # Scale edgewidth according to markersize scale.
+    edgewidth = 1.3
+    if markersize != PAPER_MARKERSIZE:
+        edgewidth *= markersize / PAPER_MARKERSIZE
+    if markersize < PAPER_MARKERSIZE:
+        edgewidth *= 2
+
     # Split dataframe on amino acid type.
     df_H = df.loc[df["Type"] == "H"]
     df_P = df.loc[df["Type"] == "P"]
 
+    # Plot protein.
     ax.plot(
         df["x"],
         df["y"],
         df["z"],
-        color="black",
+        color=COLOR_CHAIN,
         alpha=0.65,
         linewidth=linewidth,
         zorder=1,
@@ -225,7 +297,7 @@ def _plot_aminos_3d_paper(
         df_H["y"],
         df_H["z"],
         marker="o",
-        edgecolor="royalblue",
+        edgecolor=COLOR_H,
         s=markersize,
         zorder=2,
         label="H",
@@ -237,8 +309,8 @@ def _plot_aminos_3d_paper(
         df_P["z"],
         marker="o",
         facecolor="white",
-        edgecolor="orange",
-        lw=1.3,
+        edgecolor=COLOR_P,
+        lw=edgewidth,
         s=markersize,
         zorder=2,
         label="P",
@@ -253,9 +325,9 @@ def _plot_aminos_3d_paper(
                 df.iloc[0]["y"],
                 df.iloc[0]["z"],
                 marker="o",
-                fc="royalblue",
-                ec="#00ce00",
-                lw=1.3,
+                fc=COLOR_H,
+                ec=COLOR_ANNOTATE,
+                lw=edgewidth,
                 s=markersize,
                 zorder=2,
             )
@@ -266,8 +338,8 @@ def _plot_aminos_3d_paper(
                 df.iloc[0]["z"],
                 marker="o",
                 fc="white",
-                ec="#00ce00",
-                lw=1.3,
+                ec=COLOR_ANNOTATE,
+                lw=edgewidth,
                 s=markersize,
                 zorder=2,
             )
@@ -281,7 +353,7 @@ def _plot_aminos_3d_paper(
             [pos1[1], pos2[1]],
             [pos1[2], pos2[2]],
             linestyle=":",
-            color="indianred",
+            color=COLOR_CONTACT,
             alpha=0.9,
             zorder=1,
             lw=linewidth,
@@ -297,9 +369,10 @@ def plot_protein(
     ax=None,
     legend=True,
     legend_style="inner",
+    fontsize=13,
     show=True,
-    linewidth=2.5,
-    markersize=210,
+    linewidth=None,
+    markersize=None,
     annotate_first=False,
 ):
     """
@@ -309,6 +382,7 @@ def plot_protein(
     :param Axes     ax:             Axis to plot Protein on.
     :param bool     legend:         True if a legend needs to be added.
     :param str      legend_style:   Either 'inner' or 'outer'.
+    :param str      fontsize:       Fontsize to be used for all text.
     :param bool     show:           True if plot.show() needs to be called.
     :param float    linewidth:      Width of the lines.
     :param float    markersize:     Size of the markers.
@@ -320,6 +394,25 @@ def plot_protein(
             f"Cannot plot the structure of a protein with "
             f"dimension '{protein.dim}'"
         )
+
+    # Catch unsupported styles.
+    supported_styles = ["basic", "paper"]
+    if style not in supported_styles:
+        raise RuntimeError(
+            f"Style '{style}' not supported. Choose from {supported_styles}."
+        )
+
+    # Set markersize and line width according to provided style.
+    if style == "basic":
+        if not markersize:
+            markersize = BASIC_MARKERSIZE
+        if not linewidth:
+            linewidth = BASIC_LINEWIDTH
+    elif style == "paper":
+        if not markersize:
+            markersize = PAPER_MARKERSIZE
+        if not linewidth:
+            linewidth = PAPER_LINEWIDTH
 
     # Create axis to plot onto if not given.
     if ax is None:
@@ -357,20 +450,24 @@ def plot_protein(
                 protein, df, ax, linewidth, markersize, annotate_first
             )
     elif style == "basic":
-        ax.set_xlabel("x-axis", fontsize=13)
-        ax.set_ylabel("y-axis", fontsize=13)
+        ax.set_xlabel("x-axis", fontsize=fontsize)
+        ax.set_ylabel("y-axis", fontsize=fontsize)
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
         # Plot dimension specific.
         if protein.dim == 2:
             ax.set_title(f"2D conformation with {protein.score} energy")
-            _plot_aminos_2d_basic(protein, df, ax)
+            _plot_aminos_2d_basic(
+                protein, df, ax, linewidth, markersize, annotate_first
+            )
         else:
             ax.set_title(f"3D conformation with {protein.score} energy")
-            ax.set_zlabel("z-axis", fontsize=13)
+            ax.set_zlabel("z-axis", fontsize=fontsize)
             ax.zaxis.set_major_locator(MaxNLocator(integer=True))
-            _plot_aminos_3d_basic(protein, df, ax)
+            _plot_aminos_3d_basic(
+                protein, df, ax, linewidth, markersize, annotate_first
+            )
 
     # If adding legend, remove title from legend and add item for bonds.
     if legend:
@@ -381,7 +478,7 @@ def plot_protein(
             score_patch = Line2D(
                 [],
                 [],
-                color="indianred",
+                color=COLOR_CONTACT,
                 linestyle=":",
                 linewidth=linewidth,
                 alpha=0.9,
@@ -395,17 +492,19 @@ def plot_protein(
             style == "paper" and legend_style == "outer"
         ) or legend_style == "outer":
             box = ax.get_position()
-            ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
+            ax.set_position((box.x0, box.y0, box.width * 0.7, box.height))
             ax.legend(
                 handles=handles,
                 labels=labels,
                 loc="upper left",
                 bbox_to_anchor=(1, 1),
+                fontsize=fontsize,
             )
         else:
-            ax.legend(handles=handles, labels=labels, prop={"size": 12})
+            ax.legend(handles=handles, labels=labels, fontsize=fontsize)
     elif protein.dim == 2:
-        ax.get_legend().remove()
+        if legend := ax.get_legend():
+            legend.remove()
 
     # Show plot if specified.
     if show:
