@@ -21,7 +21,7 @@ class TestVisualization:
         plot_protein(
             p,
             style="paper",
-            markersize=75,
+            markersize=16,
             linewidth=1,
             fontsize=8,
             show=False,
