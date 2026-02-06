@@ -8,10 +8,6 @@ class TestVisualization:
         """
         Test the 2D plotting in all different styles.
         """
-        p = Protein("HPHPPPPPPP", dim=2, model="HP")
-        p.set_hash([-1, -1, 2, 2, 2, 2, 2, 2, 2])
-        plot_protein(p, style="paper", show=False)
-
         p = Protein("HPPHPPHPPH", dim=2, model="HP")
         p.set_hash([-1, -2, 1, -2, 1, 2, 1, 2, -1])
         plot_protein(p, style="paper", show=False)
@@ -50,13 +46,25 @@ class TestVisualization:
         p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
         plot_protein(p, style="basic", legend=False, show=False)
 
-        p = Protein("PHPHHPPPHHPHPHH", dim=2, model="HP")
-        p.set_hash([-1, -1, 2, 2, -1, 2, 2, 1, -2, 1, -2, 1, -2, -1])
-        plot_protein(p, style="paper", legend_style="inner", show=False)
-
         p = Protein("HPPHPPPHPPPPPHH", dim=2, model="HP")
         p.set_hash([-1, -2, 1, -2, 1, 2, 2, 1, 2, 2, -1, -1, -2, 1])
-        plot_protein(p, style="paper", legend_style="inner", show=False)
+        plot_protein(
+            p,
+            style="paper",
+            legend_style="inner",
+            annotate_first=True,
+            show=False,
+        )
+
+        p = Protein("PHPPPHPPPPPHH", dim=2, model="HP")
+        p.set_hash([1, -2, 1, 2, 2, 1, 2, 2, -1, -1, -2, 1])
+        plot_protein(
+            p,
+            style="paper",
+            legend_style="inner",
+            annotate_first=True,
+            show=False,
+        )
 
         p = Protein("HHPHPHPPPHPHHHPPPPPPHPPPH", dim=2, model="HP")
         p.set_hash(

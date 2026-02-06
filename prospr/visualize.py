@@ -26,7 +26,7 @@ PAPER_EDGEWIDTH = 2.5
 # Global colors.
 COLOR_H = "tab:blue"
 COLOR_P = "orange"
-COLOR_ANNOTATE = "#00ce00"
+COLOR_ANNOTATE = "#ff00ff"
 COLOR_CONTACT = "indianred"
 COLOR_CHAIN = "black"
 
@@ -43,13 +43,16 @@ def _plot_aminos_2d_basic(
     :param float        markersize:     Size of the markers.
     :param bool         annotate_first: Annotate first amino acid.
     """
+    # Plot protein chain.
     ax.plot(
         df["x"], df["y"], color=COLOR_CHAIN, alpha=0.65, zorder=1, lw=linewidth
     )
+
+    # Plot all aminos except first as it might be annotated.
     sns.scatterplot(
         x="x",
         y="y",
-        data=df,
+        data=df.iloc[1:],
         hue="Type",
         hue_order=["H", "P"],
         style="Type",
@@ -60,26 +63,27 @@ def _plot_aminos_2d_basic(
         ax=ax,
     )
 
-    # Plot first point with a green edge color.
+    # Plot the first amino acid as a diamond when annotating it.
+    marker_first = "o"
+    if df.iloc[0]["Type"] == "H":
+        facecolor = COLOR_H
+        marker_first = "o"
+    elif df.iloc[0]["Type"] == "P":
+        facecolor = COLOR_P
+        marker_first = "s"
+
     if annotate_first:
-        if df.iloc[0]["Type"] == "H":
-            ax.scatter(
-                df.iloc[0]["x"],
-                df.iloc[0]["y"],
-                marker="o",
-                fc=COLOR_ANNOTATE,
-                s=markersize,
-                zorder=2,
-            )
-        else:
-            ax.scatter(
-                df.iloc[0]["x"],
-                df.iloc[0]["y"],
-                marker="s",
-                fc=COLOR_ANNOTATE,
-                s=markersize,
-                zorder=2,
-            )
+        facecolor = COLOR_ANNOTATE
+        marker_first = "D"
+
+    ax.scatter(
+        df.iloc[0]["x"],
+        df.iloc[0]["y"],
+        fc=facecolor,
+        marker=marker_first,
+        s=markersize,
+        zorder=2,
+    )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -115,11 +119,7 @@ def _plot_aminos_2d_paper(
     if markersize < PAPER_MARKERSIZE:
         edgewidth *= 2
 
-    # Split dataframe on amino acid type.
-    df_H = df.loc[df["Type"] == "H"]
-    df_P = df.loc[df["Type"] == "P"]
-
-    # Plot protein.
+    # Plot protein chain.
     ax.plot(
         df["x"],
         df["y"],
@@ -128,10 +128,12 @@ def _plot_aminos_2d_paper(
         linewidth=linewidth,
         zorder=1,
     )
+
+    # Plot everything but the first amino acid as it might be annotated.
     sns.scatterplot(
         x="x",
         y="y",
-        data=df_H,
+        data=df.iloc[1:].loc[df["Type"] == "H"],
         marker="o",
         facecolor=COLOR_H,
         edgecolor=COLOR_H,
@@ -143,7 +145,7 @@ def _plot_aminos_2d_paper(
     sns.scatterplot(
         x="x",
         y="y",
-        data=df_P,
+        data=df.iloc[1:].loc[df["Type"] == "P"],
         marker="o",
         facecolor="white",
         edgecolor=COLOR_P,
@@ -154,31 +156,29 @@ def _plot_aminos_2d_paper(
         label="P",
     )
 
-    # Plot first point with a green edge color.
+    # Plot the first amino acid as a diamond when annotating it.
+    if df.iloc[0]["Type"] == "H":
+        edgecolor = COLOR_H
+        facecolor = COLOR_H
+    elif df.iloc[0]["Type"] == "P":
+        edgecolor = COLOR_P
+        facecolor = "white"
+    marker_first = "o"
+
     if annotate_first:
-        # Plot first point with a different color.
-        if df.iloc[0]["Type"] == "H":
-            ax.scatter(
-                df.iloc[0]["x"],
-                df.iloc[0]["y"],
-                marker="o",
-                fc=COLOR_H,
-                ec=COLOR_ANNOTATE,
-                lw=edgewidth,
-                s=markersize,
-                zorder=2,
-            )
-        else:
-            ax.scatter(
-                df.iloc[0]["x"],
-                df.iloc[0]["y"],
-                marker="o",
-                fc="white",
-                ec=COLOR_ANNOTATE,
-                lw=edgewidth,
-                s=markersize,
-                zorder=2,
-            )
+        marker_first = "D"
+        edgecolor = COLOR_ANNOTATE
+
+    ax.scatter(
+        df.iloc[0]["x"],
+        df.iloc[0]["y"],
+        marker=marker_first,
+        fc=facecolor,
+        ec=edgecolor,
+        lw=edgewidth,
+        s=markersize,
+        zorder=2,
+    )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -210,10 +210,7 @@ def _plot_aminos_3d_basic(
     :param float        markersize:     Size of the markers.
     :param bool         annotate_first: Annotate first amino acid.
     """
-    # Split dataframe on amino acid type.
-    df_H = df.loc[df["Type"] == "H"]
-    df_P = df.loc[df["Type"] == "P"]
-
+    # Plot protein chain.
     ax.plot(
         df["x"],
         df["y"],
@@ -224,11 +221,11 @@ def _plot_aminos_3d_basic(
         lw=linewidth,
     )
 
-    # Plot the aminos connected with an opaque line.
+    # Plot all except the first amino acid, as it might be annotated.
     ax.scatter(
-        df_H["x"],
-        df_H["y"],
-        df_H["z"],
+        df.iloc[1:].loc[df["Type"] == "H"]["x"],
+        df.iloc[1:].loc[df["Type"] == "H"]["y"],
+        df.iloc[1:].loc[df["Type"] == "H"]["z"],
         c=COLOR_H,
         marker="o",
         depthshade=False,
@@ -236,14 +233,35 @@ def _plot_aminos_3d_basic(
         label="H",
     )
     ax.scatter(
-        df_P["x"],
-        df_P["y"],
-        df_P["z"],
+        df.iloc[1:].loc[df["Type"] == "P"]["x"],
+        df.iloc[1:].loc[df["Type"] == "P"]["y"],
+        df.iloc[1:].loc[df["Type"] == "P"]["z"],
         c=COLOR_P,
         marker="s",
         depthshade=False,
         s=markersize,
         label="P",
+    )
+
+    # Plot the first amino acid as a diamond when annotating it.
+    if df.iloc[0]["Type"] == "H":
+        facecolor = COLOR_H
+    elif df.iloc[0]["Type"] == "P":
+        facecolor = "white"
+    marker_first = "o"
+
+    if annotate_first:
+        facecolor = COLOR_ANNOTATE
+        marker_first = "D"
+
+    ax.scatter(
+        df.iloc[0]["x"],
+        df.iloc[0]["y"],
+        df.iloc[0]["z"],
+        fc=facecolor,
+        marker=marker_first,
+        s=markersize,
+        zorder=2,
     )
 
     # Plot dotted lines between the aminos that increase the stability.
@@ -278,11 +296,7 @@ def _plot_aminos_3d_paper(
     if markersize < PAPER_MARKERSIZE:
         edgewidth *= 2
 
-    # Split dataframe on amino acid type.
-    df_H = df.loc[df["Type"] == "H"]
-    df_P = df.loc[df["Type"] == "P"]
-
-    # Plot protein.
+    # Plot protein chain.
     ax.plot(
         df["x"],
         df["y"],
@@ -293,10 +307,11 @@ def _plot_aminos_3d_paper(
         zorder=1,
     )
 
+    # Plot everything but the first amino acid as it might be annotated.
     ax.scatter(
-        df_H["x"],
-        df_H["y"],
-        df_H["z"],
+        df.iloc[1:].loc[df["Type"] == "H"]["x"],
+        df.iloc[1:].loc[df["Type"] == "H"]["y"],
+        df.iloc[1:].loc[df["Type"] == "H"]["z"],
         marker="o",
         edgecolor=COLOR_H,
         s=markersize,
@@ -305,9 +320,9 @@ def _plot_aminos_3d_paper(
         depthshade=False,
     )
     ax.scatter(
-        df_P["x"],
-        df_P["y"],
-        df_P["z"],
+        df.iloc[1:].loc[df["Type"] == "P"]["x"],
+        df.iloc[1:].loc[df["Type"] == "P"]["y"],
+        df.iloc[1:].loc[df["Type"] == "P"]["z"],
         marker="o",
         facecolor="white",
         edgecolor=COLOR_P,
@@ -318,32 +333,30 @@ def _plot_aminos_3d_paper(
         depthshade=False,
     )
 
-    # Plot first point with a green edge color.
+    # Plot the first amino acid as a diamond when annotating it.
+    if df.iloc[0]["Type"] == "H":
+        edgecolor = COLOR_H
+        facecolor = COLOR_H
+    if df.iloc[0]["Type"] == "P":
+        edgecolor = COLOR_P
+        facecolor = "white"
+    marker_first = "o"
+
     if annotate_first:
-        if df.iloc[0]["Type"] == "H":
-            ax.scatter(
-                df.iloc[0]["x"],
-                df.iloc[0]["y"],
-                df.iloc[0]["z"],
-                marker="o",
-                fc=COLOR_H,
-                ec=COLOR_ANNOTATE,
-                lw=edgewidth,
-                s=markersize,
-                zorder=2,
-            )
-        else:
-            ax.scatter(
-                df.iloc[0]["x"],
-                df.iloc[0]["y"],
-                df.iloc[0]["z"],
-                marker="o",
-                fc="white",
-                ec=COLOR_ANNOTATE,
-                lw=edgewidth,
-                s=markersize,
-                zorder=2,
-            )
+        marker_first = "D"
+        edgecolor = COLOR_ANNOTATE
+
+    ax.scatter(
+        df.iloc[0]["x"],
+        df.iloc[0]["y"],
+        df.iloc[0]["z"],
+        marker=marker_first,
+        fc=facecolor,
+        ec=edgecolor,
+        lw=edgewidth,
+        s=markersize,
+        zorder=2,
+    )
 
     # Plot dotted lines between the aminos that increase the stability.
     pairs = get_scoring_pairs(protein)
@@ -483,7 +496,7 @@ def plot_protein(
                 linestyle=":",
                 linewidth=linewidth,
                 alpha=0.9,
-                label="Bond",
+                label="Contact",
             )
             handles.append(score_patch)
             labels.append(score_patch.get_label())
