@@ -64,7 +64,6 @@ def _plot_aminos_2d_basic(
     )
 
     # Plot the first amino acid as a diamond when annotating it.
-    marker_first = "o"
     if df.iloc[0]["Type"] == "H":
         facecolor = COLOR_H
         marker_first = "o"
