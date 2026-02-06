@@ -166,6 +166,7 @@ def _plot_aminos_2d_paper(
 
     if annotate_first:
         marker_first = "D"
+        facecolor = edgecolor
         edgecolor = COLOR_ANNOTATE
 
     ax.scatter(
@@ -343,6 +344,7 @@ def _plot_aminos_3d_paper(
 
     if annotate_first:
         marker_first = "D"
+        facecolor = edgecolor
         edgecolor = COLOR_ANNOTATE
 
     ax.scatter(
