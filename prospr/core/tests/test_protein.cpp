@@ -180,6 +180,34 @@ void test_get_bonds() {
   std::cout << "\t2D get_bonds() work.\n";
 }
 
+void test_get_contact_order() {
+  /* Setup 2D protein. */
+  Protein *protein_2d = new Protein("HPPHPPHH", 2, "HP");
+  std::vector<int> moves = std::vector<int>{1, 2, -1, -1, -1, -2, 1};
+  for (int m : moves) {
+    protein_2d->place_amino(m);
+  }
+
+  /* Test for 2D protein contact order and clean up. */
+  float contact_order = protein_2d->get_contact_order();
+  assert(contact_order == 0.5);
+  delete protein_2d;
+
+  /* Setup 3D protein. */
+  Protein *protein_3d = new Protein("HPPHPPHH", 3, "HP");
+  std::vector<int> moves = std::vector<int>{1, 2, -1, 3, -2, -1, -3};
+  for (int m : moves) {
+    protein_3d->place_amino(m);
+  }
+
+  /* Test for 3D protein contact order and clean up. */
+  float contact_order = protein_3d->get_contact_order();
+  assert(contact_order == 0.625);
+  delete protein_3d;
+
+  std::cout << "\t2D and 3D get_contact_order() works.\n";
+}
+
 int main(void) {
   /* Test different Protein generation options. */
   test_protein_generation();
@@ -192,6 +220,9 @@ int main(void) {
 
   /* Test get_bonds() function. */
   test_get_bonds();
+
+  /* Test get_contact_order() function. */
+  test_get_contact_order();
 
   return 0;
 }

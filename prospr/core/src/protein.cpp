@@ -493,6 +493,23 @@ std::vector<std::pair<int, int>> Protein::get_bonds() {
   return pairs;
 }
 
+/* Compute contact order of the current conformation. */
+float Protein::get_contact_order() {
+  /* Get bonds of current conformation. */
+  std::vector<std::pair<int, int>> bonds = this->get_bonds();
+
+  /* Compute sum of the sequence separations. */
+  int sum = 0;
+  for (const auto &p : bonds) {
+    sum += abs(p.second - p.first);
+  }
+
+  /* Normalize with the length and number of bonds, and return.
+   * Divide sum and bonds size by two to remove doubles.
+   */
+  return float(sum / 2) / float((this->get_cur_len() * bonds.size() / 2));
+}
+
 /* Overload << operator for printing Proteins. */
 std::ostream &operator<<(std::ostream &os, Protein &protein) {
   std::cout << "<Protein s=" << protein.get_score()

@@ -105,3 +105,21 @@ class TestProtein:
             protein_2d.place_amino(m)
 
         assert protein_2d.get_bonds() == [(0, 3), (3, 0)]
+
+    def test_protein_2d_contact_order(self, protein_2d):
+        """Test if a 2D protein correctly computes its contact order."""
+        moves = [1, 2, -1, -1, -2]
+
+        for m in moves:
+            protein_2d.place_amino(m)
+
+        assert protein_2d.get_contact_order() == 0.5
+
+    def test_protein_3d_contact_order(self, protein_3d):
+        """Test if a 3D protein correctly computes its contact order."""
+        moves = [1, 2, -1, 3, -2, -1, -3]
+
+        for m in moves:
+            protein_3d.place_amino(m)
+
+        assert protein_3d.get_contact_order() == 0.625
