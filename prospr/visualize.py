@@ -27,6 +27,7 @@ PAPER_EDGEWIDTH = 2.5
 COLOR_H = "tab:blue"
 COLOR_P = "orange"
 COLOR_ANNOTATE = "#ff00ff"
+MARKER_ANNOTATE = "D"
 COLOR_CONTACT = "indianred"
 COLOR_CHAIN = "black"
 
@@ -66,19 +67,23 @@ def _plot_aminos_2d_basic(
     # Plot the first amino acid as a diamond when annotating it.
     if df.iloc[0]["Type"] == "H":
         facecolor = COLOR_H
+        edgecolor = COLOR_H
         marker_first = "o"
     elif df.iloc[0]["Type"] == "P":
         facecolor = COLOR_P
+        edgecolor = COLOR_P
         marker_first = "s"
 
     if annotate_first:
-        facecolor = COLOR_ANNOTATE
-        marker_first = "D"
+        edgecolor = COLOR_ANNOTATE
+        marker_first = MARKER_ANNOTATE
 
     ax.scatter(
         df.iloc[0]["x"],
         df.iloc[0]["y"],
         fc=facecolor,
+        ec=edgecolor,
+        linewidth=2,
         marker=marker_first,
         s=markersize,
         zorder=2,
@@ -165,7 +170,7 @@ def _plot_aminos_2d_paper(
     marker_first = "o"
 
     if annotate_first:
-        marker_first = "D"
+        marker_first = MARKER_ANNOTATE
         facecolor = edgecolor
         edgecolor = COLOR_ANNOTATE
 
@@ -246,19 +251,23 @@ def _plot_aminos_3d_basic(
     # Plot the first amino acid as a diamond when annotating it.
     if df.iloc[0]["Type"] == "H":
         facecolor = COLOR_H
+        edgecolor = COLOR_H
     elif df.iloc[0]["Type"] == "P":
-        facecolor = "white"
+        facecolor = COLOR_P
+        edgecolor = COLOR_P
     marker_first = "o"
 
     if annotate_first:
-        facecolor = COLOR_ANNOTATE
-        marker_first = "D"
+        edgecolor = COLOR_ANNOTATE
+        marker_first = MARKER_ANNOTATE
 
     ax.scatter(
         df.iloc[0]["x"],
         df.iloc[0]["y"],
         df.iloc[0]["z"],
         fc=facecolor,
+        ec=edgecolor,
+        linewidth=2.0,
         marker=marker_first,
         s=markersize,
         zorder=2,
@@ -343,7 +352,7 @@ def _plot_aminos_3d_paper(
     marker_first = "o"
 
     if annotate_first:
-        marker_first = "D"
+        marker_first = MARKER_ANNOTATE
         facecolor = edgecolor
         edgecolor = COLOR_ANNOTATE
 
@@ -501,6 +510,21 @@ def plot_protein(
             )
             handles.append(score_patch)
             labels.append(score_patch.get_label())
+
+        # Only add annotation label if option is enabled.
+        if annotate_first:
+            annotate_patch = Line2D(
+                [0],
+                [0],
+                marker=MARKER_ANNOTATE,
+                linestyle="None",
+                markerfacecolor="white",
+                markeredgecolor=COLOR_ANNOTATE,
+                markeredgewidth=2,
+                label="Head",
+            )
+            handles.append(annotate_patch)
+            labels.append(annotate_patch.get_label())
 
         # Style legend according to plotting style.
         if (
