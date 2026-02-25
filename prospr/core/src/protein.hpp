@@ -99,6 +99,9 @@ public:
   /* Get the pairs of amino acids indexes forming bonds. */
   std::vector<std::pair<int, int>> get_bonds();
 
+  /* Compute contact order of the current conformation. */
+  float get_contact_order();
+
 private:
   std::string sequence;
   std::map<std::vector<int>, AminoAcid *> space;
@@ -132,10 +135,10 @@ private:
   _append_bond_pairs(std::vector<std::pair<int, int>> pairs,
                      std::vector<int> pos, std::vector<int> moves);
 
-  /* Deserialize the state of the protein from key=value format. 
+  /* Deserialize the state of the protein from key=value format.
    * Required by the checkpointing utilities.
    */
-  friend void load_protein_state(Protein&, std::istream&);
+  friend void load_protein_state(Protein &, std::istream &);
 };
 
 /* Overload << operator for printing Proteins. */
