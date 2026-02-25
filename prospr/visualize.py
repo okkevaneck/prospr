@@ -524,7 +524,6 @@ def plot_protein(
                 markerfacecolor="white",
                 markeredgecolor=COLOR_ANNOTATE,
                 markeredgewidth=1.75,
-                markersize=10,
                 label="Head",
             )
             handles.append(annotate_patch)
