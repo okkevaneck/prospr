@@ -493,6 +493,9 @@ def plot_protein(
                 protein, df, ax, linewidth, markersize, annotate_first
             )
 
+    # Transform axis limits to make protein segments squared.
+    ax.axis("equal")
+
     # If adding legend, remove title from legend and add item for bonds.
     if legend:
         handles, labels = ax.get_legend_handles_labels()
@@ -520,7 +523,8 @@ def plot_protein(
                 linestyle="None",
                 markerfacecolor="white",
                 markeredgecolor=COLOR_ANNOTATE,
-                markeredgewidth=2,
+                markeredgewidth=1.75,
+                markersize=10,
                 label="Head",
             )
             handles.append(annotate_patch)
