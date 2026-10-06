@@ -358,9 +358,9 @@ be easily used via a direct import, as is shown below.
     from prospr import Protein, depth_first
 
     p_2d = Protein("HPPH")
-    p_2d = depth_first(p_2d)
+    depth_first(p_2d)
     p_2d.score
-    >>> 1
+    >>> -1
 
     p_2d.hash_fold()
     >> [1, 2, -1]
